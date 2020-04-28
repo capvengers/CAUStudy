@@ -9,7 +9,8 @@
         android:roundIcon="@drawable/cau"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StartActivity"/>
+        <activity android:name=".jesnk.JMainActivity"></activity>
+        <activity android:name=".StartActivity" />
         <activity android:name=".SignInActivity" />
         <activity
             android:name=".SignUpActivity"
@@ -33,4 +34,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
