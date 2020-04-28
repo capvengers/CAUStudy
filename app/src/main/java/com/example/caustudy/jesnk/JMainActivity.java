@@ -13,7 +13,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-
+// git commit test
 // jesnk
 // Activity For Post Testing
 public class JMainActivity extends AppCompatActivity {
