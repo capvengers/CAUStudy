@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -41,12 +42,13 @@ import javax.crypto.NoSuchPaddingException;
 
 public class SignInActivity extends AppCompatActivity {
 
-
     private static final Pattern PWD_RULE = Pattern.compile("^[a-zA-Z0-9!@.#$%^&*?_~]{4,16}$");
     private static final Pattern EMAIL_RULE=Pattern.compile("^[a-zA-Z0-9]+@cau.ac.kr+$");
     ProgressDialog dialog;
     private EditText email_login;
     private EditText pwd_login;
+    private Button login;
+    private Button find_password;
     private String email="";
     private String pwd="";
     private CheckBox autoLogin;
@@ -63,17 +65,34 @@ public class SignInActivity extends AppCompatActivity {
         pwd_login=(EditText)findViewById(R.id.pwd_in);
         email_login=(EditText) findViewById(R.id.email_in);
         autoLogin=(CheckBox)findViewById(R.id.autoLogin);
-
+        login =(Button)findViewById(R.id.signIn);
+        find_password =(Button)findViewById(R.id.findPW);
         firebaseAuth=FirebaseAuth.getInstance();
         autoLogin.setChecked(autologin);
 
         if(autologin){
             load();
         }
+
+        find_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SignInActivity.this, FindPW_Activity.class);
+                startActivity(intent);
+            }
+        });
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
+
     }
 
 
-    public void signIn(View view){
+
+    public void signIn(){
         if(mFirebaseUser!=null)
             FirebaseAuth.getInstance().signOut();
 
@@ -139,7 +158,7 @@ public class SignInActivity extends AppCompatActivity {
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                startActivity(new Intent(getApplicationContext(),StartActivity.class));
+                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                                 dialog.dismiss();
                                                 finish();
                                                 //구독이 잘되었으면 로그인
@@ -179,12 +198,6 @@ public class SignInActivity extends AppCompatActivity {
             return true;
         }
     }
-    /*
-    public void findPw(View view){
-        Intent intent = new Intent(SignInActivity.this, FindPW_Activity.class);
-        startActivity(intent);
-    }
-     */
 
     private void load() {
         try {
