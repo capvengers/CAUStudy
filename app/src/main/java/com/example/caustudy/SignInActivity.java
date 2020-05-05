@@ -141,9 +141,9 @@ public class SignInActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 // jesnk : For testing
-                                                //startActivity(new Intent(getApplicationContext(), JMainActivity.class));
+                                                startActivity(new Intent(getApplicationContext(), JMainActivity.class));
 
-                                                startActivity(new Intent(getApplicationContext(),StartActivity.class));
+                                                //startActivity(new Intent(getApplicationContext(),StartActivity.class));
                                                 dialog.dismiss();
                                                 finish();
                                                 //구독이 잘되었으면 로그인

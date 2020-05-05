@@ -9,7 +9,8 @@
         android:roundIcon="@drawable/cau"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".jesnk.JMainActivity"></activity>
+        <activity android:name=".jesnk.PostActivity"></activity>
+        <activity android:name=".jesnk.JMainActivity" />
         <activity android:name=".StartActivity" />
         <activity android:name=".SignInActivity" />
         <activity
