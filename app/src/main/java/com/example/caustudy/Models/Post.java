@@ -1,7 +1,11 @@
 package com.example.caustudy.Models;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.firestore.ServerTimestamp;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +17,10 @@ public class Post {
     public String author;
     public String title;
     public String contents;
+    @ServerTimestamp
+    public Date datetime;
+    public Timestamp time_stamp;
+
     public int starCount = 0;
     public Map<String, Boolean> stars = new HashMap<>();
 
@@ -20,9 +28,8 @@ public class Post {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Post(String uid, String author, String title, String contents) {
+    public Post(String uid, String title, String contents) {
         this.uid = uid;
-        this.author = author;
         this.title = title;
         this.contents = contents;
     }
@@ -40,6 +47,10 @@ public class Post {
     public void setContents(String contents) {
         this.contents = contents;
     }
+    public Date getDatetime() {
+        return this.time_stamp.toDate();
+    }
+    public void setData(Date timestamp){ this.datetime = timestamp;}
 
     // [START post_to_map]
     @Exclude

@@ -1,28 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- made by jesnk -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/postViewCell"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="70dp"
+
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    android:background="#72DFDFDF"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/item_post_title"
-        android:layout_width="wrap_content"
+        android:layout_width="295dp"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="97dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginBottom="39dp"
         android:textColor="@android:color/black"
+        android:textSize="20sp"
         android:textStyle="bold"
-        tools:text="Title"/>
+        tools:text="Title" />
+
+    <TextView
+        android:id="@+id/item_post_date"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="43dp"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        tools:text="Date" />
 
     <TextView
         android:id="@+id/item_post_contents"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="11dp"
         android:textSize="16sp"
-        tools:text="Contents"/>
+        android:textStyle="normal"
+        tools:text="Contents" />
 
-
-
-</LinearLayout>
+</RelativeLayout>
