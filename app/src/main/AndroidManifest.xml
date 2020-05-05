@@ -16,8 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".FindPW_Activity"></activity>
+        <activity android:name=".SearchStudy" />
+        <activity
+            android:name=".MakeStudyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan" />
+        <activity android:name=".FindPW_Activity" />
         <activity android:name=".SignInActivity" />
         <activity
             android:name=".SignUpActivity"

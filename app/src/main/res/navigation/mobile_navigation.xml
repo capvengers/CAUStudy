@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.caustudy.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_searchstudy"
+        android:name="com.example.caustudy.ui.searchstudy.SearchStudyFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_seachstudy" />
 
     <fragment
         android:id="@+id/navigation_notifications"
