@@ -1,4 +1,4 @@
-package com.example.caustudy.ui.dashboard;
+package com.example.caustudy.ui.searchstudy;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
