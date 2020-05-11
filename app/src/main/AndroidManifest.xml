@@ -15,12 +15,13 @@
         android:roundIcon="@drawable/cau"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".StudyDetailActivity"></activity>
     
 
         <activity
             android:name=".MakeStudyActivity"
             android:windowSoftInputMode="adjustResize|adjustPan" />
-
+      
         <activity android:name=".FindPW_Activity"></activity>
         <activity android:name=".jesnk.PostActivity"></activity>
         <activity android:name=".jesnk.JMainActivity"></activity>
