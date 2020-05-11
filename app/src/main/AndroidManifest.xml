@@ -16,13 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".StudyDetailActivity"></activity>
+    
+
         <activity
             android:name=".MakeStudyActivity"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|adjustPan" />
-        <activity android:name=".FindPW_Activity" />
-        <activity android:name=".jesnk.PostActivity" />
-        <activity android:name=".jesnk.JMainActivity" />
+      
+        <activity android:name=".FindPW_Activity"></activity>
+        <activity android:name=".jesnk.PostActivity"></activity>
+        <activity android:name=".jesnk.JMainActivity"></activity>
+
         <activity android:name=".SignInActivity" />
         <activity
             android:name=".SignUpActivity"
