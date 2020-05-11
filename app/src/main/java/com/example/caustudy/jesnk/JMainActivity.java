@@ -68,11 +68,13 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
                             mDatas.clear(); // For post-order
                             for (DocumentSnapshot snap : queryDocumentSnapshots.getDocuments()) {
                                 Map<String, Object> shot = snap.getData();
-                                String documentId = String.valueOf(shot.get("author_uid"));
+                                String uId = String.valueOf(shot.get("author_uid"));
+                                String user_name = String.valueOf(shot.get("user_name"));
                                 String title = String.valueOf(shot.get("title"));
                                 String contents = String.valueOf(shot.get("content"));
+
                                 Timestamp time_stamp = (Timestamp)shot.get("time_stamp");
-                                Post data = new Post(documentId,title,contents);
+                                Post data = new Post(uId,user_name,title,contents);
                                 data.time_stamp = time_stamp;
 
                                 mDatas.add(data);

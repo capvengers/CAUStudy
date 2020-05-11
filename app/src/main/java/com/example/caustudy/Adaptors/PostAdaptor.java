@@ -41,6 +41,9 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.PostViewHolder
         Post data = datas.get(position);
         holder.title.setText(data.getTitle());
         holder.contents.setText(data.getContents());
+        holder.user_name.setText(data.getUsername());
+        holder.date.setText(data.getDate());
+
         Log.d("test",data.getTitle());
         Log.d("test",data.getContents());
 
@@ -51,7 +54,6 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.PostViewHolder
         //int minutes = datetime.getMinutes();
 
         //String time_ = String.valueOf(hours) +":"+ String.valueOf(minutes) + ", " +String.valueOf(month) + "." + String.valueOf(day);
-        holder.date.setText("");
 
         //Log.d("timestamp",time_);
     }
@@ -64,11 +66,13 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.PostViewHolder
     class PostViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
+        private TextView user_name;
         private TextView contents;
         private TextView date;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
+            user_name = itemView.findViewById(R.id.item_post_user_name);
             title = itemView.findViewById(R.id.item_post_title);
             contents = itemView.findViewById(R.id.item_post_contents);
             date = itemView.findViewById(R.id.item_post_date);
