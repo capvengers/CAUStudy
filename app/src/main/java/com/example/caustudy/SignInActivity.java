@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.caustudy.jesnk.JMainActivity;
 import com.google.android.gms.common.util.SharedPreferencesUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -159,6 +160,8 @@ public class SignInActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                // jesnk : For testing
+                                                //startActivity(new Intent(getApplicationContext(), JMainActivity.class));
                                                 dialog.dismiss();
                                                 finish();
                                                 //구독이 잘되었으면 로그인
