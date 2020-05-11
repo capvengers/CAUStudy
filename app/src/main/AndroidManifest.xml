@@ -17,7 +17,6 @@
         android:theme="@style/AppTheme">
     
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SearchStudy" />
         <activity
             android:name=".MakeStudyActivity"
             android:screenOrientation="portrait"

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">CAUStudy</string>
     <string name="title_home">CAUStudy</string>
-    <string name="title_dashboard">내 스터디</string>
-    <string name="title_notifications">스터디 찾기</string>
+    <string name="title_searchstudy">스터디 찾기</string>
+    <string name="title_notifications">나의 학습방</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_login">로그인</string>
     <string name="title_activity_sign_up">회원가입</string>
