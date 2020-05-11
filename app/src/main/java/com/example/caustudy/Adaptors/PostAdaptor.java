@@ -43,19 +43,6 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.PostViewHolder
         holder.contents.setText(data.getContents());
         holder.user_name.setText(data.getUsername());
         holder.date.setText(data.getDate());
-
-        Log.d("test",data.getTitle());
-        Log.d("test",data.getContents());
-
-        //Date datetime = data.getDatetime();
-        //int month = datetime.getMonth();
-        //int day = datetime.getDay();
-        //int hours = datetime.getHours();
-        //int minutes = datetime.getMinutes();
-
-        //String time_ = String.valueOf(hours) +":"+ String.valueOf(minutes) + ", " +String.valueOf(month) + "." + String.valueOf(day);
-
-        //Log.d("timestamp",time_);
     }
 
     @Override
@@ -64,7 +51,6 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.PostViewHolder
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {
-
         private TextView title;
         private TextView user_name;
         private TextView contents;
