@@ -6,4 +6,33 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_login">로그인</string>
     <string name="title_activity_sign_up">회원가입</string>
+
+    <string-array name="spinner_do">
+        <item>전공</item>
+        <item>어학</item>
+        <item>시험</item>
+    </string-array>
+    <string-array name="spinner_do_major">
+        <item>기계공학부</item>
+        <item>전기전자공학부</item>
+        <item>소프트웨어학부</item>
+        <item>융합공학부</item>
+        <item>화학신소재공학부</item>
+    </string-array>
+    <string-array name="spinner_do_language">
+        <item>영어</item>
+        <item>중국어</item>
+        <item>일본어</item>
+        <item>한자</item>
+        <item>기타</item>
+    </string-array>
+    <string-array name="spinner_do_exam">
+        <item>LEET</item>
+        <item>PEET</item>
+        <item>CPA</item>
+        <item>9급</item>
+        <item>7급</item>
+        <item>5급</item>
+    </string-array>
+    <string name="title_activity_search_study">SearchStudy</string>
 </resources>
