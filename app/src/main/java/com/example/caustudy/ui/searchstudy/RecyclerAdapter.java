@@ -1,5 +1,8 @@
 package com.example.caustudy.ui.searchstudy;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caustudy.R;
+import com.example.caustudy.StudyDetailActivity;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
 
@@ -25,6 +29,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         // Item을 하나씩 출력
         holder.onBind(listData.get(position));
+
     }
 
     @Override
@@ -37,9 +42,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
         listData.add(data);
     }
 
+    private OnItemClickListener mListener = null ;
 
-    // RecyclerView의 핵심인 ViewHolder 입니다.
-    // 여기서 subView를 setting 해줍니다.
+    public interface OnItemClickListener {
+        void onItemClick(View v, int position) ;
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.mListener = listener ;
+    }
+
+
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
@@ -58,6 +70,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
             leader = itemView.findViewById(R.id.item_leader);
             org = itemView.findViewById(R.id.item_org);
             info = itemView.findViewById(R.id.item_info);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition() ;
+                    if (pos != RecyclerView.NO_POSITION) {
+                        // 리스너 객체의 메서드 호출.
+                        if (mListener != null) {
+                            mListener.onItemClick(v, pos) ;
+                        }
+                    }
+                }
+            });
         }
 
         void onBind(Data data) {

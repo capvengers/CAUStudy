@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,8 +19,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.caustudy.MainActivity;
 import com.example.caustudy.MakeStudyActivity;
 import com.example.caustudy.R;
+import com.example.caustudy.StudyDetailActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 
 public class SearchStudyFragment extends Fragment {
@@ -69,6 +73,8 @@ public class SearchStudyFragment extends Fragment {
         recyclerView = root.findViewById(R.id.mt_list);
         adapter_large = ArrayAdapter.createFromResource(getActivity(), R.array.spinner_do, android.R.layout.simple_spinner_dropdown_item);
         large_category.setAdapter(adapter_large);
+
+
         large_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -125,24 +131,30 @@ public class SearchStudyFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                init(recyclerView);
-                getData();
+                getData(recyclerView);
             }
         });
 
         return root;
     }
+    
 
-    private void init(RecyclerView rv) {
+    public void getData(RecyclerView rv) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(linearLayoutManager);
-
         adapter = new RecyclerAdapter();
+        adapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Intent intent = new Intent(getActivity(), StudyDetailActivity.class);
+                intent.putExtra("study_name",listTitle.get(position) );
+                intent.putExtra("l_cate",l_cate);
+                intent.putExtra("s_cate",s_cate);
+                startActivity(intent);
+            }
+        });
         rv.setAdapter(adapter);
-    }
-
-    public void getData() {
-
+        
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("StudyList");
         myRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
