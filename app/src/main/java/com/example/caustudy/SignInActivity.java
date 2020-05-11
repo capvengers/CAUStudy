@@ -163,7 +163,7 @@ public class SignInActivity extends AppCompatActivity {
                                                 // jesnk : For testing
                                                 //startActivity(new Intent(getApplicationContext(), JMainActivity.class));
 
-                                                startActivity(new Intent(getApplicationContext(),StartActivity.class));
+                                                startActivity(new Intent(getApplicationContext(),MainActivity.class));
 
                                                 dialog.dismiss();
                                                 finish();
