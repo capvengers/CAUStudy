@@ -7,7 +7,7 @@
         android:title="진행중인 스터디" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_searchstudy"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="스터디 찾기" />
 

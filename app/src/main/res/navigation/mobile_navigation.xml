@@ -14,8 +14,8 @@
     <fragment
         android:id="@+id/navigation_searchstudy"
         android:name="com.example.caustudy.ui.searchstudy.SearchStudyFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_seachstudy" />
+        android:label="스터디 찾기"
+        tools:layout="@layout/fragment_searchstudy" />
 
     <fragment
         android:id="@+id/navigation_notifications"
