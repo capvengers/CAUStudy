@@ -3,6 +3,7 @@ package com.example.caustudy.jesnk;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,10 +41,18 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private Map<String, Object> data = new HashMap<>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private String user_name;
+    private String study_key, study_name, email, name, id;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        Intent intent = getIntent();
+        study_key = intent.getStringExtra("study_key");
+        study_name = intent.getStringExtra("study_name");
+
+
 
         mAuth = FirebaseAuth.getInstance();
         userAuth = mAuth.getCurrentUser();
@@ -91,7 +100,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             data.put("user_name",this.user_name);
             //mStore.collection(FirebaseID.post).document(postId).set(data, SetOptions.merge());
 
-            mStore.collection("Posts").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            mStore.collection(study_key+":notice").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
                     Log.d("data add ","is successs");

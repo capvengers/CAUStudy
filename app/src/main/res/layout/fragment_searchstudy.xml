@@ -6,91 +6,85 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="36dp"
+        android:layout_marginBottom="16dp"
         android:text="스터디 조회"
         android:textColor="#6B95BB"
         android:textSize="26dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/small_category"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/large_category"
         android:layout_width="140dp"
         android:layout_height="30dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="20dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toTopOf="@+id/mt_list"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView1"
         tools:ignore="MissingConstraints" />
 
     <Spinner
         android:id="@+id/small_category"
         android:layout_width="140dp"
         android:layout_height="30dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"
         android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/mt_list"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.019"
+        app:layout_constraintHorizontal_bias="0.078"
         app:layout_constraintStart_toEndOf="@+id/large_category"
-        app:layout_constraintTop_toBottomOf="@+id/textView1"
         tools:ignore="MissingConstraints" />
-
 
     <Button
         android:id="@+id/search_btn"
         android:layout_width="66dp"
         android:layout_height="33dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="16dp"
         android:background="@drawable/blue_button"
-        android:text="OK"
+        android:text="검색"
         android:textColor="#FFFFFF"
-        android:textSize="18dp"
+        android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@+id/mt_list"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toEndOf="@+id/small_category"
         app:layout_constraintTop_toBottomOf="@+id/textView1"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mt_list"
-        android:layout_width="344dp"
-        android:layout_height="557dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="381dp"
+        android:layout_height="440dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/listview"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/small_category"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageButton
-        android:id="@+id/create_btn"
-        android:layout_width="56dp"
-        android:layout_height="52dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.957"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.973"
-        app:srcCompat="@drawable/create_button" />
+        app:layout_constraintVertical_bias="0.697" />
+
+    <Button
+        android:id="@+id/create_btn"
+        android:layout_width="115dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/blue_button"
+        android:text="스터디 만들기"
+        android:textColor="#FFFFFF"
+        android:textSize="14dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mt_list"
+        app:srcCompat="@drawable/blue_button" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

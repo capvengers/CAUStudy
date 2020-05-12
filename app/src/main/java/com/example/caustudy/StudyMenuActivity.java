@@ -20,6 +20,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.StringTokenizer;
 
+import com.example.caustudy.jesnk.JMainActivity;
+
 public class StudyMenuActivity extends AppCompatActivity {
     private String study_key, study_name, leader_email;
     String l_cate, s_cate, number;
@@ -35,6 +37,7 @@ public class StudyMenuActivity extends AppCompatActivity {
         study_key = intent.getStringExtra("study_key");
         study_name = intent.getStringExtra("study_name");
 
+//merge part
         mAuth = FirebaseAuth.getInstance();
         userAuth = mAuth.getCurrentUser();
 
@@ -58,7 +61,22 @@ public class StudyMenuActivity extends AppCompatActivity {
             }
         });
 
+
+        Button notice_btn = (Button)findViewById(R.id.notice_btn);
+// merge part end
+
         Button setting_btn = (Button)findViewById(R.id.setting_btn);
+
+        notice_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StudyMenuActivity.this, JMainActivity.class);
+                intent.putExtra("study_key", study_key );
+                intent.putExtra("study_name", study_name );
+                startActivity(intent);
+            }
+        });
+
         setting_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

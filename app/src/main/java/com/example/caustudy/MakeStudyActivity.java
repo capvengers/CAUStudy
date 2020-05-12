@@ -267,11 +267,13 @@ public class MakeStudyActivity extends AppCompatActivity {
         }
     }
 
-    void make_key_value() {
+    long make_key_value() {
         studyRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("count","entered count");
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Log.d("count","count increased");
                     count++;
                 }
             }
@@ -279,11 +281,11 @@ public class MakeStudyActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+        return count;
     }
     public void registerStudy() {
         checkDay();
         make_key_value();
-
         study_name = study_name_e.getText().toString();
         organization = organization_e.getText().toString();
         tag = tag_e.getText().toString();
@@ -291,6 +293,44 @@ public class MakeStudyActivity extends AppCompatActivity {
         study = new StudyModel(study_name, organization, l_cate, s_cate, name, email, info, s_period, e_period, day, time);
         //StringTokenizer stringTokenizer = new StringTokenizer(tag, "#");
 
+        // 카운트 세는 함수 안에다가 코드를 넣었다.
+        count = 0;
+        studyRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("count","entered count");
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Log.d("count","count increased");
+                    count++;
+                }
+
+                Toast.makeText(MakeStudyActivity.this, "신규 스터디가 생성되었습니다!", Toast.LENGTH_LONG).show();
+
+                // input data in user DB
+                set_leader_user();
+                // input data in study DB
+                StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
+                String id = stringTokenizer.nextToken(); //@ 분리
+                if (count >= 9) {
+                    studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).setValue(study);
+                    studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).child("member_list").child(id).setValue(email);
+                } else {
+                    Log.d("count", "count section");
+                    studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
+                    Log.d("count", "count section end");
+                    studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).child("member_list").child(id).setValue(email);
+                }
+
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+
+
+        /*
         Toast.makeText(MakeStudyActivity.this, "신규 스터디가 생성되었습니다!", Toast.LENGTH_LONG).show();
 
         // input data in user DB
@@ -302,8 +342,12 @@ public class MakeStudyActivity extends AppCompatActivity {
             studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).setValue(study);
             studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).child("member_list").child(id).setValue(email);
         } else {
+            Log.d("count", "count section");
             studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
+            Log.d("count", "count section end");
             studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).child("member_list").child(id).setValue(email);
         }
+         */
+
     }
 }

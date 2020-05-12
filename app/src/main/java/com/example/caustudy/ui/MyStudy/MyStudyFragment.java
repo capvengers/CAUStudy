@@ -78,6 +78,8 @@ public class MyStudyFragment extends Fragment {
         // 스터디 리스트 목록부터 받아와야함(순서 중요)
         check_mystudy_list();
 
+        Log.d("study_list check :",study_list.toString());
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -98,6 +100,7 @@ public class MyStudyFragment extends Fragment {
             databaseReference_user.child(user_id).child("taken_study").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    singerAdapter.resetItem(); // 중복 방지
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         String study_list_raw = ds.getKey();
                         // 리스트에 값이 저장이 안되는거 같아서 일단 때려박았어..
@@ -110,6 +113,7 @@ public class MyStudyFragment extends Fragment {
                         number = tokens.nextToken();
 
                         get_study_info(L_cate, S_cate, number);
+                        Log.d("MyStudyFragment:check_mystudy_list: ",String.valueOf(number));
                     }
                 }
                 @Override

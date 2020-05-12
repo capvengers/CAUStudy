@@ -40,7 +40,7 @@ public class SearchStudyFragment extends Fragment {
     Spinner small_category, large_category;
     String l_cate, s_cate;
     Button btn;
-    ImageButton create_btn;
+    Button create_btn;
     ArrayAdapter<CharSequence> adapter_large, adapter_small; //어댑터를 선언
 
     List<String> listTitle = new ArrayList<>();
@@ -57,10 +57,12 @@ public class SearchStudyFragment extends Fragment {
         searchViewModel =
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_searchstudy, container, false);
+        //root.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
 
         btn = (Button)root.findViewById(R.id.search_btn);
 
-        create_btn = (ImageButton)root.findViewById(R.id.create_btn);
+        create_btn = (Button)root.findViewById(R.id.create_btn);
         create_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
