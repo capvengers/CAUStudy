@@ -1,227 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="15dp"
-    android:layout_marginTop="25dp"
+    android:layout_marginTop="45dp"
     android:layout_marginBottom="25dp"
     android:layout_marginRight="15dp"
     tools:context=".StudyDetailActivity">
 
-
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="198dp"
-        android:layout_height="41dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
-        android:layout_marginStart="10dp"
-        android:text="스터디 이름"
-        android:textColor="#6B95BB"
-        android:textSize="26dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.563"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="130dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_1"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="스터디 분류 :"
-            android:textSize="18dp"
-            android:textStyle="bold"></TextView>
-
-        <TextView
-            android:id="@+id/tv_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="스터디 기간 :"
-            android:textSize="18dp"
-            android:textStyle="bold"></TextView>
-
-        <TextView
-            android:id="@+id/tv_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="스터디 시간 :"
-            android:textSize="18dp"
-            android:textStyle="bold"></TextView>
-
-        <TextView
-            android:id="@+id/tv_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="스터디장 메일 :"
-            android:textSize="18dp"
-            android:textStyle="bold"></TextView>
-
-        <TextView
-            android:id="@+id/tv_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="스터디 소속 :"
-            android:textSize="18dp"
-            android:textStyle="bold"></TextView>
-
-        <TextView
-            android:id="@+id/tv_6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:text="스터디 소개 :"
-            android:textSize="18dp"
-            android:textStyle="bold"></TextView>
-
-    </LinearLayout>
-
-    <Button
-            android:id="@+id/apply_btn"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="619dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/blue_button"
-            android:text="스터디 신청"
-            android:textColor="#FFFFFF"
-            android:textSize="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:text="스터디 이름"
+            android:textAlignment="center"
+            android:textColor="#6B95BB"
+            android:textSize="26dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.862"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5"
-            app:layout_constraintVertical_bias="0.783" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="524dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="530dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical"
+                android:layout_marginRight="15dp"
+                app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+                <TextView
+                    android:id="@+id/tv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="스터디 분류 :"
+                    android:textSize="18dp"
+                    android:textStyle="bold"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="스터디 기간 :"
+                    android:textSize="18dp"
+                    android:textStyle="bold"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="스터디 시간 :"
+                    android:textSize="18dp"
+                    android:textStyle="bold"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="스터디장 메일 :"
+                    android:textSize="18dp"
+                    android:textStyle="bold"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="스터디 소속 :"
+                    android:textSize="18dp"
+                    android:textStyle="bold"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:text="스터디 소개 :"
+                    android:textSize="18dp"
+                    android:textStyle="bold"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="530dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    android:hint="카테고리 입력"
+                    android:textSize="18dp"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    android:hint="기간 입력"
+                    android:textSize="18dp"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:hint="시간 입력"
+                    android:textSize="18dp"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_leader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:hint="이메일 입력"
+                    android:textSize="18dp"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:hint="소개 입력"
+                    android:textSize="18dp"></TextView>
+
+                <TextView
+                    android:id="@+id/tv_org"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:hint="소속 입력"
+                    android:textSize="18dp"></TextView>
+            </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+        tools:layout_editor_absoluteX="30dp">
 
         <Button
             android:id="@+id/back_btn"
-            android:layout_width="150dp"
+            android:layout_width="151dp"
             android:layout_height="50dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="38dp"
-            android:layout_marginEnd="21dp"
+            android:layout_marginStart="40dp"
             android:layout_marginBottom="10dp"
-            android:layout_toStartOf="@+id/apply_btn"
             android:background="@drawable/button"
             android:text="뒤로가기"
             android:textColor="#FFFFFF"
             android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/apply_btn"
-            app:layout_constraintHorizontal_bias="0.551"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5"
-            app:layout_constraintVertical_bias="0.783" />
+            android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginStart="150dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+        <Button
+            android:id="@+id/apply_btn"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:hint="카테고리 입력"
-            android:textSize="18dp"></TextView>
-
-        <TextView
-            android:id="@+id/tv_period"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="40dp"
             android:layout_marginBottom="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:hint="기간 입력"
-            android:textSize="18dp"></TextView>
+            android:background="@drawable/blue_button"
+            android:text="스터디 신청"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:hint="시간 입력"
-            android:textSize="18dp"></TextView>
-
-        <TextView
-            android:id="@+id/tv_leader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:hint="이메일 입력"
-            android:textSize="18dp"></TextView>
-
-        <TextView
-            android:id="@+id/tv_org"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:hint="소속 입력"
-            android:textSize="18dp"></TextView>
-
-        <TextView
-            android:id="@+id/tv_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:hint="소개 입력"
-            android:textSize="18dp"></TextView>
     </LinearLayout>
-
-
-</RelativeLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
