@@ -1,8 +1,5 @@
 package com.example.caustudy.ui.searchstudy;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caustudy.R;
-import com.example.caustudy.StudyDetailActivity;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
 
@@ -22,7 +18,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemVi
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.studyitem, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_study, parent, false);
         return new ItemViewHolder(view);
     }
     @Override

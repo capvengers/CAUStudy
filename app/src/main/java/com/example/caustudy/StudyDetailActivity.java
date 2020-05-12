@@ -32,14 +32,18 @@ import java.util.StringTokenizer;
 public class StudyDetailActivity extends AppCompatActivity {
     long count = 0;
     private String study_name, l_cate, s_cate;
-    private String leader_email;
+    private String leader_email, auth_id;
+    private String key;
+    User applier;
     TextView tv_name;
+    private String auth_name, auth_email;
     Button apply, back;
     private FirebaseUser userAuth;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private PopupWindow mPopupWindow ;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference studyRef = database.getReference("StudyList");
+    DatabaseReference databaseReference_user = database.getReference("사용자");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +98,36 @@ public class StudyDetailActivity extends AppCompatActivity {
         });
 
     }
+    void get_user_info(){
+        if (userAuth != null) {
+            databaseReference_user.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (userAuth.getEmail().equals(ds.child("email").getValue())) {
+                            auth_name = ds.child("username").getValue().toString();
+                            auth_email = ds.child("email").getValue().toString();
+                            Log.d("test", auth_name);
+                            applier = new User(auth_email, auth_name);
+                            studyRef.child(l_cate).child(s_cate).child(key).child("applier_list").child(auth_id).setValue(applier);
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
+
+
+    }
+
     void apply_study(){
         mAuth = FirebaseAuth.getInstance();
         userAuth = mAuth.getCurrentUser();
+        String email = userAuth.getEmail();
+        StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
+        auth_id = stringTokenizer.nextToken(); //@ 분리
 
         if (userAuth != null) {
             studyRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -105,18 +136,16 @@ public class StudyDetailActivity extends AppCompatActivity {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (study_name.equals(ds.child("study_name").getValue().toString())) {
                             // 스터디 키 값 받아서 데이터 올리기
-                            String key = ds.getKey();
-                            String email = userAuth.getEmail();
-                            StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
                             StringTokenizer stringTokenizer_leader = new StringTokenizer(leader_email, "@");
-                            String id = stringTokenizer.nextToken(); //@ 분리
                             String leader_id = stringTokenizer_leader.nextToken();
-                            if (leader_id.equals(id)){
+                            if (leader_id.equals(auth_id)){
                                 Toast.makeText(getApplicationContext(), "자신이 만든 스터디는 신청할 수 없습니다.", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                             else {
-                                studyRef.child(l_cate).child(s_cate).child(key).child("applier_list").child(id).setValue(email);
+                                key = ds.getKey();
+                                Log.d("te",key);
+                                get_user_info();
                                 Toast.makeText(getApplicationContext(), "스터디 신청 전송", Toast.LENGTH_SHORT).show();
                             }
                             break;

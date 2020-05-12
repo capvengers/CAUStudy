@@ -47,7 +47,7 @@ public class MyStudy_Adapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public MyStudy_SingerItem getItem(int position) {
         return items.get(position);
     }
 
