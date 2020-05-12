@@ -15,6 +15,7 @@
         android:roundIcon="@drawable/cau"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".StudyMenuActivity"></activity>
         <activity android:name=".StudyDetailActivity" />
         <activity
             android:name=".MakeStudyActivity"

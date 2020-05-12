@@ -1,6 +1,7 @@
 package com.example.caustudy.ui.MyStudy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caustudy.Models.TextParsing;
 import com.example.caustudy.R;
+import com.example.caustudy.StudyDetailActivity;
+import com.example.caustudy.StudyMenuActivity;
 import com.example.caustudy.ui.searchstudy.RecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,50 +52,15 @@ public class MyStudyFragment extends Fragment {
     private FirebaseUser userAuth = mAuth.getCurrentUser();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference_user = firebaseDatabase.getReference("사용자");
+    DatabaseReference datebaseReference_study = firebaseDatabase.getReference("StudyList");
     StringTokenizer stringTokenizer = new StringTokenizer(userAuth.getEmail(), "@");
     String user_id = stringTokenizer.nextToken();
-
-    private String study_list_raw;
-    private List<String> study_list;
-
-
+    List<String> study_list = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-
         Log.d("study",user_id);
-
-
-        if (userAuth != null) {
-            databaseReference_user.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Log.d("study",ds.getKey().toString());
-                        if (ds.getKey().equals(user_id)) {
-                            try {
-                                study_list_raw = ds.child("taken_study").getValue().toString();
-                                study_list = TextParsing.toStringArray(study_list_raw);
-                                Log.d("study",study_list.toString());
-                                Log.d("study",study_list.get(0).toString());
-                            } catch (NullPointerException e) {
-                                Log.d("study","User not have any study");
-
-                            }
-                        } else {
-                            Log.d("study", "Cannot found user");
-                        }
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-        }
-
-
-
 
         myStudyViewModel = ViewModelProviders.of(this).get(MyStudyViewModel.class);
         View root = inflater.inflate(R.layout.fragment_mystudy, container, false);
@@ -102,22 +70,73 @@ public class MyStudyFragment extends Fragment {
         editText = (EditText)root.findViewById(R.id.editText);
         editText2 = (EditText)root.findViewById(R.id.editText2);
         button = (Button)root.findViewById(R.id.button);
-        singerAdapter = new MyStudy_Adapter();
-        singerAdapter.addItem(new MyStudy_SingerItem("dummy".toString(),"5.5~10.1","50:30","zp"));
-        //singerAdapter.addItem(new MyStudy_SingerItem("test","period","time","zp"));
 
+        singerAdapter = new MyStudy_Adapter();
         gridView.setAdapter(singerAdapter);
 
-        // 클릭시 행동할거!! 여기에 강의실 메뉴 뜨는 액티비티 넣으면 될거같은데
+        // 스터디 리스트 목록부터 받아와야함(순서 중요)
+        check_mystudy_list();
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                Intent intent = new Intent(getActivity(), StudyMenuActivity.class);
+                startActivity(intent);
             }
         });
-
         return root;
     }
 
+    void check_mystudy_list(){
+        if (userAuth != null) {
+            // 내가 가입한 스터디 목록 탐색
+            databaseReference_user.child(user_id).child("taken_study").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String study_list_raw = ds.getKey();
+                        // 리스트에 값이 저장이 안되는거 같아서 일단 때려박았어..
+                        study_list.add(study_list_raw); // 키 값 저장 (format = L_cate:S_cate:001)
 
+                        StringTokenizer tokens = new StringTokenizer(study_list_raw, ":");
+                        String L_cate, S_cate, number;
+                        L_cate = tokens.nextToken();
+                        S_cate = tokens.nextToken();
+                        number = tokens.nextToken();
+
+                        get_study_info(L_cate, S_cate, number);
+                    }
+                }
+                @Override
+                public void onCancelled (@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            //get_study_info();
+        }
+    }
+
+    void get_study_info(String L, String S, String num){
+            datebaseReference_study.child(L).child(S).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String title = ds.child("study_name").getValue().toString();
+                        String s_period = ds.child("s_period").getValue().toString();   // 시작일
+                        String e_period = ds.child("e_period").getValue().toString();   // 종료일
+                        String day = ds.child("study_day").getValue().toString();  // 요일
+                        String time = ds.child("study_time").getValue().toString();  // 시간
+                        String org = ds.child("organization").getValue().toString();  // 소속
+                        singerAdapter.addItem(new MyStudy_SingerItem(title,s_period+ " ~ " + e_period,day + " / " + time, org));
+                        singerAdapter.notifyDataSetChanged();
+
+                        //singerAdapter.addItem(new MyStudy_SingerItem("test","period","time","zp"));
+                    }
+                }
+
+                @Override
+                public void onCancelled (@NonNull DatabaseError databaseError){
+                }
+            });
+        }
 }
