@@ -1,6 +1,7 @@
 package com.example.caustudy.ui.MyStudy;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,11 +60,15 @@ public class MyStudy_Adapter extends BaseAdapter {
     public void addItem(MyStudy_SingerItem singerItem) {
         items.add(singerItem);
     }
+    public void resetItem() {
+        items = new ArrayList<MyStudy_SingerItem>();
+    }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         MyStudy_SingerViewer singerViewer = new MyStudy_SingerViewer(viewGroup.getContext().getApplicationContext());
         singerViewer.setItem(items.get(i));
+        Log.d("MyStudy_Adapter:getView:i ",String.valueOf(i));
         return singerViewer;
     }
 }

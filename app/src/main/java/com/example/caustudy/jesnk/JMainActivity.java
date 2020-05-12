@@ -43,14 +43,20 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
     private RecyclerView mPostRecyclerView;
     private PostAdaptor mAdapter;
     private List<Post> mDatas;
+    private String study_key, study_name, email, name, id;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        study_key = intent.getStringExtra("study_key");
+        study_name = intent.getStringExtra("study_name");
+        Log.d("intent_test: study_key",study_key);
+        Log.d("intent_test: study_name",study_name);
         setContentView(R.layout.activity_j_main);
         mPostRecyclerView = findViewById(R.id.main_recyclerview);
-
         findViewById(R.id.jmain_post_edit).setOnClickListener(this);
 
     }
@@ -59,6 +65,33 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
         mDatas = new ArrayList<>();
+        mStore.collection(study_key + ":notice").orderBy("time_stamp", Query.Direction.DESCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() { // For real-time update
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (queryDocumentSnapshots != null) {
+                            mDatas.clear(); // For post-order
+                            for (DocumentSnapshot snap : queryDocumentSnapshots.getDocuments()) {
+                                Map<String, Object> shot = snap.getData();
+                                String uId = String.valueOf(shot.get("author_uid"));
+                                String user_name = String.valueOf(shot.get("user_name"));
+                                String title = String.valueOf(shot.get("title"));
+                                String contents = String.valueOf(shot.get("content"));
+
+                                Timestamp time_stamp = (Timestamp)shot.get("time_stamp");
+                                Post data = new Post(uId,user_name,title,contents);
+                                data.time_stamp = time_stamp;
+
+                                mDatas.add(data);
+                                mAdapter = new PostAdaptor(mDatas);
+                                mPostRecyclerView.setAdapter(mAdapter);
+
+                            }
+                        }
+                    }
+                });
+
+        /*
         mStore.collection("Posts")
                 .orderBy("time_stamp", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() { // For real-time update
@@ -85,11 +118,16 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }
                 });
+
+         */
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(this, PostActivity.class));
+        Intent intent = new Intent(this, PostActivity.class);
+        intent.putExtra("study_key", study_key );
+        intent.putExtra("study_name", study_name );
+        startActivity(intent);
 
     }
 }
