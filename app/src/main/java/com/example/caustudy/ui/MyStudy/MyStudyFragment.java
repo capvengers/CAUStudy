@@ -48,6 +48,7 @@ public class MyStudyFragment extends Fragment {
     EditText editText;
     EditText editText2;
     Button button;
+    String number;
     MyStudy_Adapter singerAdapter;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser userAuth = mAuth.getCurrentUser();
@@ -107,12 +108,12 @@ public class MyStudyFragment extends Fragment {
                         study_list.add(study_list_raw); // 키 값 저장 (format = L_cate:S_cate:001)
 
                         StringTokenizer tokens = new StringTokenizer(study_list_raw, ":");
-                        String L_cate, S_cate, number;
+                        String L_cate, S_cate;
                         L_cate = tokens.nextToken();
                         S_cate = tokens.nextToken();
                         number = tokens.nextToken();
 
-                        get_study_info(L_cate, S_cate, number);
+                        get_study_info(L_cate, S_cate);
                         Log.d("MyStudyFragment:check_mystudy_list: ",String.valueOf(number));
                     }
                 }
@@ -125,20 +126,21 @@ public class MyStudyFragment extends Fragment {
         }
     }
 
-    void get_study_info(String L, String S, String num){
+    void get_study_info(String L, String S){
             datebaseReference_study.child(L).child(S).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        String title = ds.child("study_name").getValue().toString();
-                        String s_period = ds.child("s_period").getValue().toString();   // 시작일
-                        String e_period = ds.child("e_period").getValue().toString();   // 종료일
-                        String day = ds.child("study_day").getValue().toString();  // 요일
-                        String time = ds.child("study_time").getValue().toString();  // 시간
-                        String org = ds.child("organization").getValue().toString();  // 소속
-                        singerAdapter.addItem(new MyStudy_SingerItem(title,s_period+ " ~ " + e_period,day + " / " + time, org));
-                        singerAdapter.notifyDataSetChanged();
-
+                        if (ds.getKey().equals(number)) {
+                            String title = ds.child("study_name").getValue().toString();
+                            String s_period = ds.child("s_period").getValue().toString();   // 시작일
+                            String e_period = ds.child("e_period").getValue().toString();   // 종료일
+                            String day = ds.child("study_day").getValue().toString();  // 요일
+                            String time = ds.child("study_time").getValue().toString();  // 시간
+                            String org = ds.child("organization").getValue().toString();  // 소속
+                            singerAdapter.addItem(new MyStudy_SingerItem(title, s_period + " ~ " + e_period, day + " / " + time, org));
+                            singerAdapter.notifyDataSetChanged();
+                        }
                         //singerAdapter.addItem(new MyStudy_SingerItem("test","period","time","zp"));
                     }
                 }
