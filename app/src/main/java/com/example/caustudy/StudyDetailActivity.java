@@ -35,7 +35,8 @@ public class StudyDetailActivity extends AppCompatActivity {
     private String leader_email, auth_id;
     private String key;
     User applier;
-    TextView tv_name;
+    TextView tv_title, tv_period, tv_category, tv_time, tv_leader, tv_info, tv_org;
+    String title, period, category, time, leader, info, org;
     private String auth_name, auth_email;
     Button apply, back;
     private FirebaseUser userAuth;
@@ -49,6 +50,15 @@ public class StudyDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_detail);
+
+        tv_title = (TextView)findViewById(R.id.tv_title);
+        tv_period = (TextView)findViewById(R.id.tv_period);
+        tv_category = (TextView)findViewById(R.id.tv_category);
+        tv_leader = (TextView)findViewById(R.id.tv_leader);
+        tv_time= (TextView)findViewById(R.id.tv_time);
+        tv_info = (TextView)findViewById(R.id.tv_info);
+        tv_org = (TextView)findViewById(R.id.tv_org);
+
 
         apply = (Button)findViewById(R.id.apply_btn);
         back = (Button)findViewById(R.id.back_btn);
@@ -169,9 +179,29 @@ public class StudyDetailActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (study_name.equals(ds.child("study_name").getValue().toString())) {
-                        String key = ds.getKey();
-                        leader_email = ds.child("leader_email").getValue().toString();
                         // 상세 데이터 가져오기
+                        String L = ds.child("L_category").getValue().toString();
+                        String S = ds.child("S_category").getValue().toString();
+                        String e_day = ds.child("e_period").getValue().toString();
+                        String s_day = ds.child("s_period").getValue().toString();
+                        info = ds.child("info").getValue().toString();
+                        leader_email = ds.child("leader_email").getValue().toString();
+
+                        category = L + " / " + S;
+                        period = s_day + " ~ " + e_day;
+                        leader = ds.child("leader_email").getValue().toString();
+                        org = ds.child("organization").getValue().toString();
+                        String study_day = ds.child("study_day").getValue().toString();
+                        String study_time = ds.child("study_time").getValue().toString();
+                        time = "매주 " + study_day + " / " + study_time;
+
+                        tv_category.setText(category);
+                        tv_title.setText(title);
+                        tv_period.setText(period);
+                        tv_time.setText(time);
+                        tv_leader.setText(leader);
+                        tv_org.setText(org);
+                        tv_info.setText(info);
                     }
                 }
             }
