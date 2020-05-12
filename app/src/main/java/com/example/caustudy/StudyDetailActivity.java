@@ -27,9 +27,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.StringTokenizer;
+
 public class StudyDetailActivity extends AppCompatActivity {
     long count = 0;
     private String study_name, l_cate, s_cate;
+    private String leader_email;
     TextView tv_name;
     Button apply, back;
     private FirebaseUser userAuth;
@@ -52,6 +55,7 @@ public class StudyDetailActivity extends AppCompatActivity {
 
         get_study_info();
         set_view();
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
@@ -75,7 +79,6 @@ public class StudyDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         apply_study();
-                        Toast.makeText(getApplicationContext(), "스터디 신청 전송", Toast.LENGTH_SHORT).show();
                         mPopupWindow.dismiss();
                         finish();
                     }
@@ -92,7 +95,6 @@ public class StudyDetailActivity extends AppCompatActivity {
 
     }
     void apply_study(){
-
         mAuth = FirebaseAuth.getInstance();
         userAuth = mAuth.getCurrentUser();
 
@@ -101,15 +103,21 @@ public class StudyDetailActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        count++;
                         if (study_name.equals(ds.child("study_name").getValue().toString())) {
                             // 스터디 키 값 받아서 데이터 올리기
                             String key = ds.getKey();
                             String email = userAuth.getEmail();
-                            if (count >= 9) {
-                                studyRef.child(l_cate).child(s_cate).child(key).child("applier_list").child("0" + (count + 1)).setValue(email);
-                            } else {
-                                studyRef.child(l_cate).child(s_cate).child(key).child("applier_list").child("00" + (count + 1)).setValue(email);
+                            StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
+                            StringTokenizer stringTokenizer_leader = new StringTokenizer(leader_email, "@");
+                            String id = stringTokenizer.nextToken(); //@ 분리
+                            String leader_id = stringTokenizer_leader.nextToken();
+                            if (leader_id.equals(id)){
+                                Toast.makeText(getApplicationContext(), "자신이 만든 스터디는 신청할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                            else {
+                                studyRef.child(l_cate).child(s_cate).child(key).child("applier_list").child(id).setValue(email);
+                                Toast.makeText(getApplicationContext(), "스터디 신청 전송", Toast.LENGTH_SHORT).show();
                             }
                             break;
                         } else {
@@ -132,6 +140,8 @@ public class StudyDetailActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (study_name.equals(ds.child("study_name").getValue().toString())) {
+                        String key = ds.getKey();
+                        leader_email = ds.child("leader_email").getValue().toString();
                         // 상세 데이터 가져오기
                     }
                 }

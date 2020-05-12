@@ -49,7 +49,9 @@ public class MakeStudyActivity extends AppCompatActivity {
     Spinner small_category, large_category;
     StudyModel study;
     long count=0;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference userRef = database.getReference("사용자");
     DatabaseReference studyRef = database.getReference("StudyList");
     private ToggleButton _toggleSun, _toggleMon, _toggleTue, _toggleWed, _toggleThu, _toggleFri, _toggleSat;
 
@@ -75,13 +77,13 @@ public class MakeStudyActivity extends AppCompatActivity {
         _toggleFri = (ToggleButton) findViewById(R.id.toggle_fri);
         _toggleSat = (ToggleButton) findViewById(R.id.toggle_sat);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         if (user != null){
             for (UserInfo profile : user.getProviderData()){
-                name = profile.getDisplayName();
                 email = profile.getEmail();
             }
         }
+
         tv_start = (TextView)findViewById(R.id.start_day);
         tv_start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,34 +239,71 @@ public class MakeStudyActivity extends AppCompatActivity {
             day = day + "일";
         }
     }
+    void set_leader_user() {
+        if (user != null) {
+            Log.d("test","userAuth ok");
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (user.getEmail().equals(ds.child("email").getValue().toString())) {
+                            String key = ds.getKey();
+                            name = ds.child("username").getValue().toString();
 
-    public void registerStudy() {
-        checkDay();
-        study_name = study_name_e.getText().toString();
-        organization = organization_e.getText().toString();
-        tag = tag_e.getText().toString();
-        info = info_e.getText().toString();
-        study = new StudyModel(study_name, organization, l_cate, s_cate, name, email, info, s_period, e_period, day, time);
-        StringTokenizer stringTokenizer = new StringTokenizer(tag, "#");
+                            if (count >= 9) {
+                                userRef.child(key).child("maken_study").child(l_cate + ":"+ s_cate + ":" + "0" + (count)).setValue(study_name);
+                            } else {
+                                userRef.child(key).child("maken_study").child(l_cate + ":"+ s_cate + ":" + "00" + (count)).setValue(study_name);
+                            }
+                        }
+                        else {
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
+    }
 
-        Toast.makeText(MakeStudyActivity.this, "신규 스터디가 생성되었습니다!", Toast.LENGTH_LONG).show();
-
-        studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    void make_key_value() {
+        studyRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     count++;
                 }
-                if (count >= 9) {
-                    studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).setValue(study);
-                } else {
-                    studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
-                }
-
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+    public void registerStudy() {
+        checkDay();
+        make_key_value();
+
+        study_name = study_name_e.getText().toString();
+        organization = organization_e.getText().toString();
+        tag = tag_e.getText().toString();
+        info = info_e.getText().toString();
+        study = new StudyModel(study_name, organization, l_cate, s_cate, name, email, info, s_period, e_period, day, time);
+        //StringTokenizer stringTokenizer = new StringTokenizer(tag, "#");
+
+        Toast.makeText(MakeStudyActivity.this, "신규 스터디가 생성되었습니다!", Toast.LENGTH_LONG).show();
+
+        // input data in user DB
+        set_leader_user();
+        // input data in study DB
+        StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
+        String id = stringTokenizer.nextToken(); //@ 분리
+        if (count >= 9) {
+            studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).setValue(study);
+            studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).child("member_list").child(id).setValue(email);
+        } else {
+            studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
+            studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).child("member_list").child(id).setValue(email);
+        }
     }
 }

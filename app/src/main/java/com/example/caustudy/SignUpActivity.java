@@ -178,9 +178,11 @@ public class SignUpActivity extends AppCompatActivity {
                                             User user = new User(email, name);
                                             StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
                                             if (count >= 9) {
-                                                myRef.child("user0" + (count + 1) + ":" + stringTokenizer.nextToken()).setValue(user);
+                                                myRef.child(stringTokenizer.nextToken()).setValue(user);
+                                                //myRef.child("user0" + (count + 1)).setValue(user);
                                             } else {
-                                                myRef.child("user00" + (count + 1) + ":" + stringTokenizer.nextToken()).setValue(user);
+                                                myRef.child(stringTokenizer.nextToken()).setValue(user);
+                                                //myRef.child("user00" + (count + 1)).setValue(user);
                                             }
                                         }
 
