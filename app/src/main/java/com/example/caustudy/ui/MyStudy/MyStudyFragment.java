@@ -43,6 +43,7 @@ import java.util.StringTokenizer;
 public class MyStudyFragment extends Fragment {
 
     private MyStudyViewModel myStudyViewModel;
+
     GridView gridView;
     EditText editText;
     EditText editText2;
@@ -81,6 +82,10 @@ public class MyStudyFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), StudyMenuActivity.class);
+                intent.putExtra("study_key", study_list.get(i) );
+                MyStudy_SingerItem item = singerAdapter.getItem(i);
+                String title = item.getTitle();
+                intent.putExtra("study_name", title);
                 startActivity(intent);
             }
         });

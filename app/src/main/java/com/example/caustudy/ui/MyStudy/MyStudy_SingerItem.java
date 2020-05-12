@@ -14,6 +14,7 @@ public class MyStudy_SingerItem {
     public MyStudy_SingerItem() {
 
     }
+
     public MyStudy_SingerItem(String title, String period, String time, String organization) {
         this.title = title;
         this.period = period;

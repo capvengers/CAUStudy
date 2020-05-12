@@ -144,8 +144,8 @@ public class SearchStudyFragment extends Fragment {
         rv.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapter();
         adapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
+                @Override
+                public void onItemClick(View v, int position){
                 Intent intent = new Intent(getActivity(), StudyDetailActivity.class);
                 intent.putExtra("study_name",listTitle.get(position) );
                 intent.putExtra("l_cate",l_cate);
