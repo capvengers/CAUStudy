@@ -194,7 +194,7 @@ public class StudyDetailActivity extends AppCompatActivity {
                         String study_day = ds.child("study_day").getValue().toString();
                         String study_time = ds.child("study_time").getValue().toString();
                         time = "매주 " + study_day + " / " + study_time;
-
+                        title = study_name;
                         tv_category.setText(category);
                         tv_title.setText(title);
                         tv_period.setText(period);
