@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +26,7 @@ import com.example.caustudy.jesnk.JMainActivity;
 public class StudyMenuActivity extends AppCompatActivity {
     private String study_key, study_name, leader_email;
     String l_cate, s_cate, number;
+    TextView title;
     private FirebaseUser userAuth;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("StudyList");
@@ -33,9 +35,11 @@ public class StudyMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_menu);
+        title = findViewById(R.id.textView_studyname);
         Intent intent = getIntent();
         study_key = intent.getStringExtra("study_key");
         study_name = intent.getStringExtra("study_name");
+        title.setText(study_name);
 
 //merge part
         mAuth = FirebaseAuth.getInstance();

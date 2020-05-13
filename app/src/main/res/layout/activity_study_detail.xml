@@ -167,6 +167,15 @@
                     android:textSize="18dp"></TextView>
 
                 <TextView
+                    android:id="@+id/tv_org"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:hint="소속 입력"
+                    android:textSize="18dp"></TextView>
+                <TextView
                     android:id="@+id/tv_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -176,15 +185,7 @@
                     android:hint="소개 입력"
                     android:textSize="18dp"></TextView>
 
-                <TextView
-                    android:id="@+id/tv_org"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="10dp"
-                    android:hint="소속 입력"
-                    android:textSize="18dp"></TextView>
+
             </LinearLayout>
         </LinearLayout>
 
