@@ -35,6 +35,7 @@ public class SettingStudyActivity extends AppCompatActivity {
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("StudyList");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +65,14 @@ public class SettingStudyActivity extends AppCompatActivity {
                 myRef.child(l_cate).child(s_cate).child(number).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
+                    }
+                });
+                // Test
+                myRef.child(l_cate).child(s_cate).child(number).child("member_list").child(id).setValue(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -76,7 +84,7 @@ public class SettingStudyActivity extends AppCompatActivity {
                 myRef.child(l_cate).child(s_cate).child(number).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
                     }
                 });
             }
