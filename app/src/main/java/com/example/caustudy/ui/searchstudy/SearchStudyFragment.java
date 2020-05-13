@@ -57,7 +57,6 @@ public class SearchStudyFragment extends Fragment {
         searchViewModel =
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_searchstudy, container, false);
-        //root.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN |View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
 
         btn = (Button)root.findViewById(R.id.search_btn);
