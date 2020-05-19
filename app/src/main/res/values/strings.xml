@@ -7,6 +7,37 @@
     <string name="title_activity_login">로그인</string>
     <string name="title_activity_sign_up">회원가입</string>
 
+    <string name="default_notification_channel_id">Channel ID</string>
+    <string name="default_notification_channel_name" translatable="true">Test</string>
+
+    <string-array name="spinner_dept">
+        <item>공과대학</item>
+        <item>창의ICT공과대학</item>
+        <item>경영경제대학</item>
+    </string-array>
+    <string-array name="spinner_dept_engineering">
+        <item>기계공학부</item>
+        <item>사회기반시스템공학부</item>
+        <item>에너지시스템공학부</item>
+        <item>건축공학부</item>
+        <item>화학신소재공학부</item>
+    </string-array>
+    <string-array name="spinner_dept_ict_engineering">
+        <item>소프트웨어학부</item>
+        <item>융합공학부</item>
+        <item>전기전자공학부</item>
+    </string-array>
+    <string-array name="spinner_dept_management">
+        <item>경영학부</item>
+        <item>경제학부</item>
+        <item>광고홍보학과</item>
+        <item>국제물류학과</item>
+        <item>글로벌금융학과</item>
+        <item>응용통계학과</item>
+        <item>산업보안학과</item>
+    </string-array>
+
+
     <string-array name="spinner_do">
         <item>전공</item>
         <item>어학</item>

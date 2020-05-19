@@ -109,34 +109,7 @@ public class MyStudyFragment extends Fragment {
                         S_cate = tokens.nextToken();
                         number = tokens.nextToken();
 
-                        datebaseReference_study.child(L_cate).child(S_cate).addListenerForSingleValueEvent(new ValueEventListener() {
-                            String num = number;
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                    if (ds.getKey().equals(num)) {
-                                        String title = ds.child("study_name").getValue().toString();
-                                        String s_period = ds.child("s_period").getValue().toString();   // 시작일
-                                        String e_period = ds.child("e_period").getValue().toString();   // 종료일
-                                        String day = ds.child("study_day").getValue().toString();  // 요일
-                                        String time = ds.child("study_time").getValue().toString();  // 시간
-                                        String org = ds.child("organization").getValue().toString();  // 소속
-                                        singerAdapter.addItem(new MyStudy_SingerItem(title, s_period + " ~ " + e_period, day + " / " + time, org));
-                                        singerAdapter.notifyDataSetChanged();
-                                    }
-                                    //singerAdapter.addItem(new MyStudy_SingerItem("test","period","time","zp"));
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled (@NonNull DatabaseError databaseError){
-                            }
-                        });
-
-
-
-
-                        //get_study_info(L_cate, S_cate);
+                        get_study_info(L_cate, S_cate);
                         Log.d("MyStudyFragment:check_mystudy_list: ",String.valueOf(number));
                     }
                 }

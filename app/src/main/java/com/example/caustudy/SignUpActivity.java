@@ -16,9 +16,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,13 +51,18 @@ public class SignUpActivity extends AppCompatActivity {
 
     private static final Pattern PWD_RULE=Pattern.compile("^[a-zA-Z0-9!@.#$%^&*?_~]{6,16}$");
     private static final Pattern EMAIL_RULE=Pattern.compile("^[a-zA-Z0-9]+@cau.ac.kr+$");
-    private EditText email_e,pwd_e,check_pwd,name_e;
+    private EditText email_e,pwd_e,check_pwd,name_e, hashtag_e;
     private TextView check_show;
+    private Spinner L_cate, S_cate;
+    ArrayAdapter<CharSequence> adapter_large, adapter_small; //어댑터를 선언
     private Button signup_btn;
     long count=0;
     private String email="";
     private String pwd="";
     private String name="";
+    private String L_deptname="";
+    private String S_deptname="";
+    private String hashtag="";
     public static int TM_OUT = 1001;
 
     ProgressDialog dialog;
@@ -68,6 +76,64 @@ public class SignUpActivity extends AppCompatActivity {
         name_e=(EditText)findViewById(R.id.name);
         check_show=(TextView)findViewById(R.id.checkText);
         signup_btn=(Button)findViewById(R.id.sign_up);
+        hashtag_e = (EditText)findViewById(R.id.hashtag);
+        L_cate=(Spinner)findViewById(R.id.large_dept);
+        S_cate=(Spinner)findViewById(R.id.small_dept);
+        adapter_large = ArrayAdapter.createFromResource(SignUpActivity.this, R.array.spinner_dept, android.R.layout.simple_spinner_dropdown_item);
+        L_cate.setAdapter(adapter_large);
+
+        L_cate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (adapter_large.getItem(i).equals("공과대학")) {
+                    L_deptname = "공과대학";
+                    adapter_small = ArrayAdapter.createFromResource(SignUpActivity.this, R.array.spinner_dept_engineering, android.R.layout.simple_spinner_dropdown_item);
+                    adapter_small.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    S_cate.setAdapter(adapter_small);
+                    S_cate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            S_deptname = adapter_small.getItem(i).toString();
+                        }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+                        }
+                    });
+                } else if (adapter_large.getItem(i).equals("창의ICT공과대학")) {
+                    L_deptname = "창의ICT공과대학";
+                    adapter_small = ArrayAdapter.createFromResource(SignUpActivity.this, R.array.spinner_dept_ict_engineering, android.R.layout.simple_spinner_dropdown_item);
+                    adapter_small.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    S_cate.setAdapter(adapter_small);
+                    S_cate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            S_deptname = adapter_small.getItem(i).toString();
+                        }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+                        }
+                    });
+                } else if (adapter_large.getItem(i).equals("경영경제대학")) {
+                    L_deptname = "경영경제대학";
+                    adapter_small = ArrayAdapter.createFromResource(SignUpActivity.this, R.array.spinner_dept_management, android.R.layout.simple_spinner_dropdown_item);
+                    adapter_small.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    S_cate.setAdapter(adapter_small);
+                    S_cate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                            S_deptname = adapter_small.getItem(i).toString();
+                        }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         //비밀번호 일치하는지 확인, 일치 시에 회원가입 가능
         check_pwd.addTextChangedListener(new TextWatcher() {
@@ -87,10 +153,10 @@ public class SignUpActivity extends AppCompatActivity {
                 String temp2=check_pwd.getText().toString();
 
                 if(temp1.equals(temp2)){
-                    check_show.setText("비밀번호가 일치합니다.");
+                    check_show.setText("일치");
                     signup_btn.setEnabled(true);
                 }else{
-                    check_show.setText("비밀번호가 일치하지 않습니다.");
+                    check_show.setText("불일치");
                 }
             }
         });
@@ -140,6 +206,7 @@ public class SignUpActivity extends AppCompatActivity {
         email=email_e.getText().toString();
         pwd=pwd_e.getText().toString();
         name=name_e.getText().toString();
+        hashtag=hashtag_e.getText().toString();
         if(isValidEmail()==false){
             Toast.makeText(SignUpActivity.this,"중앙대학교 이메일을 입력해주세요",Toast.LENGTH_SHORT).show();
         }
@@ -175,7 +242,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 count++;
                                             }
 
-                                            User user = new User(email, name);
+                                            User user = new User(email, name, L_deptname, S_deptname, hashtag);
                                             StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
                                             if (count >= 9) {
                                                 myRef.child(stringTokenizer.nextToken()).setValue(user);
