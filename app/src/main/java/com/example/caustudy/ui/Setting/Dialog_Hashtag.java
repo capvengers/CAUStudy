@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.caustudy.MainActivity;
 import com.example.caustudy.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,7 +69,7 @@ public class Dialog_Hashtag {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(context, "\"" +  message.getText().toString() + "\" 을 관심 태그에 추가하였습니다.", Toast.LENGTH_SHORT).show();
-
+                        ((Setting_HashtagActivity)Setting_HashtagActivity.mContext).show_data();
                     }
                 });
                 // 커스텀 다이얼로그를 종료한다.
