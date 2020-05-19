@@ -40,8 +40,6 @@ public class MyStudy_Adapter extends BaseAdapter {
     }
 
 
-
-
     @Override
     public int getCount() {
         return items.size();
