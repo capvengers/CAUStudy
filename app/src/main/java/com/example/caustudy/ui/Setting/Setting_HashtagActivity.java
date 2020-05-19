@@ -55,7 +55,6 @@ public class Setting_HashtagActivity extends AppCompatActivity {
     public static Context mContext;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +63,11 @@ public class Setting_HashtagActivity extends AppCompatActivity {
         Intent intent = getIntent();
         recyclerView = findViewById(R.id.hashtag_list);
         mContext = this;
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(Setting_HashtagActivity.this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+
         show_data();
 
         // 새로운 태그 추가 버튼. 여기서 notifyDataSetChanged() 가 제대로 안먹히는 문제 있음
@@ -72,34 +76,12 @@ public class Setting_HashtagActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Dialog_Hashtag dialog_hashtag = new Dialog_Hashtag(Setting_HashtagActivity.this);
                 dialog_hashtag.callFunction();
-                // 위의 함수 정의 따라가보면, 새로운 태그 디비에 저장까지 수행하는데
-                // 밑의 notifyDataSetChanged() 코드로 새로운 태그 들어온거 업데이트해야하는데 작동안함
             }
 
         });
-
-        // 삭제 버튼 구현. 이거도 이상한게, 여러개 연속해서 삭제할때에 제대로 작동안함
-        adapter.setOnItemClickListener(new HashtagSettingAdapter.OnItemClickListener() {
-            @Override
-            public void onDeleteClick(View v, int position) {
-                String tagName = listTag.get(position);
-                userRef.child(user_id).child("hashtag").child(tagName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-                adapter.notifyDataSetChanged();
-
-            }
-
-        });
-
     }
 
     public void show_data(){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(Setting_HashtagActivity.this);
-        recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new HashtagSettingAdapter();
         recyclerView.setAdapter(adapter);
         // DB 불러와서 RecyclerView에 띄우
@@ -122,7 +104,20 @@ public class Setting_HashtagActivity extends AppCompatActivity {
 
             }
         });
-
+        // 삭제 버튼 구현. 이거도 이상한게, 여러개 연속해서 삭제할때에 제대로 작동안함
+        adapter.setOnItemClickListener(new HashtagSettingAdapter.OnItemClickListener() {
+            @Override
+            public void onDeleteClick(View v, int position) {
+                String tagName = listTag.get(position);
+                userRef.child(user_id).child("hashtag").child(tagName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 }
 
