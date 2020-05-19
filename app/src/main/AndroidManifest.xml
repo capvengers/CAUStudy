@@ -16,6 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".QuestionActivity"></activity>
+        <activity android:name=".ui.Setting.Setting_HashtagActivity"></activity>
+        <activity android:name=".ui.Setting.SettingFragment" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"

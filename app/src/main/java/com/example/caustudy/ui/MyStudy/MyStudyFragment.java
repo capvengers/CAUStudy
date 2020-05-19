@@ -70,12 +70,12 @@ public class MyStudyFragment extends Fragment {
         gridView = (GridView)root.findViewById(R.id.gridView);
 
         singerAdapter = new MyStudy_Adapter();
-        gridView.setAdapter(singerAdapter);
 
         // 스터디 리스트 목록부터 받아와야함(순서 중요)
         check_mystudy_list();
 
         Log.d("study_list check :",study_list.toString());
+        gridView.setAdapter(singerAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -109,8 +109,35 @@ public class MyStudyFragment extends Fragment {
                         S_cate = tokens.nextToken();
                         number = tokens.nextToken();
 
-                        get_study_info(L_cate, S_cate);
-                        Log.d("MyStudyFragment:check_mystudy_list: ",String.valueOf(number));
+
+                        //get_study_info
+                        datebaseReference_study.child(L_cate).child(S_cate).addListenerForSingleValueEvent(new ValueEventListener() {
+                            // Important!! assign number to Local variable : num.
+                            // Sharing Global variable causes inorder error
+                            String num = number;
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    if (ds.getKey().equals(num)) {
+                                        String title = ds.child("study_name").getValue().toString();
+                                        String s_period = ds.child("s_period").getValue().toString();   // 시작일
+                                        String e_period = ds.child("e_period").getValue().toString();   // 종료일
+                                        String day = ds.child("study_day").getValue().toString();  // 요일
+                                        String time = ds.child("study_time").getValue().toString();  // 시간
+                                        String org = ds.child("organization").getValue().toString();  // 소속
+                                        Log.d("MyStudyFragment:additem : : ",  number + title);
+                                        singerAdapter.addItem(new MyStudy_SingerItem(title, s_period + " ~ " + e_period, day + " / " + time, org));
+                                        singerAdapter.notifyDataSetChanged();
+                                    }
+                                    //singerAdapter.addItem(new MyStudy_SingerItem("test","period","time","zp"));
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled (@NonNull DatabaseError databaseError){
+                            }
+                        });
+                        Log.d("MyStudyFragment:check_mystudy_list: ",L_cate + S_cate + String.valueOf(number));
                     }
                 }
                 @Override
