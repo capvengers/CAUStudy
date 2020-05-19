@@ -41,7 +41,6 @@ public class StudyMenuActivity extends AppCompatActivity {
         study_name = intent.getStringExtra("study_name");
         title.setText(study_name);
 
-//merge part
         mAuth = FirebaseAuth.getInstance();
         userAuth = mAuth.getCurrentUser();
 
@@ -65,11 +64,17 @@ public class StudyMenuActivity extends AppCompatActivity {
             }
         });
 
-
         Button notice_btn = (Button)findViewById(R.id.notice_btn);
-// merge part end
-
         Button setting_btn = (Button)findViewById(R.id.setting_btn);
+
+        Button question_btn = (Button)findViewById(R.id.question);
+        question_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StudyMenuActivity.this, QuestionActivity.class);
+                startActivity(intent);
+            }
+        });
 
         notice_btn.setOnClickListener(new View.OnClickListener() {
             @Override

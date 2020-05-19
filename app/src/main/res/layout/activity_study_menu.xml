@@ -68,7 +68,7 @@
         android:textSize="25dp"/>
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/question"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_below="@+id/button4"
@@ -77,7 +77,7 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/blue_button"
         android:textColor="#FFFFFF"
-        android:text="기타"
+        android:text="1:1 문의"
         android:textStyle="bold"
         android:textSize="25dp"/>
 
@@ -85,7 +85,7 @@
         android:id="@+id/setting_btn"
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:layout_below="@+id/button5"
+        android:layout_below="@+id/question"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="5dp"
