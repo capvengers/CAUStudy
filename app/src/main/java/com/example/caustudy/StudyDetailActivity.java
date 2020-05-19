@@ -160,7 +160,7 @@ public class StudyDetailActivity extends AppCompatActivity {
                             }
                             break;
                         } else {
-                            Toast.makeText(getApplicationContext(), "데이터베이스에 해당 스터디가 없습니다.", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "데이터베이스에 해당 스터디가 없습니다.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

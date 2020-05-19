@@ -10,11 +10,28 @@
     android:layout_marginTop="10dp"
     tools:context=".StudyMenuActivity">
 
+    <TextView
+        android:id="@+id/textView_studyname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="16dp"
+        android:text="스터디 이름"
+        android:textAlignment="center"
+        android:textColor="#6B95BB"
+        android:textSize="29dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/notice_btn"
         android:layout_width="match_parent"
         android:background="@drawable/blue_button"
         android:layout_height="110dp"
+        android:layout_marginTop="110dp"
         android:layout_marginBottom="5dp"
         android:layout_weight="1"
         android:text="공지사항"

@@ -18,9 +18,10 @@
             android:id="@+id/item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:includeFontPadding="false"
             android:text="TITLE"
-            android:textSize="23dp"
+            android:textSize="20dp"
             android:textColor="#0075BB"
             android:textStyle="bold"/>
 
@@ -30,7 +31,7 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:text="스터디 기간"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="@android:color/darker_gray"/>
 
         <TextView
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:text="스터디 시간"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="@android:color/darker_gray"/>
         <TextView
             android:id="@+id/item_leader"
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:text="스터디장 이메일"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="@android:color/darker_gray"/>
         <TextView
             android:id="@+id/item_org"
@@ -55,7 +56,7 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:text="단체"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="@android:color/darker_gray"/>
         <TextView
             android:id="@+id/item_info"
@@ -63,7 +64,7 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:text="소개"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:textColor="@android:color/darker_gray"/>
     </LinearLayout>
 </LinearLayout>

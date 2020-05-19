@@ -251,9 +251,9 @@ public class MakeStudyActivity extends AppCompatActivity {
                             name = ds.child("username").getValue().toString();
 
                             if (count >= 9) {
-                                userRef.child(key).child("taken_study").child(l_cate + ":"+ s_cate + ":" + "0" + (count)).setValue(study_name);
+                                userRef.child(key).child("taken_study").child(l_cate + ":"+ s_cate + ":" + "0" + (count+1)).setValue(study_name);
                             } else {
-                                userRef.child(key).child("taken_study").child(l_cate + ":"+ s_cate + ":" + "00" + (count)).setValue(study_name);
+                                userRef.child(key).child("taken_study").child(l_cate + ":"+ s_cate + ":" + "00" + (count+1)).setValue(study_name);
                             }
                         }
                         else {

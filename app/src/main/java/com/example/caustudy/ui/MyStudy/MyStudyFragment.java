@@ -69,7 +69,6 @@ public class MyStudyFragment extends Fragment {
 
         gridView = (GridView)root.findViewById(R.id.gridView);
 
-
         singerAdapter = new MyStudy_Adapter();
         gridView.setAdapter(singerAdapter);
 
