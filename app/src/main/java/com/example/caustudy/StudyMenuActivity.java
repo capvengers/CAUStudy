@@ -2,12 +2,17 @@ package com.example.caustudy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +40,7 @@ public class StudyMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_menu);
+
         title = findViewById(R.id.textView_studyname);
         Intent intent = getIntent();
         study_key = intent.getStringExtra("study_key");
@@ -48,7 +54,6 @@ public class StudyMenuActivity extends AppCompatActivity {
         l_cate = tokens.nextToken();
         s_cate = tokens.nextToken();
         number = tokens.nextToken();
-
 
         studyRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -64,40 +69,65 @@ public class StudyMenuActivity extends AppCompatActivity {
             }
         });
 
-        Button notice_btn = (Button)findViewById(R.id.notice_btn);
-        Button setting_btn = (Button)findViewById(R.id.setting_btn);
+        ListView listview ;
+        ListViewAdapter adapter;
 
-        Button question_btn = (Button)findViewById(R.id.question);
-        question_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StudyMenuActivity.this, QuestionActivity.class);
-                startActivity(intent);
-            }
-        });
+        // Adapter 생성
+        adapter = new ListViewAdapter() ;
 
-        notice_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(StudyMenuActivity.this, JMainActivity.class);
-                intent.putExtra("study_key", study_key );
-                intent.putExtra("study_name", study_name );
-                startActivity(intent);
-            }
-        });
+        // 리스트뷰 참조 및 Adapter달기
+        listview = (ListView) findViewById(R.id.listview1);
+        listview.setAdapter(adapter);
 
-        setting_btn.setOnClickListener(new View.OnClickListener() {
+        // 첫 번째 아이템 추가.    public void addItem(Drawable icon, String title, String desc) {
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_insert_comment_black_24dp),
+                "공지사항", "아두이노 초급반 공지사항입니다!") ;
+        // 두 번째 아이템 추가.
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_edit_black_24dp),
+                "학습현황", "자세한 학습 진도율을 확인해보세요.") ;
+        // 세 번째 아이템 추가.
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_event_available_black_24dp),
+                "출결현황", "지각/결석 벌금있습니다!") ;
+        // 네 번째 아이템 추가.
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_question_answer_black_24dp),
+                "1:1 문의", "이건 잠깐 링크연결") ;
+        // 다섯 번째 아이템 추가.
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),
+                "스터디 관리", "스터디장만 접근 권한이 있습니다.") ;
+        // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                if (leader_email.equals(userAuth.getEmail())) {
-                    Intent intent = new Intent(StudyMenuActivity.this, SettingStudyActivity.class);
-                    intent.putExtra("study_key", study_key);
-                    intent.putExtra("study_name", study_name);
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                if (position == 0){
+                    Intent intent = new Intent(StudyMenuActivity.this, JMainActivity.class);
+                    intent.putExtra("study_key", study_key );
+                    intent.putExtra("study_name", study_name );
                     startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "스터디 관리에 접근할 권한이 없습니다.", Toast.LENGTH_SHORT).show();
+                }
+                if (position == 1){
+                    //학습현황
+                }
+                if (position == 2){
+                    //출결현황
+                }
+                if (position == 3){
+                    //1:1 문의
+                    Intent intent = new Intent(StudyMenuActivity.this, QuestionActivity.class);
+                    startActivity(intent);
+                }
+                if (position == 4){
+                    //스터디 관리
+                    if (leader_email.equals(userAuth.getEmail())) {
+                        Intent intent = new Intent(StudyMenuActivity.this, SettingStudyActivity.class);
+                        intent.putExtra("study_key", study_key);
+                        intent.putExtra("study_name", study_name);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "스터디 관리에 접근할 권한이 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
-        });
+        }) ;
+
     }
 }
