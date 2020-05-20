@@ -38,6 +38,7 @@ public class QuestionActivity extends AppCompatActivity {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         try {
+            // Email sender
             emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"ys_7197@naver.com"});
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
             emailIntent.putExtra(Intent.EXTRA_TEXT, message);
