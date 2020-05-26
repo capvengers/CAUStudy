@@ -242,14 +242,14 @@ public class SignUpActivity extends AppCompatActivity {
                                                 count++;
                                             }
 
-                                            User user = new User(email, name, L_deptname, S_deptname, hashtag);
+                                            User user = new User(email, name, L_deptname, S_deptname);
                                             StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
-                                            if (count >= 9) {
-                                                myRef.child(stringTokenizer.nextToken()).setValue(user);
-                                                //myRef.child("user0" + (count + 1)).setValue(user);
-                                            } else {
-                                                myRef.child(stringTokenizer.nextToken()).setValue(user);
-                                                //myRef.child("user00" + (count + 1)).setValue(user);
+                                            StringTokenizer hashTokenizer = new StringTokenizer(hashtag, "#");
+                                            myRef.child(stringTokenizer.nextToken()).setValue(user);
+                                            while(hashTokenizer.hasMoreTokens()) {
+                                                String hashtag = hashTokenizer.nextToken();
+                                                hashtag = hashtag.trim();
+                                                myRef.child(stringTokenizer.nextToken()).child("hashtag").child(hashtag).setValue(1);;
                                             }
                                         }
 
