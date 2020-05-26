@@ -30,11 +30,10 @@ import com.example.caustudy.jesnk.JMainActivity;
 
 public class StudyMenuActivity extends AppCompatActivity {
     private String study_key, study_name, leader_email;
-    String l_cate, s_cate, number;
     TextView title;
     private FirebaseUser userAuth;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("StudyList");
+    DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +49,8 @@ public class StudyMenuActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         userAuth = mAuth.getCurrentUser();
 
-        StringTokenizer tokens = new StringTokenizer(study_key, ":");
-        l_cate = tokens.nextToken();
-        s_cate = tokens.nextToken();
-        number = tokens.nextToken();
 
-        studyRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
+        studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
