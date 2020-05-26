@@ -37,7 +37,7 @@ public class StudyDetailActivity extends AppCompatActivity {
     User applier;
     TextView tv_title, tv_period, tv_category, tv_time, tv_leader, tv_info, tv_org;
     String title, period, category, time, leader, info, org;
-    private String auth_name, auth_email;
+    private String auth_name, auth_email, auth_l_cate, auth_s_cate;
     Button apply, back;
     private FirebaseUser userAuth;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -115,10 +115,12 @@ public class StudyDetailActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (userAuth.getEmail().equals(ds.child("email").getValue())) {
+                            //User(String email, String username, String L_deptname, String S_deptname)
                             auth_name = ds.child("username").getValue().toString();
                             auth_email = ds.child("email").getValue().toString();
-                            Log.d("test", auth_name);
-                            applier = new User(auth_email, auth_name);
+                            auth_l_cate = ds.child("L_deptname").getValue().toString();
+                            auth_s_cate = ds.child("S_deptname").getValue().toString();
+                            applier = new User(auth_email, auth_name, auth_l_cate, auth_s_cate);
                             studyRef.child(l_cate).child(s_cate).child(key).child("applier_list").child(auth_id).setValue(applier);
                         }
                     }

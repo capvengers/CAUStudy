@@ -20,4 +20,10 @@ public class User {
         this.email = email;
         this.username = username;
     }
+    public User(String email, String username, String L_deptname, String S_deptname) {
+        this.email = email;
+        this.username = username;
+        this.L_deptname = L_deptname;
+        this.S_deptname = S_deptname;
+    }
 }
