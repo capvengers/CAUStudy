@@ -53,6 +53,7 @@ public class MakeStudyActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference userRef = database.getReference("사용자");
     DatabaseReference studyRef = database.getReference("Study");
+    DatabaseReference tagRef = database.getReference("Hashtags");
     //DatabaseReference studyRef = database.getReference("StudyList");
     private ToggleButton _toggleSun, _toggleMon, _toggleTue, _toggleWed, _toggleThu, _toggleFri, _toggleSat;
 
@@ -322,6 +323,7 @@ public class MakeStudyActivity extends AppCompatActivity {
                         String hashtag = hashTokenizer.nextToken();
                         hashtag = hashtag.trim();
                         studyRef.child("0" + (count + 1)).child("hashtag").child(hashtag).setValue(001);
+                        tagRef.child(hashtag).child("0" + (count + 1)).setValue(study_name);
                     }
                 } else {
                     //studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
@@ -331,7 +333,8 @@ public class MakeStudyActivity extends AppCompatActivity {
                     while(hashTokenizer.hasMoreTokens()) {
                         String hashtag = hashTokenizer.nextToken();
                         hashtag = hashtag.trim();
-                        studyRef.child("00" + (count + 1)).child("hashtag").child(hashtag).setValue(001);
+                        studyRef.child("00" + (count + 1)).child("hashtag").child(hashtag).setValue(1);
+                        tagRef.child(hashtag).child("00" + (count + 1)).setValue(study_name);
                     }
                 }
 

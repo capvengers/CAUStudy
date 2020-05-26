@@ -267,25 +267,16 @@ public class SearchStudyFragment extends Fragment {
         adapter = new RecyclerAdapter();
         tag_search = autoCompleteTextView.getText().toString();
 
-
         adapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position){
                 Intent intent = new Intent(getActivity(), StudyDetailActivity.class);
                 intent.putExtra("study_name",listTitle.get(position) );
-                intent.putExtra("l_cate",l_cate);
-                intent.putExtra("s_cate",s_cate);
-                intent.putExtra("tag",tag_search);
                 startActivity(intent);
             }
         });
 
         rv.setAdapter(adapter);
-
-
-
-
-
 
         // 태그와 일치하는 스터디 넘버를 리스트에 넣음
         tagRef.child(tag_search).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -296,9 +287,6 @@ public class SearchStudyFragment extends Fragment {
                 }
                 for (DataSnapshot studyNum : dataSnapshot.getChildren()) {
                     list_match_tag.add(studyNum.getKey());
-
-
-
 
                     Log.d("list_match_tag added",studyNum.getKey());
                 }

@@ -56,6 +56,7 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
 
         private TextView name;
         private TextView email;
+        private TextView dept;
         private ImageView accept;
         private ImageView delete;
 
@@ -64,6 +65,7 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
 
             name = itemView.findViewById(R.id.item_name);
             email = itemView.findViewById(R.id.item_email);
+            dept = itemView.findViewById(R.id.item_dept);
             accept = itemView.findViewById(R.id.apply_accept);
             delete = itemView.findViewById(R.id.apply_delete);
 
@@ -100,12 +102,14 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
         void onBind(Item item) {
             name.setText(item.getName());
             email.setText(item.getEmail());
-        }
+            String dept_temp = item.getL_dept() + " " + item.getS_dept();
+            dept.setText(dept_temp);
+    }
     }
 }
 
 class Item {
-    private String name, email;
+    private String name, email, l_dept, s_dept;
 
     public String getName() {
         return name;
@@ -119,5 +123,19 @@ class Item {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getL_dept() {
+        return l_dept;
+    }
+    public void setL_dept(String l_dept) {
+        this.l_dept = l_dept;
+    }
+
+    public String getS_dept() {
+        return s_dept;
+    }
+    public void setS_dept(String s_dept) {
+        this.s_dept = s_dept;
     }
 }
