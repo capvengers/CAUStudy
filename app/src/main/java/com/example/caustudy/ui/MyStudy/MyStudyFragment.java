@@ -48,13 +48,13 @@ public class MyStudyFragment extends Fragment {
     EditText editText;
     EditText editText2;
     Button button;
-    String number;
+    String study_list_raw;
     MyStudy_Adapter singerAdapter;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser userAuth = mAuth.getCurrentUser();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference_user = firebaseDatabase.getReference("사용자");
-    DatabaseReference datebaseReference_study = firebaseDatabase.getReference("StudyList");
+    DatabaseReference datebaseReference_study = firebaseDatabase.getReference("Study");
     StringTokenizer stringTokenizer = new StringTokenizer(userAuth.getEmail(), "@");
     String user_id = stringTokenizer.nextToken();
     List<String> study_list = new ArrayList<>();
@@ -99,22 +99,13 @@ public class MyStudyFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     singerAdapter.resetItem(); // 중복 방지
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        String study_list_raw = ds.getKey();
+                        study_list_raw = ds.getKey();
                         // 리스트에 값이 저장이 안되는거 같아서 일단 때려박았어..
-                        study_list.add(study_list_raw); // 키 값 저장 (format = L_cate:S_cate:001)
-
-                        StringTokenizer tokens = new StringTokenizer(study_list_raw, ":");
-                        String L_cate, S_cate;
-                        L_cate = tokens.nextToken();
-                        S_cate = tokens.nextToken();
-                        number = tokens.nextToken();
-
+                        study_list.add(study_list_raw); // 키 값 저장 (format = 001)
 
                         //get_study_info
-                        datebaseReference_study.child(L_cate).child(S_cate).addListenerForSingleValueEvent(new ValueEventListener() {
-                            // Important!! assign number to Local variable : num.
-                            // Sharing Global variable causes inorder error
-                            String num = number;
+                        datebaseReference_study.addListenerForSingleValueEvent(new ValueEventListener() {
+                            String num = study_list_raw;
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -125,7 +116,6 @@ public class MyStudyFragment extends Fragment {
                                         String day = ds.child("study_day").getValue().toString();  // 요일
                                         String time = ds.child("study_time").getValue().toString();  // 시간
                                         String org = ds.child("organization").getValue().toString();  // 소속
-                                        Log.d("MyStudyFragment:additem : : ",  number + title);
                                         singerAdapter.addItem(new MyStudy_SingerItem(title, s_period + " ~ " + e_period, day + " / " + time, org));
                                         singerAdapter.notifyDataSetChanged();
                                     }
@@ -137,7 +127,6 @@ public class MyStudyFragment extends Fragment {
                             public void onCancelled (@NonNull DatabaseError databaseError){
                             }
                         });
-                        Log.d("MyStudyFragment:check_mystudy_list: ",L_cate + S_cate + String.valueOf(number));
                     }
                 }
                 @Override
@@ -154,7 +143,7 @@ public class MyStudyFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds.getKey().equals(number)) {
+                        if (ds.getKey().equals(study_list_raw)) {
                             String title = ds.child("study_name").getValue().toString();
                             String s_period = ds.child("s_period").getValue().toString();   // 시작일
                             String e_period = ds.child("e_period").getValue().toString();   // 종료일

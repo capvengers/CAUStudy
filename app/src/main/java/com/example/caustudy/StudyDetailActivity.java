@@ -37,13 +37,13 @@ public class StudyDetailActivity extends AppCompatActivity {
     User applier;
     TextView tv_title, tv_period, tv_category, tv_time, tv_leader, tv_info, tv_org;
     String title, period, category, time, leader, info, org;
-    private String auth_name, auth_email;
+    private String auth_name, auth_email, auth_l_cate, auth_s_cate;
     Button apply, back;
     private FirebaseUser userAuth;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private PopupWindow mPopupWindow ;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference studyRef = database.getReference("StudyList");
+    DatabaseReference studyRef = database.getReference("Study");
     DatabaseReference databaseReference_user = database.getReference("사용자");
 
     @Override
@@ -115,11 +115,13 @@ public class StudyDetailActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (userAuth.getEmail().equals(ds.child("email").getValue())) {
+                            //User(String email, String username, String L_deptname, String S_deptname)
                             auth_name = ds.child("username").getValue().toString();
                             auth_email = ds.child("email").getValue().toString();
-                            Log.d("test", auth_name);
-                            applier = new User(auth_email, auth_name);
-                            studyRef.child(l_cate).child(s_cate).child(key).child("applier_list").child(auth_id).setValue(applier);
+                            auth_l_cate = ds.child("L_deptname").getValue().toString();
+                            auth_s_cate = ds.child("S_deptname").getValue().toString();
+                            applier = new User(auth_email, auth_name, auth_l_cate, auth_s_cate);
+                            studyRef.child(key).child("applier_list").child(auth_id).setValue(applier);
                         }
                     }
                 }
@@ -140,7 +142,7 @@ public class StudyDetailActivity extends AppCompatActivity {
         auth_id = stringTokenizer.nextToken(); //@ 분리
 
         if (userAuth != null) {
-            studyRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
+            studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -154,7 +156,6 @@ public class StudyDetailActivity extends AppCompatActivity {
                             }
                             else {
                                 key = ds.getKey();
-                                Log.d("te",key);
                                 get_user_info();
                                 Toast.makeText(getApplicationContext(), "스터디 신청 전송", Toast.LENGTH_SHORT).show();
                             }
