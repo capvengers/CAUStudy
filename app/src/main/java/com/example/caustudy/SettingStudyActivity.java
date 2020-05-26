@@ -33,8 +33,7 @@ public class SettingStudyActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private ApplyAdapter adapter;
     private String study_key, study_name, email, name, id;
-    String l_cate, s_cate, number;
-    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("StudyList");
+    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
 
 
@@ -47,11 +46,6 @@ public class SettingStudyActivity extends AppCompatActivity {
         study_key = intent.getStringExtra("study_key");
         study_name = intent.getStringExtra("study_name");
 
-        StringTokenizer tokens = new StringTokenizer(study_key, ":");
-        l_cate = tokens.nextToken();
-        s_cate = tokens.nextToken();
-        number = tokens.nextToken();
-
         recyclerView = findViewById(R.id.apply_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SettingStudyActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -63,15 +57,15 @@ public class SettingStudyActivity extends AppCompatActivity {
                 String get_email = listEmail.get(position);
                 StringTokenizer id_token = new StringTokenizer(get_email, "@");
                 String id = id_token.nextToken();
-                userRef.child(id).child("taken_study").child(l_cate + ":"+ s_cate + ":" + number).setValue(study_name);
-                myRef.child(l_cate).child(s_cate).child(number).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                userRef.child(id).child("taken_study").child(study_key).setValue(study_name);
+                myRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
                     }
                 });
                 // Test
-                myRef.child(l_cate).child(s_cate).child(number).child("member_list").child(id).setValue(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                myRef.child(study_key).child("member_list").child(id).setValue(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
@@ -83,7 +77,7 @@ public class SettingStudyActivity extends AppCompatActivity {
                 String get_email = listEmail.get(position);
                 StringTokenizer id_token = new StringTokenizer(get_email, "@");
                 String id = id_token.nextToken();
-                myRef.child(l_cate).child(s_cate).child(number).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                myRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
@@ -92,7 +86,7 @@ public class SettingStudyActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
-        myRef.child(l_cate).child(s_cate).child(number).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){

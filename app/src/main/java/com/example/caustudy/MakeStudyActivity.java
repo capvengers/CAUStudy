@@ -252,9 +252,9 @@ public class MakeStudyActivity extends AppCompatActivity {
                             name = ds.child("username").getValue().toString();
 
                             if (count >= 9) {
-                                userRef.child(key).child("taken_study").child(l_cate + ":"+ s_cate + ":" + "0" + (count+1)).setValue(study_name);
+                                userRef.child(key).child("taken_study").child("0" + (count+1)).setValue(study_name);
                             } else {
-                                userRef.child(key).child("taken_study").child(l_cate + ":"+ s_cate + ":" + "00" + (count+1)).setValue(study_name);
+                                userRef.child(key).child("taken_study").child("00" + (count+1)).setValue(study_name);
                             }
                         }
                         else {
@@ -296,7 +296,7 @@ public class MakeStudyActivity extends AppCompatActivity {
 
         // 카운트 세는 함수 안에다가 코드를 넣었다.
         count = 0;
-        studyRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
+        studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("count","entered count");
@@ -320,6 +320,7 @@ public class MakeStudyActivity extends AppCompatActivity {
                     studyRef.child("0" + (count + 1)).child("member_list").child(id).setValue(email);
                     while(hashTokenizer.hasMoreTokens()) {
                         String hashtag = hashTokenizer.nextToken();
+                        hashtag = hashtag.trim();
                         studyRef.child("0" + (count + 1)).child("hashtag").child(hashtag).setValue(001);
                     }
                 } else {
@@ -329,6 +330,7 @@ public class MakeStudyActivity extends AppCompatActivity {
                     studyRef.child("00" + (count + 1)).child("member_list").child(id).setValue(email);
                     while(hashTokenizer.hasMoreTokens()) {
                         String hashtag = hashTokenizer.nextToken();
+                        hashtag = hashtag.trim();
                         studyRef.child("00" + (count + 1)).child("hashtag").child(hashtag).setValue(001);
                     }
                 }
