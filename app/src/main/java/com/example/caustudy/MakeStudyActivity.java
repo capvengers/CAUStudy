@@ -52,7 +52,8 @@ public class MakeStudyActivity extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference userRef = database.getReference("사용자");
-    DatabaseReference studyRef = database.getReference("StudyList");
+    DatabaseReference studyRef = database.getReference("Study");
+    //DatabaseReference studyRef = database.getReference("StudyList");
     private ToggleButton _toggleSun, _toggleMon, _toggleTue, _toggleWed, _toggleThu, _toggleFri, _toggleSat;
 
     @Override
@@ -311,43 +312,32 @@ public class MakeStudyActivity extends AppCompatActivity {
                 // input data in study DB
                 StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
                 String id = stringTokenizer.nextToken(); //@ 분리
+                StringTokenizer hashTokenizer = new StringTokenizer(tag, "#");
                 if (count >= 9) {
-                    studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).setValue(study);
-                    studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).child("member_list").child(id).setValue(email);
+                    //studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).setValue(study);
+                    studyRef.child("0" + (count + 1)).setValue(study);
+                    //studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).child("member_list").child(id).setValue(email);
+                    studyRef.child("0" + (count + 1)).child("member_list").child(id).setValue(email);
+                    while(hashTokenizer.hasMoreTokens()) {
+                        String hashtag = hashTokenizer.nextToken();
+                        studyRef.child("0" + (count + 1)).child("hashtag").child(hashtag).setValue(001);
+                    }
                 } else {
-                    Log.d("count", "count section");
-                    studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
-                    Log.d("count", "count section end");
-                    studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).child("member_list").child(id).setValue(email);
+                    //studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
+                    studyRef.child("00" + (count + 1)).setValue(study);
+                    //studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).child("member_list").child(id).setValue(email);
+                    studyRef.child("00" + (count + 1)).child("member_list").child(id).setValue(email);
+                    while(hashTokenizer.hasMoreTokens()) {
+                        String hashtag = hashTokenizer.nextToken();
+                        studyRef.child("00" + (count + 1)).child("hashtag").child(hashtag).setValue(001);
+                    }
                 }
-
 
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
-
-
-        /*
-        Toast.makeText(MakeStudyActivity.this, "신규 스터디가 생성되었습니다!", Toast.LENGTH_LONG).show();
-
-        // input data in user DB
-        set_leader_user();
-        // input data in study DB
-        StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
-        String id = stringTokenizer.nextToken(); //@ 분리
-        if (count >= 9) {
-            studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).setValue(study);
-            studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).child("member_list").child(id).setValue(email);
-        } else {
-            Log.d("count", "count section");
-            studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
-            Log.d("count", "count section end");
-            studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).child("member_list").child(id).setValue(email);
-        }
-         */
-
     }
+
 }
