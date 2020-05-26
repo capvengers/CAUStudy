@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
 
 public class StudyDetailActivity extends AppCompatActivity {
     long count = 0;
-    private String study_name, l_cate, s_cate;
+    private String study_name;
     private String leader_email, auth_id;
     private String key;
     User applier;
@@ -64,8 +64,7 @@ public class StudyDetailActivity extends AppCompatActivity {
         back = (Button)findViewById(R.id.back_btn);
         Intent intent = getIntent();
         study_name = intent.getStringExtra("study_name");
-        l_cate = intent.getStringExtra("l_cate");
-        s_cate = intent.getStringExtra("s_cate");
+
 
         get_study_info();
         set_view();
@@ -174,8 +173,8 @@ public class StudyDetailActivity extends AppCompatActivity {
     }
 
     void get_study_info(){
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("StudyList");
-        myRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Study");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {

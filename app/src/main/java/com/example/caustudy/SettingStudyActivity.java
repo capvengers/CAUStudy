@@ -6,10 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.caustudy.jesnk.JMainActivity;
@@ -25,17 +28,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+
 public class SettingStudyActivity extends AppCompatActivity {
 
     List<String> listName = new ArrayList<>();
     List<String> listEmail = new ArrayList<>();
+    List<String> list_L = new ArrayList<>();
+    List<String> list_S = new ArrayList<>();
 
+    Switch fin;
     RecyclerView recyclerView;
     private ApplyAdapter adapter;
-    private String study_key, study_name, email, name, id;
+    private String study_key, study_name, email, name, l_dept, s_dept;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
 
+    class SwitchListener implements CompoundButton.OnCheckedChangeListener{
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(isChecked)
+                myRef.child(study_key).child("apply_status").setValue(1);
+            else
+                myRef.child(study_key).child("apply_status").removeValue();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +63,9 @@ public class SettingStudyActivity extends AppCompatActivity {
         study_name = intent.getStringExtra("study_name");
 
         recyclerView = findViewById(R.id.apply_view);
+        fin = findViewById(R.id.switch_fin);
+        fin.setOnCheckedChangeListener(new SwitchListener());
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SettingStudyActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new ApplyAdapter();
@@ -92,16 +111,24 @@ public class SettingStudyActivity extends AppCompatActivity {
                 if (dataSnapshot != null){
                     listEmail.clear();
                     listName.clear();
+                    list_L.clear();
+                    list_S.clear();
                 }
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     email = ds.child("email").getValue().toString();
                     name = ds.child("username").getValue().toString();
+                    l_dept = ds.child("L_deptname").getValue().toString();
+                    s_dept = ds.child("S_deptname").getValue().toString();
                     listEmail.add(email);
                     listName.add(name);
+                    list_L.add(l_dept);
+                    list_S.add(s_dept);
 
                     Item item = new Item();
                     item.setName(name);
                     item.setEmail(email);
+                    item.setL_dept(l_dept);
+                    item.setS_dept(s_dept);
                     adapter.addItem(item);
                     adapter.notifyDataSetChanged();
                 }
