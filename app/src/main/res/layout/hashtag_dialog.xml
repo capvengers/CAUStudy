@@ -19,14 +19,19 @@
         android:layout_height="1dp"
         android:background="#000000"/>
 
-    <EditText
-        android:id="@+id/mesgase"
+    <!-- Auto comple -->
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:gravity="center"
-        android:textColor="#000000"
+        android:gravity="center_vertical"
+        android:textColorHint="#000000"
         android:textSize="16dp"
-        android:hint="내용을 입력하세요."/>
+        android:hint="검색어를 입력하세요"
+        android:completionThreshold="1" />
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
