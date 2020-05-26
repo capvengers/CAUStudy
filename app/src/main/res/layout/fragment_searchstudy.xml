@@ -71,19 +71,53 @@
         app:layout_constraintStart_toEndOf="@+id/small_category"
         app:layout_constraintTop_toBottomOf="@+id/textView1"
         app:layout_constraintVertical_bias="0.0" />
+
+</LinearLayout>
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:layout_marginTop="150dp"
+    android:orientation="horizontal">
+
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextView"
+        android:layout_width="290dp"
+        android:layout_height="60dp"
+        android:layout_above="@+id/mt_list"
+        android:layout_marginBottom="170dp"
+        android:completionThreshold="1"
+        android:gravity="center_vertical"
+        android:hint="검색어를 입력하세요"
+        android:textColorHint="#000000"
+        android:textSize="15dp" />
+
+    <Button
+        android:id="@+id/search_btn2"
+        android:layout_width="66dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/blue_button"
+        android:text="검색"
+        android:textColor="#FFFFFF"
+        android:textSize="14dp" />
+
 </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mt_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="364dp"
+        android:layout_height="421dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="230dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="80dp"
-        android:layout_marginEnd="10dp"
         android:background="@drawable/listview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -118,6 +152,8 @@
         app:layout_constraintTop_toBottomOf="@+id/mt_list"
         app:srcCompat="@drawable/blue_button" />
     </LinearLayout>
+
+
 
 
 </RelativeLayout>

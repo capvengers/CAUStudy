@@ -39,7 +39,7 @@ import java.util.StringTokenizer;
 public class HomeFragment extends Fragment {
 
     private HomeStudyViewModel homeViewModel;
-    String study_list_raw;
+    String number;
     HomeRecyclerAdapter singerAdapter;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser userAuth = mAuth.getCurrentUser();
@@ -49,6 +49,7 @@ public class HomeFragment extends Fragment {
     StringTokenizer stringTokenizer = new StringTokenizer(userAuth.getEmail(), "@");
     String user_id = stringTokenizer.nextToken();
     List<String> study_list = new ArrayList<>();
+    private String study_num;
     RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -88,12 +89,13 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        study_list_raw = ds.getKey();
+                        study_num = ds.getKey();
+                        Log.d("ds.getKey()",study_num);
                         // 리스트에 값이 저장이 안되는거 같아서 일단 때려박았어..
-                        study_list.add(study_list_raw); // 키 값 저장 (format = L_cate:S_cate:001)
+                        study_list.add(study_num); // 키 값 저장 (format = L_cate:S_cate:001)
 
                         datebaseReference_study.addListenerForSingleValueEvent(new ValueEventListener() {
-                            String num = study_list_raw;
+                            String num = study_num;
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -115,6 +117,12 @@ public class HomeFragment extends Fragment {
                             public void onCancelled (@NonNull DatabaseError databaseError){
                             }
                         });
+
+
+
+
+                        //get_study_info(L_cate, S_cate);
+                        Log.d("MyStudyFragment:check_mystudy_list: ",String.valueOf(number));
                     }
                 }
                 @Override
