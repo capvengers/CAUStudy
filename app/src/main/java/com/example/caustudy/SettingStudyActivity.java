@@ -5,17 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.example.caustudy.jesnk.JMainActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -40,16 +38,24 @@ public class SettingStudyActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private ApplyAdapter adapter;
     private String study_key, study_name, email, name, l_dept, s_dept;
-    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Study");
+    DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
+
+    private Button setNextSchedule;
+    private TextView next_location_view, next_time_view;
+    String next_location;
+    String next_time;
+    public static Context mContext;
+
+
 
     class SwitchListener implements CompoundButton.OnCheckedChangeListener{
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked)
-                myRef.child(study_key).child("apply_status").setValue(1);
+                studyRef.child(study_key).child("apply_status").setValue(1);
             else
-                myRef.child(study_key).child("apply_status").removeValue();
+                studyRef.child(study_key).child("apply_status").removeValue();
         }
     }
 
@@ -57,10 +63,35 @@ public class SettingStudyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_study);
-
         Intent intent = getIntent();
         study_key = intent.getStringExtra("study_key");
         study_name = intent.getStringExtra("study_name");
+        mContext = this;
+
+
+        // 다음 모임 시간, 장소 텍스트뷰 업데이트
+
+
+
+        next_location_view = findViewById(R.id.nextLocationView);
+        next_time_view = findViewById(R.id.nextTimeView);
+        next_location = "설정된 장소가 없습니다.";
+        next_time = "설정된 시간이 없습니다.";
+
+        refresh_nextSchedule_view();
+
+
+
+        setNextSchedule = findViewById(R.id.schedule_setting_btn);
+        setNextSchedule.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Dialog_nextScheduleSetting dialog_nextScheduleSet = new Dialog_nextScheduleSetting(SettingStudyActivity.this);
+                dialog_nextScheduleSet.callFunction(study_key);
+
+            }
+        });
+
 
         recyclerView = findViewById(R.id.apply_view);
         fin = findViewById(R.id.switch_fin);
@@ -77,14 +108,14 @@ public class SettingStudyActivity extends AppCompatActivity {
                 StringTokenizer id_token = new StringTokenizer(get_email, "@");
                 String id = id_token.nextToken();
                 userRef.child(id).child("taken_study").child(study_key).setValue(study_name);
-                myRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                studyRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
                     }
                 });
                 // Test
-                myRef.child(study_key).child("member_list").child(id).setValue(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                studyRef.child(study_key).child("member_list").child(id).setValue(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
@@ -96,7 +127,7 @@ public class SettingStudyActivity extends AppCompatActivity {
                 String get_email = listEmail.get(position);
                 StringTokenizer id_token = new StringTokenizer(get_email, "@");
                 String id = id_token.nextToken();
-                myRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                studyRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
@@ -105,7 +136,7 @@ public class SettingStudyActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
-        myRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
+        studyRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
@@ -137,6 +168,7 @@ public class SettingStudyActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
         /*
         for (int i = 0; i < listName.size(); i++) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
@@ -146,6 +178,37 @@ public class SettingStudyActivity extends AppCompatActivity {
             adapter.addItem(item);
         }
         */
+    }
+    public void refresh_nextSchedule_view() {
+
+        studyRef.child(study_key).child("next_schedule").child("next_location").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot ds) {
+
+                Log.d("ds.getKey() test :",ds.getKey());
+                if (ds.getValue().toString() != null) {
+                    next_location_view.setText(ds.getValue().toString());
+                    Log.d("locationsteted", "Succes");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        studyRef.child(study_key).child("next_schedule").child("next_time").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot ds) {
+                Log.d("ds.getKey() test :",ds.getKey());
+                if (ds.getValue().toString() != null) {
+                    next_time_view.setText(ds.getValue().toString());
+                    Log.d("timesteted", "Succes");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
 

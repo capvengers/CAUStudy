@@ -55,6 +55,8 @@ public class Setting_HashtagActivity extends AppCompatActivity {
     public static Context mContext;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
