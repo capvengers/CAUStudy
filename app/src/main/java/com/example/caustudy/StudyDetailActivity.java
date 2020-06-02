@@ -129,8 +129,6 @@ public class StudyDetailActivity extends AppCompatActivity {
                 }
             });
         }
-
-
     }
 
     void apply_study(){

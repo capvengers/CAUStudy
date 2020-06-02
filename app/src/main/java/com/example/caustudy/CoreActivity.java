@@ -1,18 +1,28 @@
 package com.example.caustudy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spanned;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.FirebaseError;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.commonmark.node.Block;
 import org.commonmark.node.BlockQuote;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 
+import java.sql.Ref;
 import java.util.Set;
 
 import io.noties.markwon.AbstractMarkwonPlugin;
@@ -20,9 +30,10 @@ import io.noties.markwon.Markwon;
 import io.noties.markwon.core.CorePlugin;
 
 public class CoreActivity extends ActivityWithMenuOptions {
-
+    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Study");
     private TextView textView;
-
+    private String study_key;
+    private String mark_text;
     @NonNull
     @Override
     public MenuOptions menuOptions() {
@@ -37,19 +48,27 @@ public class CoreActivity extends ActivityWithMenuOptions {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_view);
-
+        Intent intent = getIntent();
+        study_key = intent.getStringExtra("study_key");
         textView = findViewById(R.id.text_view);
 
-        simple();
-
+        myRef.child(study_key).child("detail_info").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot ds) {
+                if (ds.getValue().toString() != null) {
+                    mark_text = ds.getValue().toString();
+                    simple();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
+
     private void step_1() {
-
-        // short call
         final Markwon markwon = Markwon.create(this);
-
-        // this is the same as calling
         final Markwon markwon2 = Markwon.builder(this)
                 .usePlugin(CorePlugin.create())
                 .build();
@@ -59,12 +78,9 @@ public class CoreActivity extends ActivityWithMenuOptions {
      * To simply apply raw (non-parsed) markdown call {@link Markwon#setMarkdown(TextView, String)}
      */
     private void simple() {
-
         // 여기에 그냥 친거 그대로 받아오면 될 것 같은데?
-        final String markdown = "Hello **markdown**!";
-
+        final String markdown = mark_text;
         final Markwon markwon = Markwon.create(this);
-
         // this will parse raw markdown and set parsed content to specified TextView
         markwon.setMarkdown(textView, markdown);
     }
@@ -81,21 +97,17 @@ public class CoreActivity extends ActivityWithMenuOptions {
         Toast.makeText(this, spanned, Toast.LENGTH_LONG).show();
     }
 
-    /**
+    /*
      * To apply already parsed markdown use {@link Markwon#setParsedMarkdown(TextView, Spanned)}
      */
     private void alreadyParsed() {
 
         final String markdown = "This **is** pre-parsed [markdown](#)";
-
         final Markwon markwon = Markwon.create(this);
-
         // parse markdown to obtain a Node
         final Node node = markwon.parse(markdown);
-
         // create a spanned content from parsed node
         final Spanned spanned = markwon.render(node);
-
         // apply parsed markdown
         markwon.setParsedMarkdown(textView, spanned);
     }
@@ -120,7 +132,6 @@ public class CoreActivity extends ActivityWithMenuOptions {
                     }
                 })
                 .build();
-
         markwon.setMarkdown(textView, md);
     }
 }
