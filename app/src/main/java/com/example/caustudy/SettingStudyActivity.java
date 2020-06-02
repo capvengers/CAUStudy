@@ -106,7 +106,9 @@ public class SettingStudyActivity extends AppCompatActivity {
             public void onAcceptClick(View v, int position) {
                 String get_email = listEmail.get(position);
                 StringTokenizer id_token = new StringTokenizer(get_email, "@");
-                String id = id_token.nextToken();
+
+                // Final로 했는데, 괜찮으려
+                final String id = id_token.nextToken();
                 userRef.child(id).child("taken_study").child(study_key).setValue(study_name);
                 studyRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -121,6 +123,48 @@ public class SettingStudyActivity extends AppCompatActivity {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
                     }
                 });
+                // Add Hashtag History
+                studyRef.child(study_key).child("hashtag").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            final String[] tag_value = new String[1];
+
+                            if (ds.getKey() != null) {
+                                String tag_key = ds.getKey();
+                                userRef.child(id).child("hashtag_history").child(tag_key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.getValue() != null) {
+                                            tag_value[0] = dataSnapshot.getValue().toString();
+                                            Log.d("key_value", dataSnapshot.getKey() + " " + tag_value[0]);
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+                            }
+                            // check
+                            int tag_value_int;
+                            Log.d("tag_value test",tag_value.toString());
+                            if (tag_value[0] != null) {
+                                tag_value_int = Integer.parseInt(tag_value[0]);
+                                tag_value_int += 1;
+                                userRef.child(id).child("hashtag_history").child(ds.getKey()).setValue(tag_value_int);
+                            } else {
+                                userRef.child(id).child("hashtag_history").child(ds.getKey()).setValue("1");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
             @Override
             public void onDeleteClick(View v, int position) {
@@ -186,7 +230,7 @@ public class SettingStudyActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot ds) {
 
                 Log.d("ds.getKey() test :",ds.getKey());
-                if (ds.getValue().toString() != null) {
+                if (ds.getValue() != null) {
                     next_location_view.setText(ds.getValue().toString());
                     Log.d("locationsteted", "Succes");
                 }
@@ -200,7 +244,7 @@ public class SettingStudyActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
                 Log.d("ds.getKey() test :",ds.getKey());
-                if (ds.getValue().toString() != null) {
+                if (ds.getValue() != null) {
                     next_time_view.setText(ds.getValue().toString());
                     Log.d("timesteted", "Succes");
                 }
