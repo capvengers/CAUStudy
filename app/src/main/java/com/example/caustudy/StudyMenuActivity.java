@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -79,10 +80,10 @@ public class StudyMenuActivity extends AppCompatActivity {
                 "공지사항", "아두이노 초급반 공지사항입니다!") ;
         // 두 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_edit_black_24dp),
-                "학습현황", "자세한 학습 진도율을 확인해보세요.") ;
+                "마크다운에디터", "자세한 학습 진도율을 확인해보세요.") ;
         // 세 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_event_available_black_24dp),
-                "출결현황", "지각/결석 벌금있습니다!") ;
+                "마크다운에디터 보기", "지각/결석 벌금있습니다!") ;
         // 네 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_question_answer_black_24dp),
                 "1:1 문의", "이건 잠깐 링크연결") ;
@@ -101,9 +102,13 @@ public class StudyMenuActivity extends AppCompatActivity {
                 }
                 if (position == 1){
                     //학습현황
+                    Intent intent = new Intent(StudyMenuActivity.this, EditorActivity.class);
+                    startActivity(intent);
                 }
                 if (position == 2){
                     //출결현황
+                    Intent intent = new Intent(StudyMenuActivity.this, CoreActivity.class);
+                    startActivity(intent);
                 }
                 if (position == 3){
                     //1:1 문의
