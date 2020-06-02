@@ -66,22 +66,60 @@ public class SettingStudyActivity extends AppCompatActivity {
         Intent intent = getIntent();
         study_key = intent.getStringExtra("study_key");
         study_name = intent.getStringExtra("study_name");
-        mContext = this;
-
-
-        // 다음 모임 시간, 장소 텍스트뷰 업데이트
-
-
-
         next_location_view = findViewById(R.id.nextLocationView);
         next_time_view = findViewById(R.id.nextTimeView);
         next_location = "설정된 장소가 없습니다.";
         next_time = "설정된 시간이 없습니다.";
+        mContext = this;
+
+
+        // 다음 모임 시간, 장소 텍스트뷰 업데이트
+        // 월화수 이거 가져오려했는데 왜 안될까..
+        studyRef.child(study_key).child("study_day").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String study_day = ds.getValue().toString();
+                    System.out.println(study_day);
+                    Log.d(study_day, "===========================================" + study_day);
+                    for(int i = 0; i < study_day.length(); i++){
+                        String day = study_day.substring(i);
+                        Log.d(day, day);
+                        switch (day){
+                            case "월":
+                                next_time += getDay.getMonday() + ' ';
+                                break;
+                            case "화":
+                                next_time += getDay.getTuesday() + ' ';
+                                break;
+                            case "수":
+                                next_time += getDay.getWednesday() + ' ';
+                                break;
+                            case "목":
+                                next_time += getDay.getThursday() + ' ';
+                                break;
+                            case "금":
+                                next_time += getDay.getFriday() + ' ';
+                                break;
+                            case "토":
+                                next_time += getDay.getSaturday() + ' ';
+                                break;
+                            case "일":
+                                next_time += getDay.getSunday() + ' ';
+                                break;
+                        }
+                        next_time_view.setText(next_time);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+
 
         refresh_nextSchedule_view();
-
-
-
         setNextSchedule = findViewById(R.id.schedule_setting_btn);
         setNextSchedule.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -180,6 +218,7 @@ public class SettingStudyActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
+
         studyRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
