@@ -102,7 +102,7 @@ public class StudyMenuActivity extends AppCompatActivity {
                 }
                 if (position == 1){
                     //학습현황
-                    Intent intent = new Intent(StudyMenuActivity.this, MarkdownActivity.class);
+                    Intent intent = new Intent(StudyMenuActivity.this, EditorActivity.class);
                     startActivity(intent);
                 }
                 if (position == 2){
