@@ -107,7 +107,6 @@ public class AttendantActivity extends AppCompatActivity {
                     item.setS_dept(s_dept);
                     adapter.addItem(item);
                     adapter.notifyDataSetChanged();
-
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
