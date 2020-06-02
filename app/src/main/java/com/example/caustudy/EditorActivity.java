@@ -1,5 +1,6 @@
 package com.example.caustudy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
@@ -11,19 +12,28 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.MetricAffectingSpan;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.commonmark.parser.InlineParserFactory;
 import org.commonmark.parser.Parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
 
 import io.noties.debug.AndroidLogDebugOutput;
@@ -52,6 +62,10 @@ public class EditorActivity extends ActivityWithMenuOptions {
 
     private EditText editText;
     private String pendingInput;
+    private Button save;
+    String markdown_text;
+    private String study_key;
+    DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
 
     @NonNull
     @Override
@@ -90,6 +104,9 @@ public class EditorActivity extends ActivityWithMenuOptions {
     private void createView() {
         setContentView(R.layout.activity_editor);
 
+        Intent intent = getIntent();
+        study_key = intent.getStringExtra("study_key");
+        this.save = findViewById(R.id.add_markdown);
         this.editText = findViewById(R.id.edit_text);
 
         initBottomBar();
@@ -99,7 +116,6 @@ public class EditorActivity extends ActivityWithMenuOptions {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createView();
-
         Debug.init(new AndroidLogDebugOutput(true));
 
         multiple_edit_spans();
@@ -360,7 +376,6 @@ public class EditorActivity extends ActivityWithMenuOptions {
         italic.setOnClickListener(new InsertOrWrapClickListener(editText, "_"));
         strike.setOnClickListener(new InsertOrWrapClickListener(editText, "~~"));
         code.setOnClickListener(new InsertOrWrapClickListener(editText, "`"));
-
         quote.setOnClickListener(v -> {
 
             final int start = editText.getSelectionStart();
@@ -388,6 +403,13 @@ public class EditorActivity extends ActivityWithMenuOptions {
                     editText.getText().insert(newLines.get(i), "> ");
                 }
             }
+        });
+
+        save.setOnClickListener((View view) -> {
+            // Firebase에 저장
+            registerStudy();
+            Toast.makeText(EditorActivity.this, "상세 스터디 정보가 등록되었습니다.", Toast.LENGTH_LONG).show();
+            finish();
         });
     }
 
@@ -453,5 +475,18 @@ public class EditorActivity extends ActivityWithMenuOptions {
         private void update(@NonNull TextPaint paint) {
             paint.setFakeBoldText(true);
         }
+    }
+
+    public void registerStudy() {
+        markdown_text = editText.getText().toString();
+        studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                studyRef.child(study_key).child("detail_info").setValue(markdown_text);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }

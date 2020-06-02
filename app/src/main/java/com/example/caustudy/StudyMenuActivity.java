@@ -89,6 +89,9 @@ public class StudyMenuActivity extends AppCompatActivity {
                 "1:1 문의", "이건 잠깐 링크연결") ;
         // 다섯 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),
+                "출석부 관리", "스터디장만 접근 권한이 있습니다.") ;
+        // 여섯 번째 아이템 추가.
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),
                 "스터디 관리", "스터디장만 접근 권한이 있습니다.") ;
         // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -103,11 +106,13 @@ public class StudyMenuActivity extends AppCompatActivity {
                 if (position == 1){
                     //학습현황
                     Intent intent = new Intent(StudyMenuActivity.this, EditorActivity.class);
+                    intent.putExtra("study_key", study_key );
                     startActivity(intent);
                 }
                 if (position == 2){
                     //출결현황
                     Intent intent = new Intent(StudyMenuActivity.this, CoreActivity.class);
+                    intent.putExtra("study_key", study_key );
                     startActivity(intent);
                 }
                 if (position == 3){
@@ -116,6 +121,12 @@ public class StudyMenuActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (position == 4){
+                    //출석부 관리
+                    Intent intent = new Intent(StudyMenuActivity.this, AttendantActivity.class);
+                    intent.putExtra("study_key", study_key );
+                    startActivity(intent);
+                }
+                if (position == 5){
                     //스터디 관리
                     if (leader_email.equals(userAuth.getEmail())) {
                         Intent intent = new Intent(StudyMenuActivity.this, SettingStudyActivity.class);
