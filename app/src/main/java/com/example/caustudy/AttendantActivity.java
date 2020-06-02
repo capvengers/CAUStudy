@@ -51,13 +51,15 @@ public class AttendantActivity extends AppCompatActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     memList.add(ds.getKey());
                 }
+                System.out.println(memList.size());
+                set_adaptor();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
+
         });
-        System.out.println(memList.size());
-        set_adaptor();
+
     }
 
     public void set_adaptor(){
@@ -87,24 +89,25 @@ public class AttendantActivity extends AppCompatActivity {
                         list_L.clear();
                         list_S.clear();
                     }
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        email = ds.child("email").getValue().toString();
-                        name = ds.child("username").getValue().toString();
-                        l_dept = ds.child("L_deptname").getValue().toString();
-                        s_dept = ds.child("S_deptname").getValue().toString();
-                        listEmail.add(email);
-                        listName.add(name);
-                        list_L.add(l_dept);
-                        list_S.add(s_dept);
 
-                        Item item = new Item();
-                        item.setName(name);
-                        item.setEmail(email);
-                        item.setL_dept(l_dept);
-                        item.setS_dept(s_dept);
-                        adapter.addItem(item);
-                        adapter.notifyDataSetChanged();
-                    }
+                    Log.d("ds : ",dataSnapshot.getKey());
+                    email = dataSnapshot.child("email").getValue().toString();
+                    name = dataSnapshot.child("username").getValue().toString();
+                    l_dept = dataSnapshot.child("L_deptname").getValue().toString();
+                    s_dept = dataSnapshot.child("S_deptname").getValue().toString();
+                    listEmail.add(email);
+                    listName.add(name);
+                    list_L.add(l_dept);
+                    list_S.add(s_dept);
+
+                    Item item = new Item();
+                    item.setName(name);
+                    item.setEmail(email);
+                    item.setL_dept(l_dept);
+                    item.setS_dept(s_dept);
+                    adapter.addItem(item);
+                    adapter.notifyDataSetChanged();
+
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
