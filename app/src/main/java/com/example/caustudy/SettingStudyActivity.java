@@ -69,7 +69,7 @@ public class SettingStudyActivity extends AppCompatActivity {
         next_location_view = findViewById(R.id.nextLocationView);
         next_time_view = findViewById(R.id.nextTimeView);
         next_location = "설정된 장소가 없습니다.";
-        next_time = "설정된 시간이 없습니다.";
+        next_time = "";
         mContext = this;
 
 
@@ -81,73 +81,35 @@ public class SettingStudyActivity extends AppCompatActivity {
                 Log.d("ds.getvalue",dataSnapshot.getValue().toString());
                 String study_day = dataSnapshot.getValue().toString();
                 System.out.println(study_day);
-                Log.d(study_day, "===========================================" + study_day);
                 for(int i = 0; i < study_day.length(); i++){
                     String day = study_day.substring(i);
                     Log.d(day, day);
                     switch (day){
                         case "월":
-                            next_time += getDay.getMonday() + ' ';
+                            next_time += getDay.getMonday() + "\n";
                             break;
                         case "화":
-                            next_time += getDay.getTuesday() + ' ';
+                            next_time += getDay.getTuesday() + "\n";
                             break;
                         case "수":
-                            next_time += getDay.getWednesday() + ' ';
+                            next_time += getDay.getWednesday() + "\n";
                             break;
                         case "목":
-                            next_time += getDay.getThursday() + ' ';
+                            next_time += getDay.getThursday() + "\n";
                             break;
                         case "금":
-                            next_time += getDay.getFriday() + ' ';
+                            next_time += getDay.getFriday() + "\n";
                             break;
                         case "토":
-                            next_time += getDay.getSaturday() + ' ';
+                            next_time += getDay.getSaturday() + "\n";
                             break;
                         case "일":
-                            next_time += getDay.getSunday() + ' ';
+                            next_time += getDay.getSunday() + "\n";
                             break;
                     }
                     next_time_view.setText(next_time);
                 }
-                // jesnk : 이 for문은, study_day 하위의 child들을 순회한다.
-                // 몬제는 뭐였냐면, study_day는 child가 없어! value 값만 가지고 있지.
-                /*
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    // jesnk. examine
-                    Log.d("ds.getvalue",ds.getValue().toString());
-                    String study_day = ds.getValue().toString();
-                    System.out.println(study_day);
-                    Log.d(study_day, "===========================================" + study_day);
-                    for(int i = 0; i < study_day.length(); i++){
-                        String day = study_day.substring(i);
-                        Log.d(day, day);
-                        switch (day){
-                            case "월":
-                                next_time += getDay.getMonday() + ' ';
-                                break;
-                            case "화":
-                                next_time += getDay.getTuesday() + ' ';
-                                break;
-                            case "수":
-                                next_time += getDay.getWednesday() + ' ';
-                                break;
-                            case "목":
-                                next_time += getDay.getThursday() + ' ';
-                                break;
-                            case "금":
-                                next_time += getDay.getFriday() + ' ';
-                                break;
-                            case "토":
-                                next_time += getDay.getSaturday() + ' ';
-                                break;
-                            case "일":
-                                next_time += getDay.getSunday() + ' ';
-                                break;
-                        }
-                        next_time_view.setText(next_time);
-                    }
-                } */
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
