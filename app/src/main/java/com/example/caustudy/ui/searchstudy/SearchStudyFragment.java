@@ -75,7 +75,6 @@ public class SearchStudyFragment extends Fragment {
         setting_fill_list();
         autoCompleteTextView.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, fill_list));
 
-        btn = (Button)root.findViewById(R.id.search_btn);
         serach_btn2 = (Button)root.findViewById(R.id.search_btn2);
 
         create_btn = (Button)root.findViewById(R.id.create_btn);
@@ -147,17 +146,15 @@ public class SearchStudyFragment extends Fragment {
             }
         });
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getData(recyclerView);
-            }
-        });
-
         serach_btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getData_2(recyclerView);
+                if(autoCompleteTextView.getText().toString().length() <= 0){
+                    getData(recyclerView);
+                }
+                else{
+                    getData_2(recyclerView);
+                }
             }
         });
 
@@ -190,20 +187,19 @@ public class SearchStudyFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(linearLayoutManager);
         adapter = new RecyclerAdapter();
+        tag_search = autoCompleteTextView.getText().toString();
+
         adapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View v, int position){
+            @Override
+            public void onItemClick(View v, int position){
                 Intent intent = new Intent(getActivity(), StudyDetailActivity.class);
                 intent.putExtra("study_name",listTitle.get(position) );
-                intent.putExtra("l_cate",l_cate);
-                intent.putExtra("s_cate",s_cate);
                 startActivity(intent);
             }
         });
         rv.setAdapter(adapter);
-        
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("StudyList");
-        myRef.child(l_cate).child(s_cate).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
@@ -214,24 +210,26 @@ public class SearchStudyFragment extends Fragment {
                     listOrg.clear();
                     listInfo.clear();
                 }
-                for (DataSnapshot meetingName : dataSnapshot.getChildren()) {
-                    String title = meetingName.child("study_name").getValue().toString();
-                    String s_time = meetingName.child("s_period").getValue().toString();
-                    String e_time = meetingName.child("e_period").getValue().toString();
-                    String period = s_time + " ~ " + e_time;
-                    String day = meetingName.child("study_day").getValue().toString();
-                    String time = meetingName.child("study_time").getValue().toString();
-                    day = day + " " + time;
-                    String leader = meetingName.child("leader_email").getValue().toString();
-                    String org = meetingName.child("organization").getValue().toString();
-                    String info = meetingName.child("info").getValue().toString();
-                    Log.v("리스트", "title"+ title);
-                    listTitle.add(title);
-                    listPeriod.add(period);
-                    listTime.add(day);
-                    listLeader.add(leader);
-                    listOrg.add(org);
-                    listInfo.add(info);
+                for (DataSnapshot study: dataSnapshot.getChildren()) {
+                    if (study.child("L_category").getValue().toString().equals(l_cate) && study.child("S_category").getValue().toString().equals(s_cate)){
+                        String title = study.child("study_name").getValue().toString();
+                        String s_time = study.child("s_period").getValue().toString();
+                        String e_time = study.child("e_period").getValue().toString();
+                        String period = s_time + " ~ " + e_time;
+                        String day = study.child("study_day").getValue().toString();
+                        String time = study.child("study_time").getValue().toString();
+                        day = day + " " + time;
+                        String leader = study.child("leader_email").getValue().toString();
+                        String org = study.child("organization").getValue().toString();
+                        String info = study.child("info").getValue().toString();
+                        Log.v("리스트", "title"+ title);
+                        listTitle.add(title);
+                        listPeriod.add(period);
+                        listTime.add(day);
+                        listLeader.add(leader);
+                        listOrg.add(org);
+                        listInfo.add(info);
+                    }
                 }
             }
 
@@ -329,8 +327,6 @@ public class SearchStudyFragment extends Fragment {
                         listLeader.add(leader);
                         listOrg.add(org);
                         listInfo.add(info);
-
-
                     }
 
                 }
