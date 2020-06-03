@@ -204,32 +204,36 @@ public class SettingStudyActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             final String[] tag_value = new String[1];
-
+                            final int[] tag_value_int = new int[1];
+                            final String tag_key = ds.getKey();
                             if (ds.getKey() != null) {
-                                String tag_key = ds.getKey();
-                                userRef.child(id).child("hashtag_history").child(tag_key).addValueEventListener(new ValueEventListener() {
+                                userRef.child(id).child("hashtag_history").child(tag_key).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.getValue() != null) {
                                             tag_value[0] = dataSnapshot.getValue().toString();
-                                            Log.d("key_value", dataSnapshot.getKey() + " " + tag_value[0]);
+
+                                            Log.d("key and value", dataSnapshot.getKey() + " " + tag_value[0]);
+                                            tag_value_int[0] = Integer.parseInt(tag_value[0]);
+                                            tag_value_int[0] += 1;
+                                            Log.d("tag_value_int",Integer.toString(tag_value_int[0]));
+
+
+                                        } else {
+                                            tag_value_int[0] = 1;
                                         }
+                                        userRef.child(id).child("hashtag_history").child(tag_key).setValue(Integer.toString(tag_value_int[0]));
+
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
                                     }
                                 });
+                                Log.d("DB insert test ",tag_key + " " + Integer.toString(tag_value_int[0]));
+
                             }
                             // check
-                            int tag_value_int;
-                            Log.d("tag_value test",tag_value.toString());
-                            if (tag_value[0] != null) {
-                                tag_value_int = Integer.parseInt(tag_value[0]);
-                                tag_value_int += 1;
-                                userRef.child(id).child("hashtag_history").child(ds.getKey()).setValue(tag_value_int);
-                            } else {
-                                userRef.child(id).child("hashtag_history").child(ds.getKey()).setValue("1");
-                            }
+
                         }
                     }
 
