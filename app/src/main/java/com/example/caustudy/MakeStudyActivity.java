@@ -55,7 +55,14 @@ public class MakeStudyActivity extends AppCompatActivity {
     DatabaseReference studyRef = database.getReference("Study");
     DatabaseReference tagRef = database.getReference("Hashtags");
     //DatabaseReference studyRef = database.getReference("StudyList");
+
     private ToggleButton _toggleSun, _toggleMon, _toggleTue, _toggleWed, _toggleThu, _toggleFri, _toggleSat;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser userAuth = mAuth.getCurrentUser();
+    StringTokenizer stringTokenizer = new StringTokenizer(userAuth.getEmail(), "@");
+    String user_id = stringTokenizer.nextToken();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -295,6 +302,7 @@ public class MakeStudyActivity extends AppCompatActivity {
         study = new StudyModel(study_name, organization, l_cate, s_cate, name, email, info, s_period, e_period, day, time);
         //StringTokenizer stringTokenizer = new StringTokenizer(tag, "#");
 
+        Log.d("registerStudy ", "Started");
         // 카운트 세는 함수 안에다가 코드를 넣었다.
         count = 0;
         studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -324,6 +332,31 @@ public class MakeStudyActivity extends AppCompatActivity {
                         hashtag = hashtag.trim();
                         studyRef.child("0" + (count + 1)).child("hashtag").child(hashtag).setValue(001);
                         tagRef.child(hashtag).child("0" + (count + 1)).setValue(study_name);
+                        // 해쉬태그 히스토리 추
+
+                        final String[] tag_value = new String[1];
+                        final int[] tag_value_int = new int[1];
+                        final String tagName = hashtag;
+                        Log.d("해시태그 히스토리 검색",user_id+ " " + tagName );
+                        userRef.child(user_id).child("hashtag_history").child(tagName).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() != null) {
+                                    tag_value[0] = dataSnapshot.getValue().toString();
+                                    Log.d("key and value", dataSnapshot.getKey() + " " + tag_value[0]);
+                                    tag_value_int[0] = Integer.parseInt(tag_value[0]);
+                                    tag_value_int[0] += 1;
+                                    Log.d("tag_value_int",Integer.toString(tag_value_int[0]));
+                                } else {
+                                    tag_value_int[0] = 1;
+                                }
+                                userRef.child(user_id).child("hashtag_history").child(tagName).setValue(Integer.toString(tag_value_int[0]));
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+
                     }
                 } else {
                     //studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
@@ -335,8 +368,78 @@ public class MakeStudyActivity extends AppCompatActivity {
                         hashtag = hashtag.trim();
                         studyRef.child("00" + (count + 1)).child("hashtag").child(hashtag).setValue(1);
                         tagRef.child(hashtag).child("00" + (count + 1)).setValue(study_name);
+
+                        // 해쉬태그 히스토리 추
+                        final String[] tag_value = new String[1];
+                        final int[] tag_value_int = new int[1];
+                        final String tagName = hashtag;
+                        Log.d("해시태그 히스토리 검색",user_id+ " " + tagName );
+                        userRef.child(user_id).child("hashtag_history").child(tagName).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() != null) {
+                                    tag_value[0] = dataSnapshot.getValue().toString();
+                                    Log.d("key and value", dataSnapshot.getKey() + " " + tag_value[0]);
+                                    tag_value_int[0] = Integer.parseInt(tag_value[0]);
+                                    tag_value_int[0] += 1;
+                                    Log.d("tag_value_int",Integer.toString(tag_value_int[0]));
+                                } else {
+                                    tag_value_int[0] = 1;
+                                }
+                                userRef.child(user_id).child("hashtag_history").child(tagName).setValue(Integer.toString(tag_value_int[0]));
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
                     }
                 }
+
+                // HashTag history 추가
+                /*
+                studyRef.child("00" + (count + 1)).child("hashtag").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            final String[] tag_value = new String[1];
+                            final int[] tag_value_int = new int[1];
+                            final String tag_key = ds.getKey();
+                            if (ds.getKey() != null) {
+                                userRef.child(name).child("hashtag_history").child(tag_key).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.getValue() != null) {
+                                            tag_value[0] = dataSnapshot.getValue().toString();
+
+                                            Log.d("key and value", dataSnapshot.getKey() + " " + tag_value[0]);
+                                            tag_value_int[0] = Integer.parseInt(tag_value[0]);
+                                            tag_value_int[0] += 1;
+                                            Log.d("tag_value_int",Integer.toString(tag_value_int[0]));
+
+
+                                        } else {
+                                            tag_value_int[0] = 1;
+                                        }
+                                        userRef.child(name).child("hashtag_history").child(tag_key).setValue(Integer.toString(tag_value_int[0]));
+
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+                                Log.d("DB insert test ",tag_key + " " + Integer.toString(tag_value_int[0]));
+
+                            }
+                            // check
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                }); */
 
             }
             @Override

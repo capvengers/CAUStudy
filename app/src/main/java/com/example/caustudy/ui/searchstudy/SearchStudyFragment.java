@@ -442,7 +442,7 @@ public class SearchStudyFragment extends Fragment {
 
                         for(Entry<String, Integer> entry : keySetList) {
                             idx += 1;
-                            System.out.println(entry.getKey() + " : " + entry.getValue());
+                            System.out.println("추천 검색 태그 : "+ entry.getKey() + " : " + entry.getValue());
                             // 상위태그에서,
                             // 태그 별 스터디 검색
                             // entry.getKey() : 태그
@@ -457,7 +457,7 @@ public class SearchStudyFragment extends Fragment {
                                             continue;
                                         } else {
                                             list_match_tag.add(studyNum.getKey());
-                                            Log.d("list_match_tag added",studyNum.getKey());
+                                            Log.d("Recommend Studynum added",studyNum.getKey());
                                         }
                                     }
 
@@ -485,6 +485,7 @@ public class SearchStudyFragment extends Fragment {
                                     listLeader.clear();
                                     listOrg.clear();
                                     listInfo.clear();
+                                    Log.v("리스트 ","초기화됨");
                                 }
                                 for (DataSnapshot study : dataSnapshot.getChildren()) {
                                     if (list_match_tag.contains(study.getKey())) {
@@ -498,7 +499,7 @@ public class SearchStudyFragment extends Fragment {
                                         String leader = study.child("leader_email").getValue().toString();
                                         String org = study.child("organization").getValue().toString();
                                         String info = study.child("info").getValue().toString();
-                                        Log.v("리스트", "title"+ title);
+                                        Log.v("리스트 추가됨", "title : "+ title);
                                         listTitle.add(title);
                                         listPeriod.add(period);
                                         listTime.add(day);
