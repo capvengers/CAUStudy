@@ -48,7 +48,6 @@ public class SettingStudyActivity extends AppCompatActivity {
     public static Context mContext;
 
 
-
     class SwitchListener implements CompoundButton.OnCheckedChangeListener{
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -57,6 +56,7 @@ public class SettingStudyActivity extends AppCompatActivity {
             else
                 studyRef.child(study_key).child("apply_status").removeValue();
         }
+
     }
 
     @Override
@@ -71,16 +71,17 @@ public class SettingStudyActivity extends AppCompatActivity {
         next_location = "설정된 장소가 없습니다.";
         next_time = "";
         mContext = this;
-
+        get_switch_status();
+        //스터디 모집 상태 가져오기
+        fin = findViewById(R.id.switch_fin);
+        fin.setOnCheckedChangeListener(new SwitchListener());
 
         // 다음 모임 시간, 장소 텍스트뷰 업데이트
-        // 월화수 이거 가져오려했는데 왜 안될까..
         studyRef.child(study_key).child("study_day").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("ds.getvalue",dataSnapshot.getValue().toString());
                 String study_day = dataSnapshot.getValue().toString();
-                System.out.println(study_day);
                 for(int i = 0; i < study_day.length(); i++){
                     String day = study_day.substring(i);
                     Log.d(day, day);
@@ -107,7 +108,13 @@ public class SettingStudyActivity extends AppCompatActivity {
                             next_time += getDay.getSunday() + "\n";
                             break;
                     }
-                    next_time_view.setText(next_time);
+                    studyRef.child(study_key).child("next_schedule").child("next_time").setValue(next_time).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            ((SettingStudyActivity) SettingStudyActivity.mContext).refresh_nextSchedule_view();
+
+                        }
+                    });
                 }
 
             }
@@ -115,8 +122,6 @@ public class SettingStudyActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
-
 
         refresh_nextSchedule_view();
         setNextSchedule = findViewById(R.id.schedule_setting_btn);
@@ -131,8 +136,6 @@ public class SettingStudyActivity extends AppCompatActivity {
 
 
         recyclerView = findViewById(R.id.apply_view);
-        fin = findViewById(R.id.switch_fin);
-        fin.setOnCheckedChangeListener(new SwitchListener());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SettingStudyActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -254,17 +257,25 @@ public class SettingStudyActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
-        /*
-        for (int i = 0; i < listName.size(); i++) {
-            // 각 List의 값들을 data 객체에 set 해줍니다.
-            Item item = new Item();
-            item.setName(listName.get(i));
-            item.setEmail(listEmail.get(i));
-            adapter.addItem(item);
-        }
-        */
     }
+
+    public void get_switch_status() {
+        studyRef.child(study_key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child("apply_status").getValue() != null) {
+                    fin.setChecked(true);
+                }
+                else{
+                    fin.setChecked(false);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
     public void refresh_nextSchedule_view() {
 
         studyRef.child(study_key).child("next_schedule").child("next_location").addListenerForSingleValueEvent(new ValueEventListener() {

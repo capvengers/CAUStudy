@@ -1,27 +1,24 @@
 package com.example.caustudy;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
-public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> {
+public class AttendantAdapter extends RecyclerView.Adapter<AttendantAdapter.ViewHolder> {
 
-    private ArrayList<Item> listApplier = new ArrayList<>();
+    private ArrayList<Item_attendant> listApplier = new ArrayList<>();
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_apply, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_attendant, parent, false);
         return new ViewHolder(view);
     }
     @Override
@@ -37,15 +34,16 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
         return listApplier.size();
     }
 
-    public void addItem(Item item) {
+    public void addItem(Item_attendant item) {
         listApplier.add(item);
     }
 
     private OnItemClickListener mListener = null ;
 
     public interface OnItemClickListener {
-        void onDeleteClick(View v, int position);
-        void onAcceptClick(View v, int position) ;
+        void onDelayClick(View v, int position);
+        void onAttendClick(View v, int position) ;
+        void onAbsentClick(View v, int position) ;
     }
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener ;
@@ -57,8 +55,7 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
         private TextView name;
         private TextView email;
         private TextView dept;
-        private ImageView accept;
-        private ImageView delete;
+        private ToggleButton _toggle1, _toggle2, _toggle3; //출석, 지각, 결석 순서
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -66,40 +63,55 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
             name = itemView.findViewById(R.id.item_name);
             email = itemView.findViewById(R.id.item_email);
             dept = itemView.findViewById(R.id.item_dept);
-            accept = itemView.findViewById(R.id.apply_accept);
-            delete = itemView.findViewById(R.id.apply_delete);
+            _toggle1 = itemView.findViewById(R.id.toggle_1);
+            _toggle2 = itemView.findViewById(R.id.toggle_2);
+            _toggle3 = itemView.findViewById(R.id.toggle_3);
 
-            accept.setOnClickListener(new View.OnClickListener() {
+            _toggle1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = getAdapterPosition() ;
-                    if (pos != RecyclerView.NO_POSITION) {
-                        // 리스너 객체의 메서드 호출.
-                        if (mListener != null) {
-                            mListener.onAcceptClick(v, pos);
-                            listApplier.remove(pos);
-                            notifyItemRemoved(pos);
+                    if (_toggle1.isChecked()) {
+                        int pos = getAdapterPosition();
+                        if (pos != RecyclerView.NO_POSITION) {
+                            // 리스너 객체의 메서드 호출.
+                            if (mListener != null) {
+                                mListener.onAttendClick(v, pos);
+                            }
                         }
                     }
                 }
             });
-            delete.setOnClickListener(new View.OnClickListener() {
+            _toggle2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = getAdapterPosition() ;
-                    if (pos != RecyclerView.NO_POSITION) {
-                        // 리스너 객체의 메서드 호출.
-                        if (mListener != null) {
-                            mListener.onDeleteClick(v, pos) ;
-                            listApplier.remove(pos);
-                            notifyItemRemoved(pos);
+                    if (_toggle1.isChecked()) {
+                        int pos = getAdapterPosition();
+                        if (pos != RecyclerView.NO_POSITION) {
+                            // 리스너 객체의 메서드 호출.
+                            if (mListener != null) {
+                                mListener.onDelayClick(v, pos);
+                            }
+                        }
+                    }
+                }
+            });
+            _toggle3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (_toggle1.isChecked()) {
+                        int pos = getAdapterPosition();
+                        if (pos != RecyclerView.NO_POSITION) {
+                            // 리스너 객체의 메서드 호출.
+                            if (mListener != null) {
+                                mListener.onAbsentClick(v, pos);
+                            }
                         }
                     }
                 }
             });
         }
 
-        void onBind(Item item) {
+        void onBind(Item_attendant item) {
             name.setText(item.getName());
             email.setText(item.getEmail());
             String dept_temp = item.getL_dept() + " " + item.getS_dept();
@@ -108,7 +120,7 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
     }
 }
 
-class Item {
+class Item_attendant {
     private String name, email, l_dept, s_dept;
 
     public String getName() {

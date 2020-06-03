@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.7"
+        android:layout_weight="0.65"
         android:orientation="vertical"
         android:gravity="center_vertical">
 
@@ -50,30 +50,60 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.15"
-        android:layout_margin="5dp"
+        android:layout_margin="1dp"
         android:orientation="vertical"
         android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/apply_accept"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_check" />
+        <ToggleButton
+            android:id="@+id/toggle_1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/toggle_selector"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:theme="@style/ToggleButton.CustomTheme"
+            android:checked="false"
+            android:textOff="출석"
+            android:textOn="출석" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.15"
-        android:layout_margin="5dp"
+        android:layout_margin="1dp"
         android:orientation="vertical"
         android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/apply_delete"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_clear" />
+        <ToggleButton
+            android:id="@+id/toggle_2"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/toggle_selector"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:theme="@style/ToggleButton.CustomTheme"
+            android:checked="false"
+            android:textOff="지각"
+            android:textOn="지각" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.15"
+        android:layout_margin="1dp"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <ToggleButton
+            android:id="@+id/toggle_3"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/toggle_selector"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:theme="@style/ToggleButton.CustomTheme"
+            android:checked="false"
+            android:textOff="결석"
+            android:textOn="결석" />
     </LinearLayout>
 
 </LinearLayout>

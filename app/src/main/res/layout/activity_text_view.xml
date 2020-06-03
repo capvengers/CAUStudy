@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:layout_margin="15dp"
+    android:background="@drawable/listview"
     android:padding="8dip">
 
     <TextView
@@ -13,7 +15,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000"
-        android:textSize="16sp"
+        android:textSize="18dp"
         android:padding="8dip"
         tools:text="whatever" />
 

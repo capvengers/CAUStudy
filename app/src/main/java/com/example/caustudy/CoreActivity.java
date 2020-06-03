@@ -88,7 +88,7 @@ public class CoreActivity extends ActivityWithMenuOptions {
 
     private void toast() {
 
-        final String markdown = "*Toast* __here__!\n\n> And a quote!";
+        final String markdown = mark_text;
 
         final Markwon markwon = Markwon.create(this);
 
@@ -102,7 +102,7 @@ public class CoreActivity extends ActivityWithMenuOptions {
      */
     private void alreadyParsed() {
 
-        final String markdown = "This **is** pre-parsed [markdown](#)";
+        final String markdown = mark_text;
         final Markwon markwon = Markwon.create(this);
         // parse markdown to obtain a Node
         final Node node = markwon.parse(markdown);
@@ -114,12 +114,7 @@ public class CoreActivity extends ActivityWithMenuOptions {
 
     private void enabledBlockTypes() {
 
-        final String md = "" +
-                "# Head\n\n" +
-                "> and disabled quote\n\n" +
-                "```\n" +
-                "yep\n" +
-                "```";
+        final String md = mark_text;
 
         final Set<Class<? extends Block>> blocks = CorePlugin.enabledBlockTypes();
         blocks.remove(BlockQuote.class);

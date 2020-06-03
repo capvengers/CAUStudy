@@ -4,11 +4,14 @@
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:orientation="vertical"
+    android:layout_margin="15dp"
     android:padding="8dip">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0px"
+        android:background="@drawable/listview"
+        android:layout_marginBottom="5dp"
         android:layout_weight="1">
 
         <EditText
