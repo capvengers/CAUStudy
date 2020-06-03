@@ -24,6 +24,8 @@ import com.example.caustudy.MainActivity;
 import com.example.caustudy.MakeStudyActivity;
 import com.example.caustudy.R;
 import com.example.caustudy.StudyDetailActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,8 +33,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 public class SearchStudyFragment extends Fragment {
 
@@ -43,12 +51,19 @@ public class SearchStudyFragment extends Fragment {
     Button btn;
     Button create_btn;
     Button serach_btn2;
+    Button recommend_btn;
     AutoCompleteTextView autoCompleteTextView;
     private ArrayList<String> fill_list;
     private String tag_search;
     ArrayAdapter<CharSequence> adapter_large, adapter_small; //어댑터를 선언
     DatabaseReference tagRef = FirebaseDatabase.getInstance().getReference("Hashtags");
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
+    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser userAuth = mAuth.getCurrentUser();
+    StringTokenizer stringTokenizer = new StringTokenizer(userAuth.getEmail(), "@");
+    String user_id = stringTokenizer.nextToken();
+    Map<String, Integer> interest = new HashMap<>();
 
 
     List<String> listTitle = new ArrayList<>();
@@ -69,6 +84,7 @@ public class SearchStudyFragment extends Fragment {
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_searchstudy, container, false);
 
+
         //자동완성
         autoCompleteTextView = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
         fill_list = new ArrayList<String>();
@@ -76,6 +92,7 @@ public class SearchStudyFragment extends Fragment {
         autoCompleteTextView.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, fill_list));
 
         serach_btn2 = (Button)root.findViewById(R.id.search_btn2);
+        recommend_btn = (Button)root.findViewById(R.id.recommend_list_btn);
 
         create_btn = (Button)root.findViewById(R.id.create_btn);
         create_btn.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +174,13 @@ public class SearchStudyFragment extends Fragment {
                 }
             }
         });
+        recommend_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 추천 리스트 불러오기
+                get_recommend_Data(recyclerView);
+            }
+        });
 
         return root;
     }
@@ -182,6 +206,7 @@ public class SearchStudyFragment extends Fragment {
         });
 
     }
+
 
     public void getData(RecyclerView rv) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -358,6 +383,172 @@ public class SearchStudyFragment extends Fragment {
 
         // adapter의 값이 변경되었다는 것을 알려줍니다.
         adapter.notifyDataSetChanged();
+    }
+
+    public void get_recommend_Data(RecyclerView rv) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(linearLayoutManager);
+        adapter = new RecyclerAdapter();
+        tag_search = autoCompleteTextView.getText().toString();
+
+        adapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position){
+                Intent intent = new Intent(getActivity(), StudyDetailActivity.class);
+                intent.putExtra("study_name",listTitle.get(position) );
+                startActivity(intent);
+            }
+        });
+
+        rv.setAdapter(adapter);
+
+
+        userRef.child(user_id).child("hashtag").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (interest.get(dataSnapshot.getKey()) != null) {
+                        Log.d("getKeyTest",ds.getKey() + " " +interest.get(ds.getKey()).toString());
+                        interest.put(ds.getKey(),Integer.parseInt(interest.get(ds.getKey()).toString()) + 10);
+                    } else {
+                        interest.put(ds.getKey(), 10);
+                    }
+                }
+                userRef.child(user_id).child("hashtag_history").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        System.out.println("hashtag_history");
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (interest.get(dataSnapshot.getKey()) != null) {
+                                interest.put(ds.getKey(), Integer.parseInt(interest.get(ds.getKey()).toString()) + 1);
+                                System.out.println(interest.get(ds.getKey()));
+                            } else {
+                                interest.put(ds.getKey(),1);
+                            }
+                        }
+
+                        List<Entry<String, Integer>> keySetList = new ArrayList<Entry<String, Integer>>(interest.entrySet());
+
+                        Collections.sort(keySetList, new Comparator<Entry<String, Integer>>() {
+                            // compare로 값을 비교
+                            public int compare(Entry<String, Integer> obj1, Entry<String, Integer> obj2) {
+                                // 오름 차순 정렬
+                                return obj2.getValue().compareTo(obj1.getValue());
+                            }
+                        });
+                        //정렬 끝.
+
+                        int idx = 0;
+
+                        for(Entry<String, Integer> entry : keySetList) {
+                            idx += 1;
+                            System.out.println(entry.getKey() + " : " + entry.getValue());
+                            // 상위태그에서,
+                            // 태그 별 스터디 검색
+                            // entry.getKey() : 태그
+
+                            list_match_tag.clear();
+                            tagRef.child(entry.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    for (DataSnapshot studyNum : dataSnapshot.getChildren()) {
+                                        if (list_match_tag.contains(studyNum.getKey())) {
+                                            continue;
+                                        } else {
+                                            list_match_tag.add(studyNum.getKey());
+                                            Log.d("list_match_tag added",studyNum.getKey());
+                                        }
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+
+                                }
+                            });
+                            // 상위 태그 3개까지만.
+                            if (idx > 3) {
+                                break;
+                            }
+                        }
+                        // 어댑터에 추가
+                        studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot != null) {
+                                    listTitle.clear();
+                                    listPeriod.clear();
+                                    listTime.clear();
+                                    listLeader.clear();
+                                    listOrg.clear();
+                                    listInfo.clear();
+                                }
+                                for (DataSnapshot study : dataSnapshot.getChildren()) {
+                                    if (list_match_tag.contains(study.getKey())) {
+                                        String title = study.child("study_name").getValue().toString();
+                                        String s_time = study.child("s_period").getValue().toString();
+                                        String e_time = study.child("e_period").getValue().toString();
+                                        String period = s_time + " ~ " + e_time;
+                                        String day = study.child("study_day").getValue().toString();
+                                        String time = study.child("study_time").getValue().toString();
+                                        day = day + " " + time;
+                                        String leader = study.child("leader_email").getValue().toString();
+                                        String org = study.child("organization").getValue().toString();
+                                        String info = study.child("info").getValue().toString();
+                                        Log.v("리스트", "title"+ title);
+                                        listTitle.add(title);
+                                        listPeriod.add(period);
+                                        listTime.add(day);
+                                        listLeader.add(leader);
+                                        listOrg.add(org);
+                                        listInfo.add(info);
+                                    }
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                        Log.v("리스트", "title"+listTitle.toString());
+                        Log.v("리스트", "period"+listPeriod.toString());
+                        Log.v("리스트", "title"+listTitle.toString());
+
+                        for (int i = 0; i < listTitle.size(); i++) {
+                            // 각 List의 값들을 data 객체에 set 해줍니다.
+                            Data data = new Data();
+                            data.setTitle(listTitle.get(i));
+                            data.setPeriod(listPeriod.get(i));
+                            data.setTime(listTime.get(i));
+                            data.setLeader(listLeader.get(i));
+                            data.setOrg(listOrg.get(i));
+                            data.setInfo(listInfo.get(i));
+
+                            adapter.addItem(data);
+                        }
+
+                        // adapter의 값이 변경되었다는 것을 알려줍니다.
+                        adapter.notifyDataSetChanged();
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
 }
