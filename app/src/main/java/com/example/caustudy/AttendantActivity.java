@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -20,9 +21,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 public class AttendantActivity extends AppCompatActivity {
-    private ApplyAdapter adapter;
+    private AttendantAdapter adapter;
     List<String> listName = new ArrayList<>();
     List<String> listEmail = new ArrayList<>();
     List<String> list_L = new ArrayList<>();
@@ -61,21 +64,45 @@ public class AttendantActivity extends AppCompatActivity {
         });
 
     }
+    public String get_today(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String date = format.format(Calendar.getInstance().getTime());
+        return date;
+    }
 
     public void set_adaptor(){
+        String today = get_today();
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AttendantActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new ApplyAdapter();
-        adapter.setOnItemClickListener(new ApplyAdapter.OnItemClickListener() {
+        adapter = new AttendantAdapter();
+        adapter.setOnItemClickListener(new AttendantAdapter.OnItemClickListener() {
             @Override
-            public void onAcceptClick(View v, int position) {
-
+            public void onAttendClick(View v, int position) {
+                String get_email = listEmail.get(position);
+                StringTokenizer id_token = new StringTokenizer(get_email, "@");
+                final String id = id_token.nextToken();
+                studyRef.child(study_key).child("schedule").child(today).child(id).setValue(1);
+                Toast.makeText(AttendantActivity.this, "출석 처리되었습니다.", Toast.LENGTH_SHORT).show();
             }
             @Override
-            public void onDeleteClick(View v, int position) {
-
+            public void onDelayClick(View v, int position) {
+                String get_email = listEmail.get(position);
+                StringTokenizer id_token = new StringTokenizer(get_email, "@");
+                final String id = id_token.nextToken();
+                studyRef.child(study_key).child("schedule").child(today).child(id).setValue(2);
+                Toast.makeText(AttendantActivity.this, "지각 처리되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onAbsentClick(View v, int position) {
+                String get_email = listEmail.get(position);
+                StringTokenizer id_token = new StringTokenizer(get_email, "@");
+                final String id = id_token.nextToken();
+                studyRef.child(study_key).child("schedule").child(today).child(id).setValue(3);
+                Toast.makeText(AttendantActivity.this, "결석 처리되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
+
         recyclerView.setAdapter(adapter);
         for(int i = 0; i < memList.size(); i++){
             String mem_id = memList.get(i);
@@ -100,7 +127,7 @@ public class AttendantActivity extends AppCompatActivity {
                     list_L.add(l_dept);
                     list_S.add(s_dept);
 
-                    Item item = new Item();
+                    Item_attendant item = new Item_attendant();
                     item.setName(name);
                     item.setEmail(email);
                     item.setL_dept(l_dept);

@@ -407,7 +407,7 @@ public class EditorActivity extends ActivityWithMenuOptions {
 
         save.setOnClickListener((View view) -> {
             // Firebase에 저장
-            registerStudy();
+            registerText();
             Toast.makeText(EditorActivity.this, "상세 스터디 정보가 등록되었습니다.", Toast.LENGTH_LONG).show();
             finish();
         });
@@ -477,16 +477,8 @@ public class EditorActivity extends ActivityWithMenuOptions {
         }
     }
 
-    public void registerStudy() {
+    public void registerText() {
         markdown_text = editText.getText().toString();
-        studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                studyRef.child(study_key).child("detail_info").setValue(markdown_text);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+        studyRef.child(study_key).child("detail_info").setValue(markdown_text);
     }
 }

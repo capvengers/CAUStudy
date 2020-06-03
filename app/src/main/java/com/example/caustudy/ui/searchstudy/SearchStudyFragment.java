@@ -202,7 +202,7 @@ public class SearchStudyFragment extends Fragment {
         studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null){
+                if (dataSnapshot != null) {
                     listTitle.clear();
                     listPeriod.clear();
                     listTime.clear();
@@ -210,25 +210,30 @@ public class SearchStudyFragment extends Fragment {
                     listOrg.clear();
                     listInfo.clear();
                 }
-                for (DataSnapshot study: dataSnapshot.getChildren()) {
-                    if (study.child("L_category").getValue().toString().equals(l_cate) && study.child("S_category").getValue().toString().equals(s_cate)){
-                        String title = study.child("study_name").getValue().toString();
-                        String s_time = study.child("s_period").getValue().toString();
-                        String e_time = study.child("e_period").getValue().toString();
-                        String period = s_time + " ~ " + e_time;
-                        String day = study.child("study_day").getValue().toString();
-                        String time = study.child("study_time").getValue().toString();
-                        day = day + " " + time;
-                        String leader = study.child("leader_email").getValue().toString();
-                        String org = study.child("organization").getValue().toString();
-                        String info = study.child("info").getValue().toString();
-                        Log.v("리스트", "title"+ title);
-                        listTitle.add(title);
-                        listPeriod.add(period);
-                        listTime.add(day);
-                        listLeader.add(leader);
-                        listOrg.add(org);
-                        listInfo.add(info);
+                for (DataSnapshot study : dataSnapshot.getChildren()) {
+                    if (study.child("L_category").getValue().toString().equals(l_cate) && study.child("S_category").getValue().toString().equals(s_cate)) {
+                        if (study.child("apply_status").getValue() != null) {
+                            //스터디 신청 마감
+                        }
+                        else {
+                            String title = study.child("study_name").getValue().toString();
+                            String s_time = study.child("s_period").getValue().toString();
+                            String e_time = study.child("e_period").getValue().toString();
+                            String period = s_time + " ~ " + e_time;
+                            String day = study.child("study_day").getValue().toString();
+                            String time = study.child("study_time").getValue().toString();
+                            day = day + " " + time;
+                            String leader = study.child("leader_email").getValue().toString();
+                            String org = study.child("organization").getValue().toString();
+                            String info = study.child("info").getValue().toString();
+                            Log.v("리스트", "title" + title);
+                            listTitle.add(title);
+                            listPeriod.add(period);
+                            listTime.add(day);
+                            listLeader.add(leader);
+                            listOrg.add(org);
+                            listInfo.add(info);
+                        }
                     }
                 }
             }
@@ -310,25 +315,29 @@ public class SearchStudyFragment extends Fragment {
                 }
                 for (DataSnapshot study : dataSnapshot.getChildren()) {
                     if (list_match_tag.contains(study.getKey())) {
-                        String title = study.child("study_name").getValue().toString();
-                        String s_time = study.child("s_period").getValue().toString();
-                        String e_time = study.child("e_period").getValue().toString();
-                        String period = s_time + " ~ " + e_time;
-                        String day = study.child("study_day").getValue().toString();
-                        String time = study.child("study_time").getValue().toString();
-                        day = day + " " + time;
-                        String leader = study.child("leader_email").getValue().toString();
-                        String org = study.child("organization").getValue().toString();
-                        String info = study.child("info").getValue().toString();
-                        Log.v("리스트", "title"+ title);
-                        listTitle.add(title);
-                        listPeriod.add(period);
-                        listTime.add(day);
-                        listLeader.add(leader);
-                        listOrg.add(org);
-                        listInfo.add(info);
+                        if (study.child("apply_status").getValue() != null) {
+                            //스터디 신청 마감
+                        }
+                        else {
+                            String title = study.child("study_name").getValue().toString();
+                            String s_time = study.child("s_period").getValue().toString();
+                            String e_time = study.child("e_period").getValue().toString();
+                            String period = s_time + " ~ " + e_time;
+                            String day = study.child("study_day").getValue().toString();
+                            String time = study.child("study_time").getValue().toString();
+                            day = day + " " + time;
+                            String leader = study.child("leader_email").getValue().toString();
+                            String org = study.child("organization").getValue().toString();
+                            String info = study.child("info").getValue().toString();
+                            Log.v("리스트", "title" + title);
+                            listTitle.add(title);
+                            listPeriod.add(period);
+                            listTime.add(day);
+                            listLeader.add(leader);
+                            listOrg.add(org);
+                            listInfo.add(info);
+                        }
                     }
-
                 }
             }
 
