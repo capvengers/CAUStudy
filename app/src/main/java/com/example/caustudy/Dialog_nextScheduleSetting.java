@@ -82,15 +82,15 @@ public class Dialog_nextScheduleSetting {
 
                     }
                 });
-                studyRef.child(studyNum).child("next_schedule").child("next_time").setValue(next_time.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        ((SettingStudyActivity)SettingStudyActivity.mContext).refresh_nextSchedule_view();
+                if(next_time.getText().toString().length() > 0) {
+                    studyRef.child(studyNum).child("next_schedule").child("next_time").setValue(next_time.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            ((SettingStudyActivity) SettingStudyActivity.mContext).refresh_nextSchedule_view();
 
-                    }
-                });
-
-
+                        }
+                    });
+                }
                 // 커스텀 다이얼로그를 종료한다.
                 dlg.dismiss();
             }

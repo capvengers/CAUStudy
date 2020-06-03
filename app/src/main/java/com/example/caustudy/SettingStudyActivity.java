@@ -107,7 +107,13 @@ public class SettingStudyActivity extends AppCompatActivity {
                             next_time += getDay.getSunday() + "\n";
                             break;
                     }
-                    next_time_view.setText(next_time);
+                    studyRef.child(study_key).child("next_schedule").child("next_time").setValue(next_time).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            ((SettingStudyActivity) SettingStudyActivity.mContext).refresh_nextSchedule_view();
+
+                        }
+                    });
                 }
 
             }
