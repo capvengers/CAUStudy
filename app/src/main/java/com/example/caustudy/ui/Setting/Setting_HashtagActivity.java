@@ -1,28 +1,18 @@
 package com.example.caustudy.ui.Setting;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.example.caustudy.ApplyAdapter;
 import com.example.caustudy.R;
-import com.example.caustudy.ui.searchstudy.RecyclerAdapter;
-import com.example.caustudy.ui.searchstudy.SearchViewModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

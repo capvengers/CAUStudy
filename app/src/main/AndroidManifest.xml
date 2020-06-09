@@ -15,7 +15,7 @@
         android:roundIcon="@drawable/cau"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".Member_management"></activity>
+        <activity android:name=".MemberManagement.MemberManagementActivity"></activity>
         <activity android:name=".AttendantActivity" />
         <activity android:name=".QuestionActivity" />
         <activity android:name=".ui.Setting.Setting_HashtagActivity" />

@@ -1,4 +1,4 @@
-package com.example.caustudy;
+package com.example.caustudy.MemberManagement;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,14 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import com.example.caustudy.MemberManagement.ApplyViewAdapter;
-import com.example.caustudy.MemberManagement.ApplyViewItem;
-
+import com.example.caustudy.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,29 +26,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+public class MemberManagementActivity extends AppCompatActivity {
 
-public class SettingStudyActivity extends AppCompatActivity {
 
     List<String> listName = new ArrayList<>();
     List<String> listEmail = new ArrayList<>();
     List<String> list_L = new ArrayList<>();
     List<String> list_S = new ArrayList<>();
 
+    List<String> member_email = new ArrayList<>();
+    List<String> member_name = new ArrayList<>();
+    List<String> member_list_L = new ArrayList<>();
+    List<String> member_list_S = new ArrayList<>();
+
+
     Switch fin;
-    RecyclerView recyclerView;
-    private ApplyViewAdapter adapter;
+    RecyclerView apply_recyclerView;
+    RecyclerView member_recyclerView;
+    private MemberViewAdapter member_view_adapter;
+    private ApplyViewAdapter apply_view_adapter;
     private String study_key, study_name, email, name, l_dept, s_dept;
+
+
+
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
 
-    private Button setNextSchedule;
-    private TextView next_location_view, next_time_view;
-    String next_location;
-    String next_time;
     public static Context mContext;
 
 
-    class SwitchListener implements CompoundButton.OnCheckedChangeListener{
+    class SwitchListener2 implements CompoundButton.OnCheckedChangeListener{
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked)
@@ -59,91 +63,34 @@ public class SettingStudyActivity extends AppCompatActivity {
             else
                 studyRef.child(study_key).child("apply_status").removeValue();
         }
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_study);
+        setContentView(R.layout.activity_member_management);
         Intent intent = getIntent();
         study_key = intent.getStringExtra("study_key");
         study_name = intent.getStringExtra("study_name");
-        next_location_view = findViewById(R.id.nextLocationView);
-        next_time_view = findViewById(R.id.nextTimeView);
-        next_location = "설정된 장소가 없습니다.";
-        next_time = "";
+
         mContext = this;
         get_switch_status();
         //스터디 모집 상태 가져오기
         fin = findViewById(R.id.switch_fin);
-        fin.setOnCheckedChangeListener(new SwitchListener());
+        fin.setOnCheckedChangeListener(new SwitchListener2());
 
-        // 다음 모임 시간, 장소 텍스트뷰 업데이트
-        studyRef.child(study_key).child("study_day").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("ds.getvalue",dataSnapshot.getValue().toString());
-                String study_day = dataSnapshot.getValue().toString();
-                for(int i = 0; i < study_day.length(); i++){
-                    String day = study_day.substring(i);
-                    Log.d(day, day);
-                    switch (day){
-                        case "월":
-                            next_time += getDay.getMonday() + "\n";
-                            break;
-                        case "화":
-                            next_time += getDay.getTuesday() + "\n";
-                            break;
-                        case "수":
-                            next_time += getDay.getWednesday() + "\n";
-                            break;
-                        case "목":
-                            next_time += getDay.getThursday() + "\n";
-                            break;
-                        case "금":
-                            next_time += getDay.getFriday() + "\n";
-                            break;
-                        case "토":
-                            next_time += getDay.getSaturday() + "\n";
-                            break;
-                        case "일":
-                            next_time += getDay.getSunday() + "\n";
-                            break;
-                    }
-                    studyRef.child(study_key).child("next_schedule").child("next_time").setValue(next_time).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            ((SettingStudyActivity) SettingStudyActivity.mContext).refresh_nextSchedule_view();
+        apply_recyclerView = findViewById(R.id.apply_view);
+        member_recyclerView = findViewById(R.id.member_view);
+        apply_view_adapter = new ApplyViewAdapter();
+        member_view_adapter = new MemberViewAdapter();
 
-                        }
-                    });
-                }
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MemberManagementActivity.this);
+        apply_recyclerView.setLayoutManager(linearLayoutManager);
 
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(MemberManagementActivity.this);
+        member_recyclerView.setLayoutManager(linearLayoutManager2);
 
-        refresh_nextSchedule_view();
-        setNextSchedule = findViewById(R.id.schedule_setting_btn);
-        setNextSchedule.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Dialog_nextScheduleSetting dialog_nextScheduleSet = new Dialog_nextScheduleSetting(SettingStudyActivity.this);
-                dialog_nextScheduleSet.callFunction(study_key);
-
-            }
-        });
-
-
-        recyclerView = findViewById(R.id.apply_view);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SettingStudyActivity.this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new ApplyViewAdapter();
-        adapter.setOnItemClickListener(new ApplyViewAdapter.OnItemClickListener() {
+        apply_view_adapter.setOnItemClickListener(new ApplyViewAdapter.OnItemClickListener() {
 
             @Override
             public void onAcceptClick(View v, int position) {
@@ -226,8 +173,8 @@ public class SettingStudyActivity extends AppCompatActivity {
                 });
             }
         });
-        recyclerView.setAdapter(adapter);
 
+        apply_recyclerView.setAdapter(apply_view_adapter);
         studyRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -247,19 +194,77 @@ public class SettingStudyActivity extends AppCompatActivity {
                     list_L.add(l_dept);
                     list_S.add(s_dept);
 
-                    ApplyViewItem item = new ApplyViewItem();
-                    item.setName(name);
-                    item.setEmail(email);
-                    item.setL_dept(l_dept);
-                    item.setS_dept(s_dept);
-                    adapter.addItem(item);
-                    adapter.notifyDataSetChanged();
+                    ApplyViewItem applyViewItem = new ApplyViewItem();
+                    applyViewItem.setName(name);
+                    applyViewItem.setEmail(email);
+                    applyViewItem.setL_dept(l_dept);
+                    applyViewItem.setS_dept(s_dept);
+                    apply_view_adapter.addItem(applyViewItem);
+                    apply_view_adapter.notifyDataSetChanged();
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
+        member_recyclerView.setAdapter(member_view_adapter);
+        studyRef.child(study_key).child("member_list").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null){
+                    listEmail.clear();
+                    listName.clear();
+                    list_L.clear();
+                    list_S.clear();
+                }
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //member_email.add(ds.getValue().toString());
+                    String user_email = ds.getValue().toString();
+                    StringTokenizer id_token = new StringTokenizer(user_email, "@");
+                    String user_id = id_token.nextToken();
+                    final String[] name = new String[1];
+                    userRef.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot ds) {
+                            if (ds.getValue() != null) {
+                                name[0] = ds.child("username").getValue().toString();
+                                String member_l_dept = ds.child("L_deptname").getValue().toString();
+                                String member_s_dept = ds.child("S_deptname").getValue().toString();
+
+                                member_email.add(user_email);
+                                member_name.add(name[0]);
+                                member_list_L.add(member_l_dept);
+                                member_list_S.add(member_s_dept);
+                                MemberViewItem memberViewItem = new MemberViewItem();
+                                memberViewItem.setName(name[0]);
+                                memberViewItem.setEmail(user_email);
+                                memberViewItem.setL_dept(member_l_dept);
+                                memberViewItem.setS_dept(member_s_dept);
+
+                                member_view_adapter.addItem(memberViewItem);
+                                // 아래 코드를 밖으로 뺴면 안되더
+                                member_view_adapter.notifyDataSetChanged();
+
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     public void get_switch_status() {
@@ -278,38 +283,5 @@ public class SettingStudyActivity extends AppCompatActivity {
             }
         });
     }
-
-    public void refresh_nextSchedule_view() {
-
-        studyRef.child(study_key).child("next_schedule").child("next_location").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot ds) {
-
-                Log.d("ds.getKey() test :",ds.getKey());
-                if (ds.getValue() != null) {
-                    next_location_view.setText(ds.getValue().toString());
-                    Log.d("locationsteted", "Succes");
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        studyRef.child(study_key).child("next_schedule").child("next_time").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot ds) {
-                Log.d("ds.getKey() test :",ds.getKey());
-                if (ds.getValue() != null) {
-                    next_time_view.setText(ds.getValue().toString());
-                    Log.d("timesteted", "Succes");
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
 
 }

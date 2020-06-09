@@ -1,23 +1,21 @@
-package com.example.caustudy;
+package com.example.caustudy.MemberManagement;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.ValueEventListener;
+import com.example.caustudy.R;
 
 import java.util.ArrayList;
 
-public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> {
+public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.ViewHolder> {
 
-    private ArrayList<Item> listApplier = new ArrayList<>();
+    private ArrayList<ApplyViewItem> listApplier = new ArrayList<>();
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,12 +31,12 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        // Item 수
+        // ApplyViewItem 수
         return listApplier.size();
     }
 
-    public void addItem(Item item) {
-        listApplier.add(item);
+    public void addItem(ApplyViewItem applyViewItem) {
+        listApplier.add(applyViewItem);
     }
 
     private OnItemClickListener mListener = null ;
@@ -99,43 +97,12 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ViewHolder> 
             });
         }
 
-        void onBind(Item item) {
-            name.setText(item.getName());
-            email.setText(item.getEmail());
-            String dept_temp = item.getL_dept() + " " + item.getS_dept();
+        void onBind(ApplyViewItem applyViewItem) {
+            name.setText(applyViewItem.getName());
+            email.setText(applyViewItem.getEmail());
+            String dept_temp = applyViewItem.getL_dept() + " " + applyViewItem.getS_dept();
             dept.setText(dept_temp);
         }
     }
 }
 
-class Item {
-    private String name, email, l_dept, s_dept;
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getL_dept() {
-        return l_dept;
-    }
-    public void setL_dept(String l_dept) {
-        this.l_dept = l_dept;
-    }
-
-    public String getS_dept() {
-        return s_dept;
-    }
-    public void setS_dept(String s_dept) {
-        this.s_dept = s_dept;
-    }
-}
