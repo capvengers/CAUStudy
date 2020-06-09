@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +42,7 @@ public class SettingStudyActivity extends AppCompatActivity {
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
 
-    private Button setNextSchedule;
+    private Button setNextSchedule, editMarkdown;
     private TextView next_location_view, next_time_view;
     String next_location;
     String next_time;
@@ -75,6 +76,17 @@ public class SettingStudyActivity extends AppCompatActivity {
         //스터디 모집 상태 가져오기
         fin = findViewById(R.id.switch_fin);
         fin.setOnCheckedChangeListener(new SwitchListener());
+
+        editMarkdown = findViewById(R.id.edit_btn);
+        editMarkdown.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //상세스터디 마크다운에디터
+                Intent intent = new Intent(SettingStudyActivity.this, EditorActivity.class);
+                intent.putExtra("study_key", study_key );
+                startActivity(intent);
+            }
+        });
 
         // 다음 모임 시간, 장소 텍스트뷰 업데이트
         studyRef.child(study_key).child("study_day").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -136,7 +148,6 @@ public class SettingStudyActivity extends AppCompatActivity {
 
 
         recyclerView = findViewById(R.id.apply_view);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SettingStudyActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new ApplyAdapter();
@@ -182,33 +193,25 @@ public class SettingStudyActivity extends AppCompatActivity {
                                             tag_value_int[0] = Integer.parseInt(tag_value[0]);
                                             tag_value_int[0] += 1;
                                             Log.d("tag_value_int",Integer.toString(tag_value_int[0]));
-
-
                                         } else {
                                             tag_value_int[0] = 1;
                                         }
                                         userRef.child(id).child("hashtag_history").child(tag_key).setValue(Integer.toString(tag_value_int[0]));
-
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
                                     }
                                 });
                                 Log.d("DB insert test ",tag_key + " " + Integer.toString(tag_value_int[0]));
-
                             }
                             // check
-
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
                 });
-
-
             }
             @Override
             public void onDeleteClick(View v, int position) {
@@ -307,6 +310,7 @@ public class SettingStudyActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
 }

@@ -72,6 +72,7 @@ public class SearchStudyFragment extends Fragment {
     List<String> listLeader = new ArrayList<>();
     List<String> listOrg = new ArrayList<>();
     List<String> listInfo = new ArrayList<>();
+    List<String> listKey = new ArrayList<>();
 
     List<String> list_match_tag = new ArrayList<>();
 
@@ -219,6 +220,7 @@ public class SearchStudyFragment extends Fragment {
             public void onItemClick(View v, int position){
                 Intent intent = new Intent(getActivity(), StudyDetailActivity.class);
                 intent.putExtra("study_name",listTitle.get(position) );
+                intent.putExtra("study_key",listKey.get(position) );
                 startActivity(intent);
             }
         });
@@ -234,6 +236,7 @@ public class SearchStudyFragment extends Fragment {
                     listLeader.clear();
                     listOrg.clear();
                     listInfo.clear();
+                    listKey.clear();
                 }
                 for (DataSnapshot study : dataSnapshot.getChildren()) {
                     if (study.child("L_category").getValue().toString().equals(l_cate) && study.child("S_category").getValue().toString().equals(s_cate)) {
@@ -251,6 +254,7 @@ public class SearchStudyFragment extends Fragment {
                             String leader = study.child("leader_email").getValue().toString();
                             String org = study.child("organization").getValue().toString();
                             String info = study.child("info").getValue().toString();
+                            String key = study.getKey();
                             Log.v("리스트", "title" + title);
                             listTitle.add(title);
                             listPeriod.add(period);
@@ -258,6 +262,7 @@ public class SearchStudyFragment extends Fragment {
                             listLeader.add(leader);
                             listOrg.add(org);
                             listInfo.add(info);
+                            listKey.add(key);
                         }
                     }
                 }
@@ -300,6 +305,7 @@ public class SearchStudyFragment extends Fragment {
             public void onItemClick(View v, int position){
                 Intent intent = new Intent(getActivity(), StudyDetailActivity.class);
                 intent.putExtra("study_name",listTitle.get(position) );
+                intent.putExtra("study_key",listKey.get(position) );
                 startActivity(intent);
             }
         });
@@ -337,6 +343,7 @@ public class SearchStudyFragment extends Fragment {
                     listLeader.clear();
                     listOrg.clear();
                     listInfo.clear();
+                    listKey.clear();
                 }
                 for (DataSnapshot study : dataSnapshot.getChildren()) {
                     if (list_match_tag.contains(study.getKey())) {
@@ -354,6 +361,7 @@ public class SearchStudyFragment extends Fragment {
                             String leader = study.child("leader_email").getValue().toString();
                             String org = study.child("organization").getValue().toString();
                             String info = study.child("info").getValue().toString();
+                            String key = study.getKey();
                             Log.v("리스트", "title" + title);
                             listTitle.add(title);
                             listPeriod.add(period);
@@ -361,6 +369,8 @@ public class SearchStudyFragment extends Fragment {
                             listLeader.add(leader);
                             listOrg.add(org);
                             listInfo.add(info);
+                            listKey.add(key);
+
                         }
                     }
                 }

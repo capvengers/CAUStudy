@@ -70,16 +70,16 @@
 
     <CheckBox
         android:id="@+id/autoLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="146dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/pwd_in"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_marginStart="261dp"
+        android:layout_marginStart="225dp"
         android:layout_marginTop="-2dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="40dp"
         android:layout_marginRight="53dp"
-        android:text="자동로그인" />
+        android:text="로그인 정보 저장" />
 
 
 </RelativeLayout>

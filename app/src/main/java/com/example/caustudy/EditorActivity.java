@@ -311,7 +311,6 @@ public class EditorActivity extends ActivityWithMenuOptions {
 
     private void plugin_require() {
         // usage of plugin from other plugins
-
         final Markwon markwon = Markwon.builder(this)
                 .usePlugin(MarkwonInlineParserPlugin.create())
                 .usePlugin(new AbstractMarkwonPlugin() {
