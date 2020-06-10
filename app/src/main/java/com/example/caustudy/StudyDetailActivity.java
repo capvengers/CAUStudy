@@ -45,7 +45,7 @@ public class StudyDetailActivity extends AppCompatActivity {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference studyRef = database.getReference("Study");
     DatabaseReference databaseReference_user = database.getReference("사용자");
-
+    private String study_key;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +63,9 @@ public class StudyDetailActivity extends AppCompatActivity {
         apply = (Button)findViewById(R.id.apply_btn);
         back = (Button)findViewById(R.id.back_btn);
         Intent intent = getIntent();
-        study_name = intent.getStringExtra("study_name");
 
+        study_name = intent.getStringExtra("study_name");
+        study_key = intent.getStringExtra("study_key");
 
         get_study_info();
         set_view();
@@ -138,7 +139,66 @@ public class StudyDetailActivity extends AppCompatActivity {
         StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
         auth_id = stringTokenizer.nextToken(); //@ 분리
 
+
         if (userAuth != null) {
+
+
+
+
+
+            studyRef.child(study_key).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot ds) {
+                    StringTokenizer stringTokenizer_leader = new StringTokenizer(leader_email, "@");
+                    String leader_id = stringTokenizer_leader.nextToken();
+
+                    final Boolean[] declined = {false};
+
+
+
+                    studyRef.child(study_key).child("declined_list").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                if (ds.getKey() == auth_id) {
+                                    declined[0] = true;
+                                }
+                                if (ds.child("reApply_status").getValue() != null) {
+                                    declined[0] = false;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    if (ds.child("reApply_status").getValue() != null) {
+                        declined[0] = false;
+                    }
+
+                    if (leader_id.equals(auth_id)){
+                        Toast.makeText(getApplicationContext(), "자신이 만든 스터디는 신청할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if (ds.child("apply_status").getValue() != null) {
+                        Toast.makeText(getApplicationContext(), "스터디 모집이 마감되었습니다.", Toast.LENGTH_SHORT).show();
+                    } else if (declined[0]) {
+                        Toast.makeText(getApplicationContext(), "참여가 거절된 스터디입니다.", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        key = study_key;
+                        get_user_info();
+                        Toast.makeText(getApplicationContext(), "스터디 신청 전송", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+
+            /*
             studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -147,16 +207,23 @@ public class StudyDetailActivity extends AppCompatActivity {
                             // 스터디 키 값 받아서 데이터 올리기
                             StringTokenizer stringTokenizer_leader = new StringTokenizer(leader_email, "@");
                             String leader_id = stringTokenizer_leader.nextToken();
+
+
                             if (leader_id.equals(auth_id)){
                                 Toast.makeText(getApplicationContext(), "자신이 만든 스터디는 신청할 수 없습니다.", Toast.LENGTH_SHORT).show();
                                 finish();
-                            }
-                            else {
-                                key = ds.getKey();
+                            } else if (ds.child("apply_status").getValue() != null) {
+                                Toast.makeText(getApplicationContext(), "스터디 모집이 마감되었습니다.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                key = study_key;
                                 get_user_info();
                                 Toast.makeText(getApplicationContext(), "스터디 신청 전송", Toast.LENGTH_SHORT).show();
                             }
-                            break;
+
+
+
+
+                                break;
                         } else {
                             //Toast.makeText(getApplicationContext(), "데이터베이스에 해당 스터디가 없습니다.", Toast.LENGTH_SHORT).show();
                         }
@@ -166,7 +233,7 @@ public class StudyDetailActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
-            });
+            }); */
         }
     }
 

@@ -10,9 +10,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.caustudy.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,13 +42,16 @@ public class MemberManagementActivity extends AppCompatActivity {
 
 
     Switch fin;
+    Switch fin2;
     RecyclerView apply_recyclerView;
     RecyclerView member_recyclerView;
     private MemberViewAdapter member_view_adapter;
     private ApplyViewAdapter apply_view_adapter;
     private String study_key, study_name, email, name, l_dept, s_dept;
 
-
+    private Button set_apply_limit;
+    private TextView applier_text_view;
+    final String[] applier_limit = new String[1];
 
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
@@ -55,13 +59,22 @@ public class MemberManagementActivity extends AppCompatActivity {
     public static Context mContext;
 
 
-    class SwitchListener2 implements CompoundButton.OnCheckedChangeListener{
+    class ApplyableSwitchListener implements CompoundButton.OnCheckedChangeListener{
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if(isChecked)
                 studyRef.child(study_key).child("apply_status").setValue(1);
             else
                 studyRef.child(study_key).child("apply_status").removeValue();
+        }
+    }
+    class ReApplyableSwitchListener implements CompoundButton.OnCheckedChangeListener{
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(isChecked)
+                studyRef.child(study_key).child("reApply_status").setValue(1);
+            else
+                studyRef.child(study_key).child("reApply_status").removeValue();
         }
     }
 
@@ -72,16 +85,52 @@ public class MemberManagementActivity extends AppCompatActivity {
         Intent intent = getIntent();
         study_key = intent.getStringExtra("study_key");
         study_name = intent.getStringExtra("study_name");
+        applier_text_view = findViewById(R.id.textView_applier_limit_value);
+
+
+        set_apply_limit = findViewById(R.id.btn_set_applyNum);
+        set_apply_limit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog_NumApply dialog_numApply = new Dialog_NumApply(MemberManagementActivity.this);
+                dialog_numApply.callFunction(study_key);
+                update_view();
+
+            }
+        });
+
+        studyRef.child(study_key).child("applier_limit").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot ds) {
+                if (ds.getValue() != null) {
+                    applier_limit[0] = ds.getValue().toString();
+                    applier_text_view.setText(applier_limit[0] + " 명");
+                }
+                else {
+                    applier_limit[0] = "-";
+                    applier_text_view.setText(applier_limit[0] + " 명");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
 
         mContext = this;
         get_switch_status();
         //스터디 모집 상태 가져오기
-        fin = findViewById(R.id.switch_fin);
-        fin.setOnCheckedChangeListener(new SwitchListener2());
+        fin = findViewById(R.id.switch_fin_apply);
+        fin.setOnCheckedChangeListener(new ApplyableSwitchListener());
+        fin2 = findViewById(R.id.switch_fin_reapply);
+        fin2.setOnCheckedChangeListener(new ReApplyableSwitchListener());
 
         apply_recyclerView = findViewById(R.id.apply_view);
         member_recyclerView = findViewById(R.id.member_view);
         apply_view_adapter = new ApplyViewAdapter();
+        apply_view_adapter.setStudyKey(study_key);
+
         member_view_adapter = new MemberViewAdapter();
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MemberManagementActivity.this);
@@ -171,6 +220,10 @@ public class MemberManagementActivity extends AppCompatActivity {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
                     }
                 });
+                String declined_username = id;
+                String declined_email = get_email;
+                studyRef.child(study_key).child("declined_list").child(declined_username).setValue(declined_email);
+
             }
         });
 
@@ -190,6 +243,7 @@ public class MemberManagementActivity extends AppCompatActivity {
                     l_dept = ds.child("L_deptname").getValue().toString();
                     s_dept = ds.child("S_deptname").getValue().toString();
                     listEmail.add(email);
+                    Log.d("???",email);
                     listName.add(name);
                     list_L.add(l_dept);
                     list_S.add(s_dept);
@@ -213,10 +267,10 @@ public class MemberManagementActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
-                    listEmail.clear();
-                    listName.clear();
-                    list_L.clear();
-                    list_S.clear();
+                    member_email.clear();
+                    member_name.clear();
+                    member_list_L.clear();
+                    member_list_S.clear();
                 }
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //member_email.add(ds.getValue().toString());
@@ -277,7 +331,33 @@ public class MemberManagementActivity extends AppCompatActivity {
                 else{
                     fin.setChecked(false);
                 }
+                if (dataSnapshot.child("reApply_status").getValue() != null ) {
+                    fin2.setChecked(true);
+                }
+                else {
+                    fin2.setChecked(false);
+                }
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+    }
+    public void update_view() {
+        studyRef.child(study_key).child("applier_limit").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot ds) {
+                if (ds.getValue() != null) {
+                    applier_limit[0] = ds.getValue().toString();
+                    applier_text_view.setText(applier_limit[0] + " 명");
+                }
+                else {
+                    applier_limit[0] = "-";
+                    applier_text_view.setText(applier_limit[0] + " 명");
+                }
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }

@@ -65,7 +65,7 @@ public class SearchStudyFragment extends Fragment {
     String user_id = stringTokenizer.nextToken();
     Map<String, Integer> interest = new HashMap<>();
 
-
+    List<String> listKey = new ArrayList<>();
     List<String> listTitle = new ArrayList<>();
     List<String> listPeriod = new ArrayList<>();
     List<String> listTime = new ArrayList<>();
@@ -228,6 +228,7 @@ public class SearchStudyFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
+                    listKey.clear();
                     listTitle.clear();
                     listPeriod.clear();
                     listTime.clear();
@@ -239,8 +240,7 @@ public class SearchStudyFragment extends Fragment {
                     if (study.child("L_category").getValue().toString().equals(l_cate) && study.child("S_category").getValue().toString().equals(s_cate)) {
                         if (study.child("apply_status").getValue() != null) {
                             //스터디 신청 마감
-                        }
-                        else {
+                            String key = study.getKey();
                             String title = study.child("study_name").getValue().toString();
                             String s_time = study.child("s_period").getValue().toString();
                             String e_time = study.child("e_period").getValue().toString();
@@ -252,6 +252,28 @@ public class SearchStudyFragment extends Fragment {
                             String org = study.child("organization").getValue().toString();
                             String info = study.child("info").getValue().toString();
                             Log.v("리스트", "title" + title);
+                            listKey.add(key);
+                            listTitle.add(title);
+                            listPeriod.add(period);
+                            listTime.add(day);
+                            listLeader.add(leader);
+                            listOrg.add(org);
+                            listInfo.add(info);
+                        }
+                        else {
+                            String key = study.getKey();
+                            String title = study.child("study_name").getValue().toString();
+                            String s_time = study.child("s_period").getValue().toString();
+                            String e_time = study.child("e_period").getValue().toString();
+                            String period = s_time + " ~ " + e_time;
+                            String day = study.child("study_day").getValue().toString();
+                            String time = study.child("study_time").getValue().toString();
+                            day = day + " " + time;
+                            String leader = study.child("leader_email").getValue().toString();
+                            String org = study.child("organization").getValue().toString();
+                            String info = study.child("info").getValue().toString();
+                            Log.v("리스트", "title" + title);
+                            listKey.add(key);
                             listTitle.add(title);
                             listPeriod.add(period);
                             listTime.add(day);
@@ -300,6 +322,7 @@ public class SearchStudyFragment extends Fragment {
             public void onItemClick(View v, int position){
                 Intent intent = new Intent(getActivity(), StudyDetailActivity.class);
                 intent.putExtra("study_name",listTitle.get(position) );
+                intent.putExtra("study_key",listKey.get(position));
                 startActivity(intent);
             }
         });

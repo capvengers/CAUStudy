@@ -10,12 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caustudy.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.ViewHolder> {
 
     private ArrayList<ApplyViewItem> listApplier = new ArrayList<>();
+    private String study_key;
+    DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
+
+
+
+
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,6 +46,9 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
 
     public void addItem(ApplyViewItem applyViewItem) {
         listApplier.add(applyViewItem);
+    }
+    public void setStudyKey(String studyKey) {
+        this.study_key = studyKey;
     }
 
     private OnItemClickListener mListener = null ;
