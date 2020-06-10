@@ -2,6 +2,7 @@ package com.example.caustudy;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,7 +78,7 @@ public class StudyDetailActivity extends AppCompatActivity {
         studyRef.child(study_key).child("detail_info").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
-                if (ds.getValue().toString() != null) {
+                if (ds.getValue() != null) {
                     mark_text = ds.getValue().toString();
                     simple();
                 }
@@ -111,13 +113,20 @@ public class StudyDetailActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         apply_study();
                         mPopupWindow.dismiss();
-                        finish();
+                        //finish();
                     }
                 });
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getApplicationContext(), "스터디 신청 취소", Toast.LENGTH_SHORT).show();
+                        String toast_text = "스터디 신청 취소.";
+                        Toast toast = Toast.makeText(getApplicationContext(), toast_text, Toast.LENGTH_SHORT);
+                        LinearLayout toastLayout = (LinearLayout) toast.getView();
+                        TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                        toastTV.setTextSize(20);
+                        toast.setGravity(Gravity.CENTER|Gravity.CENTER, 0, 0);
+                        toast.show();
+
                         mPopupWindow.dismiss();
                     }
                 });
@@ -159,31 +168,116 @@ public class StudyDetailActivity extends AppCompatActivity {
 
         if (userAuth != null) {
 
+            final int[] num_applier = {0};
+            final int[] applier_limit = {0};
 
-
-
-
-            studyRef.child(study_key).addListenerForSingleValueEvent(new ValueEventListener() {
+            // Get applier_limit value
+            studyRef.child(study_key).child("applier_limit").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot ds) {
-                    StringTokenizer stringTokenizer_leader = new StringTokenizer(leader_email, "@");
-                    String leader_id = stringTokenizer_leader.nextToken();
-
-                    final Boolean[] declined = {false};
-
-
-
-                    studyRef.child(study_key).child("declined_list").addListenerForSingleValueEvent(new ValueEventListener() {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() != null) {
+                        Log.d("get limit value : ",dataSnapshot.getValue().toString());
+                        applier_limit[0] = Integer.parseInt(dataSnapshot.getValue().toString());
+                    }
+                    studyRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                if (ds.getKey() == auth_id) {
-                                    declined[0] = true;
-                                }
-                                if (ds.child("reApply_status").getValue() != null) {
-                                    declined[0] = false;
-                                }
+
+
+                            for (DataSnapshot applier : dataSnapshot.getChildren()) {
+                                num_applier[0] += 1;
                             }
+                            Log.d("get applier value : ",String.valueOf(num_applier[0]));
+
+                            // Check the applier limit
+                            if (num_applier[0] >= applier_limit[0]) {
+                                String toast_text = "스터디 지원 대기열이 가득 찼습니다.";
+                                Toast toast = Toast.makeText(getApplicationContext(), toast_text, Toast.LENGTH_SHORT);
+                                LinearLayout toastLayout = (LinearLayout) toast.getView();
+                                TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                                toastTV.setTextSize(20);
+                                toast.setGravity(Gravity.CENTER|Gravity.CENTER, 0, 0);
+                                toast.show();
+
+                            } else {
+                                studyRef.child(study_key).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot ds) {
+                                        StringTokenizer stringTokenizer_leader = new StringTokenizer(leader_email, "@");
+                                        String leader_id = stringTokenizer_leader.nextToken();
+
+                                        final Boolean[] declined = {false};
+
+                                        studyRef.child(study_key).child("declined_list").addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                                                    Log.d("decline test ",ds.getKey()+auth_id);
+
+                                                    if (ds.getKey().equals(auth_id)) {
+                                                        declined[0] = true;
+                                                    }
+
+                                                }
+
+                                                if (ds.child("reApply_status").getValue() != null) {
+                                                    declined[0] = false;
+                                                }
+                                                Log.d("decline value : ",declined[0].toString());
+                                                if (leader_id.equals(auth_id)){
+                                                    String toast_text = "자신이 만든 스터디는 신청할 수 없습니다.";
+                                                    Toast toast = Toast.makeText(getApplicationContext(), toast_text, Toast.LENGTH_SHORT);
+                                                    LinearLayout toastLayout = (LinearLayout) toast.getView();
+                                                    TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                                                    toastTV.setTextSize(20);
+                                                    toast.setGravity(Gravity.CENTER|Gravity.CENTER, 0, 0);
+                                                    toast.show();
+
+                                                } else if (ds.child("apply_status").getValue() != null) {
+                                                    String toast_text = "스터디 모집이 마감되었습니다.";
+                                                    Toast toast = Toast.makeText(getApplicationContext(), toast_text, Toast.LENGTH_SHORT);
+                                                    LinearLayout toastLayout = (LinearLayout) toast.getView();
+                                                    TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                                                    toastTV.setTextSize(20);
+                                                    toast.setGravity(Gravity.CENTER|Gravity.CENTER, 0, 0);
+                                                    toast.show();
+
+                                                } else if (declined[0]) {
+                                                    String toast_text = "참여가 거절된 스터디입니다.";
+                                                    Toast toast = Toast.makeText(getApplicationContext(), toast_text, Toast.LENGTH_SHORT);
+                                                    LinearLayout toastLayout = (LinearLayout) toast.getView();
+                                                    TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                                                    toastTV.setTextSize(20);
+                                                    toast.setGravity(Gravity.CENTER|Gravity.CENTER, 0, 0);
+                                                    toast.show();
+                                                } else {
+                                                    key = study_key;
+                                                    get_user_info();
+                                                    String toast_text = "스터디 신청 완료.";
+                                                    Toast toast = Toast.makeText(getApplicationContext(), toast_text, Toast.LENGTH_SHORT);
+                                                    LinearLayout toastLayout = (LinearLayout) toast.getView();
+                                                    TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                                                    toastTV.setTextSize(20);
+                                                    toast.setGravity(Gravity.CENTER|Gravity.CENTER, 0, 0);
+                                                    toast.show();                            }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+
+                            }
+
                         }
 
                         @Override
@@ -191,66 +285,19 @@ public class StudyDetailActivity extends AppCompatActivity {
 
                         }
                     });
-                    if (ds.child("reApply_status").getValue() != null) {
-                        declined[0] = false;
-                    }
-
-                    if (leader_id.equals(auth_id)){
-                        Toast.makeText(getApplicationContext(), "자신이 만든 스터디는 신청할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else if (ds.child("apply_status").getValue() != null) {
-                        Toast.makeText(getApplicationContext(), "스터디 모집이 마감되었습니다.", Toast.LENGTH_SHORT).show();
-                    } else if (declined[0]) {
-                        Toast.makeText(getApplicationContext(), "참여가 거절된 스터디입니다.", Toast.LENGTH_SHORT).show();
-
-                    } else {
-                        key = study_key;
-                        get_user_info();
-                        Toast.makeText(getApplicationContext(), "스터디 신청 전송", Toast.LENGTH_SHORT).show();
-                    }
 
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
             });
 
-            /*
-            studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (study_name.equals(ds.child("study_name").getValue().toString())) {
-                            // 스터디 키 값 받아서 데이터 올리기
-                            StringTokenizer stringTokenizer_leader = new StringTokenizer(leader_email, "@");
-                            String leader_id = stringTokenizer_leader.nextToken();
-
-
-                            if (leader_id.equals(auth_id)){
-                                Toast.makeText(getApplicationContext(), "자신이 만든 스터디는 신청할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                                finish();
-                            } else if (ds.child("apply_status").getValue() != null) {
-                                Toast.makeText(getApplicationContext(), "스터디 모집이 마감되었습니다.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                key = study_key;
-                                get_user_info();
-                                Toast.makeText(getApplicationContext(), "스터디 신청 전송", Toast.LENGTH_SHORT).show();
-                            }
 
 
 
 
-                                break;
-                        } else {
-                            //Toast.makeText(getApplicationContext(), "데이터베이스에 해당 스터디가 없습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            }); */
         }
     }
 

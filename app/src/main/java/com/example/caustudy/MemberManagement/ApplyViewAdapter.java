@@ -47,6 +47,7 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
     public void addItem(ApplyViewItem applyViewItem) {
         listApplier.add(applyViewItem);
     }
+    public void clearItem() {listApplier.clear();}
     public void setStudyKey(String studyKey) {
         this.study_key = studyKey;
     }

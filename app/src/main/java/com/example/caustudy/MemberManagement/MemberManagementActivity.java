@@ -163,6 +163,11 @@ public class MemberManagementActivity extends AppCompatActivity {
                     }
                 });
                 // Add Hashtag History
+
+                Log.d("study_history ","check");
+                userRef.child(id).child("study_history").child(study_key).child("score").setValue("-");
+                update_member_view();
+                update_applier_view();
                 studyRef.child(study_key).child("hashtag").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -317,8 +322,64 @@ public class MemberManagementActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void update_member_view() {
+        studyRef.child(study_key).child("member_list").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null){
+                    member_email.clear();
+                    member_name.clear();
+                    member_list_L.clear();
+                    member_list_S.clear();
+                    member_view_adapter.clearItem();
+                }
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //member_email.add(ds.getValue().toString());
+                    String user_email = ds.getValue().toString();
+                    StringTokenizer id_token = new StringTokenizer(user_email, "@");
+                    String user_id = id_token.nextToken();
+                    final String[] name = new String[1];
+                    userRef.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot ds) {
+                            if (ds.getValue() != null) {
+                                name[0] = ds.child("username").getValue().toString();
+                                String member_l_dept = ds.child("L_deptname").getValue().toString();
+                                String member_s_dept = ds.child("S_deptname").getValue().toString();
+
+                                member_email.add(user_email);
+                                member_name.add(name[0]);
+                                member_list_L.add(member_l_dept);
+                                member_list_S.add(member_s_dept);
+                                MemberViewItem memberViewItem = new MemberViewItem();
+                                memberViewItem.setName(name[0]);
+                                memberViewItem.setEmail(user_email);
+                                memberViewItem.setL_dept(member_l_dept);
+                                memberViewItem.setS_dept(member_s_dept);
+
+                                member_view_adapter.addItem(memberViewItem);
+                                // 아래 코드를 밖으로 뺴면 안되더
+                                member_view_adapter.notifyDataSetChanged();
+
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
 
 
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void get_switch_status() {
@@ -344,6 +405,43 @@ public class MemberManagementActivity extends AppCompatActivity {
         });
 
     }
+    public void update_applier_view() {
+        studyRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null){
+                    listEmail.clear();
+                    listName.clear();
+                    list_L.clear();
+                    list_S.clear();
+                }
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    email = ds.child("email").getValue().toString();
+                    name = ds.child("username").getValue().toString();
+                    l_dept = ds.child("L_deptname").getValue().toString();
+                    s_dept = ds.child("S_deptname").getValue().toString();
+                    listEmail.add(email);
+                    Log.d("???",email);
+                    listName.add(name);
+                    list_L.add(l_dept);
+                    list_S.add(s_dept);
+
+                    ApplyViewItem applyViewItem = new ApplyViewItem();
+                    applyViewItem.setName(name);
+                    applyViewItem.setEmail(email);
+                    applyViewItem.setL_dept(l_dept);
+                    applyViewItem.setS_dept(s_dept);
+                    apply_view_adapter.addItem(applyViewItem);
+                    apply_view_adapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+    }
+
     public void update_view() {
         studyRef.child(study_key).child("applier_limit").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

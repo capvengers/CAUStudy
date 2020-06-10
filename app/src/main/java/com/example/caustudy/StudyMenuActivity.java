@@ -44,7 +44,6 @@ public class StudyMenuActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         userAuth = mAuth.getCurrentUser();
 
-
         studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -71,7 +70,7 @@ public class StudyMenuActivity extends AppCompatActivity {
 
         // 첫 번째 아이템 추가.    public void addItem(Drawable icon, String title, String desc) {
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_insert_comment_black_24dp),
-                "공지사항", "아두이노 초급반 공지사항입니다!") ;
+                "공지사항", "스터디 알림 사항을 확인해보세요!") ;
         // 두 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_edit_black_24dp),
                 "상세 스터디 정보", "마크다운 에디터를 이용해서 스터디 정보를 작성해보세요!.") ;

@@ -38,6 +38,7 @@ public class MemberViewAdapter extends RecyclerView.Adapter<MemberViewAdapter.Vi
     public void addItem(MemberViewItem memberViewItem) {
         listMember.add(memberViewItem);
     }
+    public void clearItem() { listMember.clear();}
 
     private OnItemClickListener mListener = null ;
 

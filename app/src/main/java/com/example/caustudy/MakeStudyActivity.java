@@ -327,6 +327,8 @@ public class MakeStudyActivity extends AppCompatActivity {
                     studyRef.child("0" + (count + 1)).setValue(study);
                     //studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).child("member_list").child(id).setValue(email);
                     studyRef.child("0" + (count + 1)).child("member_list").child(id).setValue(email);
+                    studyRef.child("0" + (count + 1)).child("applier_limit").setValue("10");
+
                     while(hashTokenizer.hasMoreTokens()) {
                         String hashtag = hashTokenizer.nextToken();
                         hashtag = hashtag.trim();
@@ -369,7 +371,7 @@ public class MakeStudyActivity extends AppCompatActivity {
                         studyRef.child("00" + (count + 1)).child("hashtag").child(hashtag).setValue(1);
                         tagRef.child(hashtag).child("00" + (count + 1)).setValue(study_name);
 
-                        // 해쉬태그 히스토리 추
+                        // 해쉬태그 히스토리 추가
                         final String[] tag_value = new String[1];
                         final int[] tag_value_int = new int[1];
                         final String tagName = hashtag;
