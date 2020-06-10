@@ -29,6 +29,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.StringTokenizer;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.core.CorePlugin;
+
 public class StudyDetailActivity extends AppCompatActivity {
     long count = 0;
     private String study_name;
@@ -39,6 +42,8 @@ public class StudyDetailActivity extends AppCompatActivity {
     String title, period, category, time, leader, info, org;
     private String auth_name, auth_email, auth_l_cate, auth_s_cate;
     Button apply, back;
+    private TextView textView;
+    private String mark_text;
     private FirebaseUser userAuth;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private PopupWindow mPopupWindow ;
@@ -50,7 +55,6 @@ public class StudyDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_study_detail);
-
         tv_title = (TextView)findViewById(R.id.tv_title);
         tv_period = (TextView)findViewById(R.id.tv_period);
         tv_category = (TextView)findViewById(R.id.tv_category);
@@ -58,17 +62,30 @@ public class StudyDetailActivity extends AppCompatActivity {
         tv_time= (TextView)findViewById(R.id.tv_time);
         tv_info = (TextView)findViewById(R.id.tv_info);
         tv_org = (TextView)findViewById(R.id.tv_org);
-
-
         apply = (Button)findViewById(R.id.apply_btn);
         back = (Button)findViewById(R.id.back_btn);
         Intent intent = getIntent();
-
         study_name = intent.getStringExtra("study_name");
         study_key = intent.getStringExtra("study_key");
 
         get_study_info();
         set_view();
+        textView = findViewById(R.id.text_markdown);
+
+        // 근데 detail_info를 안 작성하면 에러뜨면서 꺼지는데? 파베 어려워요.,, 몰라요...
+        studyRef.child(study_key).child("detail_info").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot ds) {
+                if (ds.getValue().toString() != null) {
+                    mark_text = ds.getValue().toString();
+                    simple();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,8 +123,8 @@ public class StudyDetailActivity extends AppCompatActivity {
                 });
             }
         });
-
     }
+
     void get_user_info(){
         if (userAuth != null) {
             databaseReference_user.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -275,6 +292,17 @@ public class StudyDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void simple() {
+        // 여기에 그냥 친거 그대로 받아오면 될 것 같은데?
+        final Markwon markwon = Markwon.builder(this)
+                .usePlugin(CorePlugin.create())
+                .build();
+
+        final String markdown = mark_text;
+        // this will parse raw markdown and set parsed content to specified TextView
+        markwon.setMarkdown(textView, markdown);
     }
 
     void set_view(){

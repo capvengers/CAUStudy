@@ -58,6 +58,8 @@ public class CoreActivity extends ActivityWithMenuOptions {
                 if (ds.getValue().toString() != null) {
                     mark_text = ds.getValue().toString();
                     simple();
+                    //enabledBlockTypes();
+                    //alreadyParsed();
                 }
             }
             @Override
@@ -79,8 +81,11 @@ public class CoreActivity extends ActivityWithMenuOptions {
      */
     private void simple() {
         // 여기에 그냥 친거 그대로 받아오면 될 것 같은데?
+        final Markwon markwon = Markwon.builder(this)
+                .usePlugin(CorePlugin.create())
+                .build();
+
         final String markdown = mark_text;
-        final Markwon markwon = Markwon.create(this);
         // this will parse raw markdown and set parsed content to specified TextView
         markwon.setMarkdown(textView, markdown);
     }
