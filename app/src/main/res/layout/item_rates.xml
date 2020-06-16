@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
     android:padding="8dp"
     android:layout_gravity="center"
     android:gravity="center"
@@ -29,18 +29,16 @@
             android:textColor="#0075BB"
             android:textStyle="bold"/>
 
-
-        <TextView
-            android:id="@+id/rate_view"
+        <RatingBar
+            android:isIndicator="true"
+            android:id="@+id/rate_star_view"
+            style="@style/Widget.AppCompat.RatingBar.Indicator"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:includeFontPadding="false"
             android:layout_gravity="center"
-            android:gravity="center"
-
-            android:text="별점"
-            android:textSize="16dp"
-            android:textColor="@android:color/darker_gray"/>
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="3"
+            />
 
         <TextView
             android:id="@+id/feedback_view"

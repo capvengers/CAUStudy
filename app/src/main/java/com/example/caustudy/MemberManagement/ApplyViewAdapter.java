@@ -60,6 +60,7 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
         void onDeleteClick(View v, int position);
         void onAcceptClick(View v, int position) ;
         void onRatingInquiry(View v, int position);
+        void onKickClick(View v, int position);
     }
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener ;
@@ -74,6 +75,7 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
         private ImageView accept;
         private ImageView delete;
         private Button btn_rating_view;
+        private Button btn_block;
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -84,6 +86,7 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
             accept = itemView.findViewById(R.id.apply_accept);
             delete = itemView.findViewById(R.id.apply_delete);
             btn_rating_view = itemView.findViewById(R.id.btn_rating_inquiry);
+            btn_block = itemView.findViewById(R.id.btn_block);
 
             accept.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -93,8 +96,30 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
                         // 리스너 객체의 메서드 호출.
                         if (mListener != null) {
                             mListener.onAcceptClick(v, pos);
-                            listApplier.remove(pos);
-                            notifyItemRemoved(pos);
+                            if (listApplier.size() != 0) {
+                                listApplier.remove(pos);
+                                notifyDataSetChanged();
+
+                            }
+
+                        }
+                    }
+                }
+            });
+            btn_block.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition() ;
+                    if (pos != RecyclerView.NO_POSITION) {
+                        // 리스너 객체의 메서드 호출.
+                        if (mListener != null) {
+                            mListener.onKickClick(v, pos);
+                            if (listApplier.size() != 0) {
+                                listApplier.remove(pos);
+                                //notifyItemRemoved(pos);
+                                notifyDataSetChanged();
+
+                            }
                         }
                     }
                 }
@@ -107,8 +132,12 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
                         // 리스너 객체의 메서드 호출.
                         if (mListener != null) {
                             mListener.onDeleteClick(v, pos) ;
-                            listApplier.remove(pos);
-                            notifyItemRemoved(pos);
+                            if (listApplier.size() != 0) {
+                                listApplier.remove(pos);
+                                notifyDataSetChanged();
+
+                                //notifyItemRemoved(pos);
+                            }
                         }
                     }
                 }

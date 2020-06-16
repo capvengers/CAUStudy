@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -142,19 +143,19 @@ public class RatingHistoryViewAdapter extends RecyclerView.Adapter<RatingHistory
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView study_name;
-        private TextView rate;
+        private RatingBar rate;
         private TextView feedback;
 
         ViewHolder(final View itemView) {
             super(itemView);
             study_name = itemView.findViewById(R.id.study_name_view);
-            rate = itemView.findViewById(R.id.rate_view);
+            rate = itemView.findViewById(R.id.rate_star_view);
             feedback = itemView.findViewById(R.id.feedback_view);
         }
 
         void onBind(RatingHistoryViewItem ratingViewItem) {
             study_name.setText(ratingViewItem.getStudyName());
-            rate.setText(ratingViewItem.getRate());
+            rate.setRating(Float.parseFloat(ratingViewItem.getRate()));
             feedback.setText(ratingViewItem.getFeedback());
         }
     }

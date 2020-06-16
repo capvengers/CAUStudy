@@ -209,12 +209,12 @@ public class StudyDetailActivity extends AppCompatActivity {
 
                                         final Boolean[] declined = {false};
 
-                                        studyRef.child(study_key).child("declined_list").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        studyRef.child(study_key).child("block_member_list").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                                                    Log.d("decline test ",ds.getKey()+auth_id);
+                                                    Log.d("block test ",ds.getKey()+auth_id);
 
                                                     if (ds.getKey().equals(auth_id)) {
                                                         declined[0] = true;

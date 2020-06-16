@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.caustudy.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,13 +45,24 @@ public class MemberManagementActivity extends AppCompatActivity {
     List<String> member_list_L = new ArrayList<>();
     List<String> member_list_S = new ArrayList<>();
 
+    List<String> block_member_email = new ArrayList<>();
+    List<String> block_member_name = new ArrayList<>();
+    List<String> block_member_list_L = new ArrayList<>();
+    List<String> block_member_list_S = new ArrayList<>();
+
+
+
 
     Switch fin;
     Switch fin2;
     RecyclerView apply_recyclerView;
     RecyclerView member_recyclerView;
+    RecyclerView block_member_recyclerView;
+
     private MemberViewAdapter member_view_adapter;
     private ApplyViewAdapter apply_view_adapter;
+    private BlockMemberViewAdapter block_member_view_adapter;
+
     private String study_key, study_name, email, name, l_dept, s_dept;
 
     private Button set_apply_limit;
@@ -134,16 +147,25 @@ public class MemberManagementActivity extends AppCompatActivity {
 
         apply_recyclerView = findViewById(R.id.apply_view);
         member_recyclerView = findViewById(R.id.member_view);
+        block_member_recyclerView = findViewById(R.id.block_user_view);
+
         apply_view_adapter = new ApplyViewAdapter();
         apply_view_adapter.setStudyKey(study_key);
 
         member_view_adapter = new MemberViewAdapter();
+
+        block_member_view_adapter = new BlockMemberViewAdapter();
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MemberManagementActivity.this);
         apply_recyclerView.setLayoutManager(linearLayoutManager);
 
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(MemberManagementActivity.this);
         member_recyclerView.setLayoutManager(linearLayoutManager2);
+
+        LinearLayoutManager linearLayoutManager3 = new LinearLayoutManager(MemberManagementActivity.this);
+        block_member_recyclerView.setLayoutManager(linearLayoutManager3);
+
 
         member_view_adapter.setOnItemClickListener(new MemberViewAdapter.OnItemClickListener() {
             @Override
@@ -158,9 +180,52 @@ public class MemberManagementActivity extends AppCompatActivity {
             }
             @Override
             public void onKickClick(View v, int position) {
+                String email_mem = member_email.get(position);
+                StringTokenizer id_token = new StringTokenizer(email_mem, "@");
+                String id_mem = id_token.nextToken();
+                String name_mem = member_name.get(position);
+
+                studyRef.child(study_key).child("member_list").child(id_mem).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(MemberManagementActivity.this, "해제 성공", Toast.LENGTH_LONG).show();
+                        update_member_view();
+                    }
+                });
+                userRef.child(id_mem).child("taken_study").child(study_key).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                });
+
+
+                update_view();
+
+
             }
         });
 
+        block_member_view_adapter.setOnItemClickListener(new BlockMemberViewAdapter.OnItemClickListener() {
+            @Override
+            public void onUnblockClick(View v, int position) {
+                String email_mem = block_member_email.get(position);
+                StringTokenizer id_token = new StringTokenizer(email_mem, "@");
+                String id_mem = id_token.nextToken();
+                studyRef.child(study_key).child("block_member_list").child(id_mem).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(MemberManagementActivity.this, "해제 성공", Toast.LENGTH_LONG).show();
+
+                        update_block_member_view();
+                    }
+                });
+            }
+
+            @Override
+            public void onKickClick(View v, int position) {
+
+            }
+        });
 
         apply_view_adapter.setOnItemClickListener(new ApplyViewAdapter.OnItemClickListener() {
             @Override
@@ -175,21 +240,21 @@ public class MemberManagementActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
+                        update_applier_view();
+
                     }
                 });
                 // Test
                 studyRef.child(study_key).child("member_list").child(id).setValue(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        update_member_view();
                         //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
                     }
                 });
                 // Add Hashtag History
-
                 Log.d("study_history ","check");
                 userRef.child(id).child("study_history").child(study_key).child("score").setValue("-");
-                update_member_view();
-                update_applier_view();
                 studyRef.child(study_key).child("hashtag").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -248,6 +313,24 @@ public class MemberManagementActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onKickClick(View v, int position) {
+                String get_email = listEmail.get(position);
+                StringTokenizer id_token = new StringTokenizer(get_email, "@");
+                String id = id_token.nextToken();
+                studyRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
+                    }
+                });
+                String declined_username = id;
+                String declined_email = get_email;
+                studyRef.child(study_key).child("block_member_list").child(declined_username).setValue(declined_email);
+                update_block_member_view();
+
+            }
+
+            @Override
             public void onDeleteClick(View v, int position) {
                 String get_email = listEmail.get(position);
                 StringTokenizer id_token = new StringTokenizer(get_email, "@");
@@ -268,10 +351,13 @@ public class MemberManagementActivity extends AppCompatActivity {
 
         apply_recyclerView.setAdapter(apply_view_adapter);
         member_recyclerView.setAdapter(member_view_adapter);
+        block_member_recyclerView.setAdapter(block_member_view_adapter);
         update_applier_view();
         update_member_view();
+        update_block_member_view();
     }
     public void update_member_view() {
+        member_view_adapter.clearItem();
         studyRef.child(study_key).child("member_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -283,6 +369,7 @@ public class MemberManagementActivity extends AppCompatActivity {
                 }
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //member_email.add(ds.getValue().toString());
+
 
                     String user_email = ds.getValue().toString();
                     StringTokenizer id_token = new StringTokenizer(user_email, "@");
@@ -297,6 +384,7 @@ public class MemberManagementActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot ds) {
                             if (ds.getValue() != null) {
+                                Log.d("member item added",ds.getKey());
                                 name[0] = ds.child("username").getValue().toString();
                                 String member_l_dept = ds.child("L_deptname").getValue().toString();
                                 String member_s_dept = ds.child("S_deptname").getValue().toString();
@@ -314,6 +402,69 @@ public class MemberManagementActivity extends AppCompatActivity {
                                 member_view_adapter.addItem(memberViewItem);
                                 // 아래 코드를 밖으로 뺴면 안되더
                                 member_view_adapter.notifyDataSetChanged();
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void update_block_member_view() {
+        Log.d("update_block_member_view","called");
+        block_member_view_adapter.clearItem();
+        Log.d("update_block_member_view","adapter cleared");
+
+        studyRef.child(study_key).child("block_member_list").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null){
+                    block_member_email.clear();
+                    block_member_name.clear();
+                    block_member_list_L.clear();
+                    block_member_list_S.clear();
+                    Log.d("update_block_member_view","list cleared");
+                }
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //member_email.add(ds.getValue().toString());
+                    String user_email = ds.getValue().toString();
+                    StringTokenizer id_token = new StringTokenizer(user_email, "@");
+                    String user_id = id_token.nextToken();
+
+                    if (user_id.equals(cur_user_id)) {
+                        continue;
+                    }
+                    final String[] name = new String[1];
+                    userRef.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot ds) {
+                            if (ds.getValue() != null) {
+                                name[0] = ds.child("username").getValue().toString();
+                                String member_l_dept = ds.child("L_deptname").getValue().toString();
+                                String member_s_dept = ds.child("S_deptname").getValue().toString();
+
+                                block_member_email.add(user_email);
+                                block_member_name.add(name[0]);
+                                block_member_list_L.add(member_l_dept);
+                                block_member_list_S.add(member_s_dept);
+                                BlockMemberViewItem memberViewItem = new BlockMemberViewItem();
+                                memberViewItem.setName(name[0]);
+                                memberViewItem.setEmail(user_email);
+                                memberViewItem.setL_dept(member_l_dept);
+                                memberViewItem.setS_dept(member_s_dept);
+
+                                block_member_view_adapter.addItem(memberViewItem);
+                                Log.d("update_block_member_view","add item");
+
+                                // 아래 코드를 밖으로 뺴면 안되더
+                                block_member_view_adapter.notifyDataSetChanged();
 
                             }
                         }
@@ -322,6 +473,7 @@ public class MemberManagementActivity extends AppCompatActivity {
                         }
                     });
                 }
+                //update_block_member_view();
             }
 
             @Override
@@ -355,6 +507,7 @@ public class MemberManagementActivity extends AppCompatActivity {
 
     }
     public void update_applier_view() {
+        apply_view_adapter.clearItem();
         studyRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -366,7 +519,7 @@ public class MemberManagementActivity extends AppCompatActivity {
                     list_S.clear();
                 }
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
+                    Log.d("applyer item added",ds.getKey());
                     email = ds.child("email").getValue().toString();
                     StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
                     String id_mem = stringTokenizer.nextToken();
@@ -388,13 +541,13 @@ public class MemberManagementActivity extends AppCompatActivity {
                     applyViewItem.setS_dept(s_dept);
                     apply_view_adapter.addItem(applyViewItem);
                     apply_view_adapter.notifyDataSetChanged();
+
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
     }
 
     public void update_view() {
