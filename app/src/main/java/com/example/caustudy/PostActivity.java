@@ -1,6 +1,14 @@
 package com.example.caustudy;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.app.PictureInPictureParams;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
@@ -19,21 +27,32 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
+import com.example.caustudy.Models.FirebaseID;
+import com.example.caustudy.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import org.commonmark.parser.InlineParserFactory;
 import org.commonmark.parser.Parser;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 import io.noties.debug.AndroidLogDebugOutput;
@@ -41,6 +60,7 @@ import io.noties.debug.Debug;
 import io.noties.markwon.AbstractMarkwonPlugin;
 import io.noties.markwon.Markwon;
 import io.noties.markwon.SoftBreakAddsNewLinePlugin;
+import io.noties.markwon.core.CorePlugin;
 import io.noties.markwon.core.spans.EmphasisSpan;
 import io.noties.markwon.core.spans.StrongEmphasisSpan;
 import io.noties.markwon.editor.AbstractEditHandler;
@@ -58,14 +78,20 @@ import io.noties.markwon.inlineparser.MarkwonInlineParser;
 import io.noties.markwon.inlineparser.MarkwonInlineParserPlugin;
 import io.noties.markwon.linkify.LinkifyPlugin;
 
-public class EditorActivity extends ActivityWithMenuOptions {
 
-    private EditText editText;
+public class PostActivity extends ActivityWithMenuOptions implements View.OnClickListener {
+
     private String pendingInput;
-    private Button save;
     String markdown_text;
-    private String study_key;
-    DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
+    private EditText mTitle, editText;
+    private FirebaseUser userAuth;
+    private Map<String, Object> data = new HashMap<>();
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private String user_name;
+    private String study_key, study_name, email, name, id;
 
     @NonNull
     @Override
@@ -102,12 +128,37 @@ public class EditorActivity extends ActivityWithMenuOptions {
     }
 
     private void createView() {
-        setContentView(R.layout.activity_editor);
+        setContentView(R.layout.activity_post);
 
         Intent intent = getIntent();
         study_key = intent.getStringExtra("study_key");
-        this.save = findViewById(R.id.add_markdown);
-        this.editText = findViewById(R.id.edit_text);
+        study_name = intent.getStringExtra("study_name");
+
+        mAuth = FirebaseAuth.getInstance();
+        userAuth = mAuth.getCurrentUser();
+        mTitle = findViewById(R.id.post_title_edit);
+        DatabaseReference databaseReference_user = firebaseDatabase.getReference("사용자");
+
+        if (userAuth != null) {
+            Log.d("test","userAuth ok");
+            databaseReference_user.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (userAuth.getEmail().equals(ds.child("email").getValue().toString())) {
+                            user_name = ds.child("username").getValue().toString();
+                        }
+                        else {
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
+        findViewById(R.id.post_save_button).setOnClickListener(this);
+        this.editText = findViewById(R.id.post_contents_edit);
 
         initBottomBar();
     }
@@ -119,7 +170,43 @@ public class EditorActivity extends ActivityWithMenuOptions {
         Debug.init(new AndroidLogDebugOutput(true));
 
         multiple_edit_spans();
-//        newLine();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(mAuth.getCurrentUser() != null) {
+            String postId = mStore.collection(FirebaseID.post).document().getId();
+            Log.d("PostActivity : postId",postId);
+            Log.d("PostActivity : FirebaseID.post : ",FirebaseID.post);
+
+            data = new HashMap<>();
+            // Data input part
+            data.put("content", editText.getText().toString());
+            data.put("title", mTitle.getText().toString());
+            data.put("author_uid", mAuth.getCurrentUser().getUid());
+
+
+            data.put("time_stamp", FieldValue.serverTimestamp());
+            data.put("user_name",this.user_name);
+            //mStore.collection(FirebaseID.post).document(postId).set(data, SetOptions.merge());
+
+            mStore.collection(study_key+":notice").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d("data add ","is successs");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("data add ", "is fail");
+                }
+            });
+
+            Log.d("test","Auth success");
+            finish();
+        } else {
+            Log.d("test","Auth fail");
+        }
     }
 
     private void simple_process() {
@@ -151,7 +238,7 @@ public class EditorActivity extends ActivityWithMenuOptions {
         // Use own punctuation span
 
         final MarkwonEditor editor = MarkwonEditor.builder(Markwon.create(this))
-                .punctuationSpan(CustomPunctuationSpan.class, CustomPunctuationSpan::new)
+                .punctuationSpan(EditorActivity.CustomPunctuationSpan.class, EditorActivity.CustomPunctuationSpan::new)
                 .build();
 
         editText.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(editor));
@@ -169,7 +256,7 @@ public class EditorActivity extends ActivityWithMenuOptions {
                         //  position). Consider it as a cache for spans. We could use `StrongEmphasisSpan`
                         //  here also, but I chose Bold to indicate that this span is not the same
                         //  as in off-screen rendered markdown
-                        builder.persistSpan(Bold.class, Bold::new);
+                        builder.persistSpan(EditorActivity.Bold.class, EditorActivity.Bold::new);
                     }
 
                     @Override
@@ -191,7 +278,7 @@ public class EditorActivity extends ActivityWithMenuOptions {
                                     // we handle StrongEmphasisSpan and represent it with Bold in EditText
                                     //  we still could use StrongEmphasisSpan, but it must be accessed
                                     //  via persistedSpans
-                                    persistedSpans.get(Bold.class),
+                                    persistedSpans.get(EditorActivity.Bold.class),
                                     match.start(),
                                     match.end(),
                                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -211,24 +298,16 @@ public class EditorActivity extends ActivityWithMenuOptions {
     }
 
     private void additional_plugins() {
-        // As highlight works based on text-diff, everything that is present in input,
-        // but missing in resulting markdown is considered to be punctuation, this is why
-        // additional plugins do not need special handling
-
         final Markwon markwon = Markwon.builder(this)
                 .usePlugin(StrikethroughPlugin.create())
                 .build();
-
         final MarkwonEditor editor = MarkwonEditor.create(markwon);
-
         editText.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(editor));
     }
 
     private void multiple_edit_spans() {
-
         // for links to be clickable
         editText.setMovementMethod(LinkMovementMethod.getInstance());
-
         final InlineParserFactory inlineParserFactory = MarkwonInlineParser.factoryBuilder()
                 // no inline images will be parsed
                 .excludeInlineProcessor(BangInlineProcessor.class)
@@ -283,24 +362,24 @@ public class EditorActivity extends ActivityWithMenuOptions {
                     builder
                             .excludeInlineProcessor(BangInlineProcessor.class)
                             .excludeInlineProcessor(HtmlInlineProcessor.class)
-                            .excludeInlineProcessor(EntityInlineProcessor.class);
-                }))
-                .build();
+                .excludeInlineProcessor(EntityInlineProcessor.class);
+    }))
+            .build();
 
-        final LinkEditHandler.OnClick onClick = (widget, link) -> markwon.configuration().linkResolver().resolve(widget, link);
+    final LinkEditHandler.OnClick onClick = (widget, link) -> markwon.configuration().linkResolver().resolve(widget, link);
 
-        final MarkwonEditor editor = MarkwonEditor.builder(markwon)
-                .useEditHandler(new EmphasisEditHandler())
-                .useEditHandler(new StrongEmphasisEditHandler())
-                .useEditHandler(new StrikethroughEditHandler())
-                .useEditHandler(new CodeEditHandler())
-                .useEditHandler(new BlockQuoteEditHandler())
-                .useEditHandler(new LinkEditHandler(onClick))
-                .build();
+    final MarkwonEditor editor = MarkwonEditor.builder(markwon)
+            .useEditHandler(new EmphasisEditHandler())
+            .useEditHandler(new StrongEmphasisEditHandler())
+            .useEditHandler(new StrikethroughEditHandler())
+            .useEditHandler(new CodeEditHandler())
+            .useEditHandler(new BlockQuoteEditHandler())
+            .useEditHandler(new LinkEditHandler(onClick))
+            .build();
 
         editText.addTextChangedListener(MarkwonEditorTextWatcher.withPreRender(
-                editor, Executors.newSingleThreadExecutor(), editText));
-    }
+    editor, Executors.newSingleThreadExecutor(), editText));
+}
 
     private void newLine() {
         final Markwon markwon = Markwon.create(this);
@@ -371,10 +450,10 @@ public class EditorActivity extends ActivityWithMenuOptions {
         addSpan(italic, new EmphasisSpan());
         addSpan(strike, new StrikethroughSpan());
 
-        bold.setOnClickListener(new InsertOrWrapClickListener(editText, "**"));
-        italic.setOnClickListener(new InsertOrWrapClickListener(editText, "_"));
-        strike.setOnClickListener(new InsertOrWrapClickListener(editText, "~~"));
-        code.setOnClickListener(new InsertOrWrapClickListener(editText, "`"));
+        bold.setOnClickListener(new EditorActivity.InsertOrWrapClickListener(editText, "**"));
+        italic.setOnClickListener(new EditorActivity.InsertOrWrapClickListener(editText, "_"));
+        strike.setOnClickListener(new EditorActivity.InsertOrWrapClickListener(editText, "~~"));
+        code.setOnClickListener(new EditorActivity.InsertOrWrapClickListener(editText, "`"));
         quote.setOnClickListener(v -> {
 
             final int start = editText.getSelectionStart();
@@ -403,13 +482,6 @@ public class EditorActivity extends ActivityWithMenuOptions {
                 }
             }
         });
-
-        save.setOnClickListener((View view) -> {
-            // Firebase에 저장
-            registerText();
-            Toast.makeText(EditorActivity.this, "상세 스터디 정보가 등록되었습니다.", Toast.LENGTH_LONG).show();
-            finish();
-        });
     }
 
     private static void addSpan(@NonNull TextView textView, Object... spans) {
@@ -421,7 +493,7 @@ public class EditorActivity extends ActivityWithMenuOptions {
         textView.setText(builder);
     }
 
-    static class InsertOrWrapClickListener implements View.OnClickListener {
+    private static class InsertOrWrapClickListener implements View.OnClickListener {
 
         private final EditText editText;
         private final String text;
@@ -450,13 +522,13 @@ public class EditorActivity extends ActivityWithMenuOptions {
         }
     }
 
-    static class CustomPunctuationSpan extends ForegroundColorSpan {
+    private static class CustomPunctuationSpan extends ForegroundColorSpan {
         CustomPunctuationSpan() {
             super(0xFFFF0000); // RED
         }
     }
 
-    static class Bold extends MetricAffectingSpan {
+    private static class Bold extends MetricAffectingSpan {
         public Bold() {
             super();
         }
@@ -474,10 +546,5 @@ public class EditorActivity extends ActivityWithMenuOptions {
         private void update(@NonNull TextPaint paint) {
             paint.setFakeBoldText(true);
         }
-    }
-
-    public void registerText() {
-        markdown_text = editText.getText().toString();
-        studyRef.child(study_key).child("detail_info").setValue(markdown_text);
     }
 }
