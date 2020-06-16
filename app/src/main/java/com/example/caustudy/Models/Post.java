@@ -19,6 +19,7 @@ public class Post {
     public String author;
     public String title;
     public String contents;
+    public String date;
     @ServerTimestamp
     public Date datetime;
     public Timestamp time_stamp;
@@ -45,12 +46,11 @@ public class Post {
     public String getContents() {
         return contents;
     }
-
     public String getDate() {
         try {
             SimpleDateFormat transFormat = new SimpleDateFormat("MM-dd\nHH:mm:ss");
-            String ret = transFormat.format(this.time_stamp.toDate());
-            return ret;
+            date = transFormat.format(this.time_stamp.toDate());
+            return date;
         } catch (Exception e) {
 
         }
@@ -60,9 +60,11 @@ public class Post {
     public void setTitle(String title) {
         this.title = title;
     }
+    public void setUid(String uid) {this.uid = uid;}
     public void setContents(String contents) {
         this.contents = contents;
     }
+    public void setDate(String date) {this.date = date;}
     public Date getDatetime() {
         return this.time_stamp.toDate();
     }

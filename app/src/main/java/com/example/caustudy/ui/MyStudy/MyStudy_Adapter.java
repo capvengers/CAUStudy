@@ -6,15 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.caustudy.Adaptors.PostAdaptor;
-import com.example.caustudy.Models.Post;
-import com.example.caustudy.R;
 
 import java.util.ArrayList;
 

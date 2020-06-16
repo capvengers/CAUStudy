@@ -21,8 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import com.example.caustudy.jesnk.JMainActivity;
-
 public class StudyMenuActivity extends AppCompatActivity {
     private String study_key, study_name, leader_email;
     TextView title;

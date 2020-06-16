@@ -15,8 +15,9 @@
         android:roundIcon="@drawable/cau"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MemberManagement.MemberManagementActivity"></activity>
-        <activity android:name=".MemberManagement.Dialog_rating_inquiry"></activity>
+        <activity android:name=".PostViewActivity"></activity>
+        <activity android:name=".MemberManagement.MemberManagementActivity" />
+        <activity android:name=".MemberManagement.Dialog_rating_inquiry" />
         <activity android:name=".MemberManagement.Dialog_member_evaluation" />
         <activity android:name=".MakeTodoActivity" />
         <activity android:name=".AttendantActivity" />
@@ -48,10 +49,10 @@
             android:windowSoftInputMode="adjustResize|adjustPan" />
         <activity android:name=".FindPW_Activity" />
         <activity
-            android:name=".jesnk.PostActivity"
+            android:name=".PostActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".jesnk.JMainActivity"
+            android:name=".JMainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SignInActivity" />
         <activity
