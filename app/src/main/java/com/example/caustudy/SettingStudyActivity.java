@@ -16,6 +16,9 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.caustudy.MemberManagement.ApplyViewAdapter;
+import com.example.caustudy.MemberManagement.ApplyViewItem;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +40,7 @@ public class SettingStudyActivity extends AppCompatActivity {
 
     Switch fin;
     RecyclerView recyclerView;
-    private ApplyAdapter adapter;
+    private ApplyViewAdapter adapter;
     private String study_key, study_name, email, name, l_dept, s_dept;
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
@@ -72,10 +75,7 @@ public class SettingStudyActivity extends AppCompatActivity {
         next_location = "설정된 장소가 없습니다.";
         next_time = "";
         mContext = this;
-        get_switch_status();
         //스터디 모집 상태 가져오기
-        fin = findViewById(R.id.switch_fin);
-        fin.setOnCheckedChangeListener(new SwitchListener());
 
         editMarkdown = findViewById(R.id.edit_btn);
         editMarkdown.setOnClickListener(new View.OnClickListener(){
@@ -146,138 +146,8 @@ public class SettingStudyActivity extends AppCompatActivity {
             }
         });
 
-
-        recyclerView = findViewById(R.id.apply_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SettingStudyActivity.this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new ApplyAdapter();
-        adapter.setOnItemClickListener(new ApplyAdapter.OnItemClickListener() {
-
-            @Override
-            public void onAcceptClick(View v, int position) {
-                String get_email = listEmail.get(position);
-                StringTokenizer id_token = new StringTokenizer(get_email, "@");
-
-                // Final로 했는데, 괜찮으려
-                final String id = id_token.nextToken();
-                userRef.child(id).child("taken_study").child(study_key).setValue(study_name);
-                studyRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
-                    }
-                });
-                // Test
-                studyRef.child(study_key).child("member_list").child(id).setValue(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
-                    }
-                });
-                // Add Hashtag History
-                studyRef.child(study_key).child("hashtag").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            final String[] tag_value = new String[1];
-                            final int[] tag_value_int = new int[1];
-                            final String tag_key = ds.getKey();
-                            if (ds.getKey() != null) {
-                                userRef.child(id).child("hashtag_history").child(tag_key).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.getValue() != null) {
-                                            tag_value[0] = dataSnapshot.getValue().toString();
-
-                                            Log.d("key and value", dataSnapshot.getKey() + " " + tag_value[0]);
-                                            tag_value_int[0] = Integer.parseInt(tag_value[0]);
-                                            tag_value_int[0] += 1;
-                                            Log.d("tag_value_int",Integer.toString(tag_value_int[0]));
-                                        } else {
-                                            tag_value_int[0] = 1;
-                                        }
-                                        userRef.child(id).child("hashtag_history").child(tag_key).setValue(Integer.toString(tag_value_int[0]));
-                                    }
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    }
-                                });
-                                Log.d("DB insert test ",tag_key + " " + Integer.toString(tag_value_int[0]));
-                            }
-                            // check
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-            @Override
-            public void onDeleteClick(View v, int position) {
-                String get_email = listEmail.get(position);
-                StringTokenizer id_token = new StringTokenizer(get_email, "@");
-                String id = id_token.nextToken();
-                studyRef.child(study_key).child("applier_list").child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        //Toast.makeText(SettingStudyActivity.this, "삭제 성공", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
-        recyclerView.setAdapter(adapter);
-
-        studyRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null){
-                    listEmail.clear();
-                    listName.clear();
-                    list_L.clear();
-                    list_S.clear();
-                }
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    email = ds.child("email").getValue().toString();
-                    name = ds.child("username").getValue().toString();
-                    l_dept = ds.child("L_deptname").getValue().toString();
-                    s_dept = ds.child("S_deptname").getValue().toString();
-                    listEmail.add(email);
-                    listName.add(name);
-                    list_L.add(l_dept);
-                    list_S.add(s_dept);
-
-                    Item item = new Item();
-                    item.setName(name);
-                    item.setEmail(email);
-                    item.setL_dept(l_dept);
-                    item.setS_dept(s_dept);
-                    adapter.addItem(item);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
     }
 
-    public void get_switch_status() {
-        studyRef.child(study_key).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("apply_status").getValue() != null) {
-                    fin.setChecked(true);
-                }
-                else{
-                    fin.setChecked(false);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
 
     public void refresh_nextSchedule_view() {
 

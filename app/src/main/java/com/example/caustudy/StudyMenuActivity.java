@@ -4,19 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.caustudy.MemberManagement.MemberManagementActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,8 +20,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.StringTokenizer;
 
 import com.example.caustudy.jesnk.JMainActivity;
 
@@ -49,7 +43,6 @@ public class StudyMenuActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         userAuth = mAuth.getCurrentUser();
-
 
         studyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -77,7 +70,7 @@ public class StudyMenuActivity extends AppCompatActivity {
 
         // 첫 번째 아이템 추가.    public void addItem(Drawable icon, String title, String desc) {
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_insert_comment_black_24dp),
-                "공지사항", "아두이노 초급반 공지사항입니다!") ;
+                "공지사항", "스터디 알림 사항을 확인해보세요!") ;
         // 두 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_edit_black_24dp),
                 "상세 스터디 정보", "마크다운 에디터를 이용해서 스터디 정보를 작성해보세요!.") ;
@@ -91,6 +84,9 @@ public class StudyMenuActivity extends AppCompatActivity {
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),
                 "출석부 관리", "스터디장만 접근 권한이 있습니다.") ;
         // 여섯 번째 아이템 추가.
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),
+                "스터디원 관리", "스터디장만 접근 권한이 있습니다.") ;
+
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),
                 "스터디 관리", "스터디장만 접근 권한이 있습니다.") ;
         // 위에서 생성한 listview에 클릭 이벤트 핸들러 정의.
@@ -123,7 +119,21 @@ public class StudyMenuActivity extends AppCompatActivity {
                     intent.putExtra("study_key", study_key );
                     startActivity(intent);
                 }
+
+
                 if (position == 5){
+                    //스터디 관리
+                    if (leader_email.equals(userAuth.getEmail())) {
+                        Intent intent = new Intent(StudyMenuActivity.this, MemberManagementActivity.class);
+                        intent.putExtra("study_key", study_key);
+                        intent.putExtra("study_name", study_name);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "스터디 관리에 접근할 권한이 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                if (position == 6){
                     //스터디 관리
                     if (leader_email.equals(userAuth.getEmail())) {
                         Intent intent = new Intent(StudyMenuActivity.this, SettingStudyActivity.class);
