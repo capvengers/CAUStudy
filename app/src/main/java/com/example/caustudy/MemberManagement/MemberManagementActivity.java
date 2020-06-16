@@ -36,6 +36,7 @@ public class MemberManagementActivity extends AppCompatActivity {
     List<String> listEmail = new ArrayList<>();
     List<String> list_L = new ArrayList<>();
     List<String> list_S = new ArrayList<>();
+    List<String> listId = new ArrayList<>();
 
     List<String> member_email = new ArrayList<>();
     List<String> member_name = new ArrayList<>();
@@ -153,13 +154,13 @@ public class MemberManagementActivity extends AppCompatActivity {
                 String name_mem = member_name.get(position);
                 Dialog_member_evaluation dialog_eval = new Dialog_member_evaluation(MemberManagementActivity.this);
                 dialog_eval.callFunction(study_key,id_mem);
-
                 update_view();
             }
             @Override
             public void onKickClick(View v, int position) {
             }
         });
+
 
         apply_view_adapter.setOnItemClickListener(new ApplyViewAdapter.OnItemClickListener() {
             @Override
@@ -240,8 +241,10 @@ public class MemberManagementActivity extends AppCompatActivity {
             public void onRatingInquiry(View v, int position) {
                 String email_mem = listEmail.get(position);
                 String name_mem = listName.get(position);
-
-
+                String id_mem = listId.get(position);
+                Dialog_rating_inquiry dialog = new Dialog_rating_inquiry(MemberManagementActivity.this);
+                dialog.callFunction(id_mem);
+                update_view();
             }
 
             @Override
@@ -356,18 +359,24 @@ public class MemberManagementActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
+                    listId.clear();
                     listEmail.clear();
                     listName.clear();
                     list_L.clear();
                     list_S.clear();
                 }
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
                     email = ds.child("email").getValue().toString();
+                    StringTokenizer stringTokenizer = new StringTokenizer(email, "@");
+                    String id_mem = stringTokenizer.nextToken();
+
                     name = ds.child("username").getValue().toString();
                     l_dept = ds.child("L_deptname").getValue().toString();
                     s_dept = ds.child("S_deptname").getValue().toString();
                     listEmail.add(email);
                     Log.d("???",email);
+                    listId.add(id_mem);
                     listName.add(name);
                     list_L.add(l_dept);
                     list_S.add(s_dept);

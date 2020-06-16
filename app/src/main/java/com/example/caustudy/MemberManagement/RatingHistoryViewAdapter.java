@@ -28,25 +28,26 @@ public class RatingHistoryViewAdapter extends RecyclerView.Adapter<RatingHistory
     private ArrayList<RatingHistoryViewItem> listItem = new ArrayList<>();
     private String study_key;
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
+    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
 
-    RecyclerView member_recyclerView;
     List<String> listKey = new ArrayList<>();
     List<String> listRate = new ArrayList<>();
     List<String> listFeedback = new ArrayList<>();
     List<String> listStudyName = new ArrayList<>();
-
+    RatingHistoryViewAdapter myself = this;
 
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_apply, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rates, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Item을 하나씩 출력
+        Log.d("onBindViewHolder called","");
         holder.onBind(listItem.get(position));
 
     }
@@ -77,7 +78,10 @@ public class RatingHistoryViewAdapter extends RecyclerView.Adapter<RatingHistory
     }
 
     public void update_rates_view(String id_mem) {
-        studyRef.child(id_mem).child("ratings").addListenerForSingleValueEvent(new ValueEventListener() {
+        Log.d("update_rates_view","start");
+        Log.d("name_mem",id_mem);
+
+        userRef.child(id_mem).child("ratings").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null){
@@ -86,8 +90,11 @@ public class RatingHistoryViewAdapter extends RecyclerView.Adapter<RatingHistory
                     listRate.clear();
                     listItem.clear();
                 }
+                Log.d("test1",dataSnapshot.getKey().toString());
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    studyRef.child(study_key).addListenerForSingleValueEvent(new ValueEventListener() {
+                    Log.d("ds.key :",ds.getKey().toString());
+                    studyRef.child(ds.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             String study_name = dataSnapshot.child("study_name").getValue().toString();
@@ -98,54 +105,57 @@ public class RatingHistoryViewAdapter extends RecyclerView.Adapter<RatingHistory
                             listRate.add(rate);
                             listFeedback.add(feedback);
                             listStudyName.add(study_name);
+                            Log.d("list added",study_key + rate + feedback + study_name);
 
                             RatingHistoryViewItem ratingViewItem = new RatingHistoryViewItem();
                             ratingViewItem.setFeedback(feedback);
                             ratingViewItem.setRate(rate);
                             ratingViewItem.setStudyName(study_name);
                             listItem.add(ratingViewItem);
+                            myself.notifyDataSetChanged();
+                            Log.d("this","");
+
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
-                    });
 
+
+                    });
                 }
+
+
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
+
         });
+        this.notifyDataSetChanged();
 
     }
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView name;
-        private TextView email;
-        private TextView dept;
-        private ImageView accept;
-        private ImageView delete;
-        private Button btn_rating_view;
+        private TextView study_name;
+        private TextView rate;
+        private TextView feedback;
 
         ViewHolder(final View itemView) {
             super(itemView);
-
-            name = itemView.findViewById(R.id.item_name);
-            email = itemView.findViewById(R.id.item_email);
-            dept = itemView.findViewById(R.id.item_dept);
-
-
+            study_name = itemView.findViewById(R.id.study_name_view);
+            rate = itemView.findViewById(R.id.rate_view);
+            feedback = itemView.findViewById(R.id.feedback_view);
         }
 
         void onBind(RatingHistoryViewItem ratingViewItem) {
-            name.setText(ratingViewItem.getName());
-            email.setText(ratingViewItem.getEmail());
-            String dept_temp = ratingViewItem.getL_dept() + " " + ratingViewItem.getS_dept();
-            dept.setText(dept_temp);
+            study_name.setText(ratingViewItem.getStudyName());
+            rate.setText(ratingViewItem.getRate());
+            feedback.setText(ratingViewItem.getFeedback());
         }
     }
 
