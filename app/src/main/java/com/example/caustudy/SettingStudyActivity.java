@@ -17,8 +17,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.caustudy.MemberManagement.ApplyViewAdapter;
-import com.example.caustudy.MemberManagement.ApplyViewItem;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,7 +43,7 @@ public class SettingStudyActivity extends AppCompatActivity {
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
 
-    private Button setNextSchedule, editMarkdown;
+    private Button setNextSchedule, editMarkdown, schedule_btn;
     private TextView next_location_view, next_time_view;
     String next_location;
     String next_time;
@@ -83,6 +81,17 @@ public class SettingStudyActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //상세스터디 마크다운에디터
                 Intent intent = new Intent(SettingStudyActivity.this, EditorActivity.class);
+                intent.putExtra("study_key", study_key );
+                startActivity(intent);
+            }
+        });
+
+        schedule_btn = findViewById(R.id.study_schedule_btn);
+        schedule_btn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //상세스터디 마크다운에디터
+                Intent intent = new Intent(SettingStudyActivity.this, MakeTodoActivity.class);
                 intent.putExtra("study_key", study_key );
                 startActivity(intent);
             }

@@ -10,7 +10,7 @@
         android:layout_height="60dp"
         android:background="#124175"
         android:gravity="center"
-        android:text="관심 태그 추가"
+        android:text="스터디 진행 일정 추가하기"
         android:textColor="#ffffff"
         android:textSize="16dp" />
 
@@ -19,16 +19,35 @@
         android:layout_height="1dp"
         android:background="#000000"/>
 
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView"
+    <EditText
+        android:id="@+id/new_todo_num"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center_vertical"
         android:textColorHint="#000000"
         android:textSize="16dp"
-        android:hint="검색어를 입력하세요"
+        android:hint="진행 차시를 입력하세요 (숫자로)"
         android:completionThreshold="1" />
 
+    <EditText
+        android:id="@+id/new_todo_topic"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:textColorHint="#000000"
+        android:textSize="16dp"
+        android:hint="해당 주차의 주제를 입력하세요"
+        android:completionThreshold="1" />
+
+    <EditText
+        android:id="@+id/new_todo_day"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:textColorHint="#000000"
+        android:textSize="16dp"
+        android:hint="해당 주차의 날짜를 입력하세요"
+        android:completionThreshold="1" />
 
     <View
         android:layout_width="match_parent"

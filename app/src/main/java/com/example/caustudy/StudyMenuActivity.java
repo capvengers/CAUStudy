@@ -129,7 +129,7 @@ public class StudyMenuActivity extends AppCompatActivity {
                         intent.putExtra("study_name", study_name);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(getApplicationContext(), "스터디 관리에 접근할 권한이 없습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "스터디원 관리에 접근할 권한이 없습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
