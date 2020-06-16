@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
+import com.example.caustudy.MemberManagement.MemberManagementActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,6 +57,9 @@ public class MakeTodoActivity extends AppCompatActivity {
         adapter = new TodoAdapter();
         Log.d("set_listview","Started");
         recyclerView.setAdapter(adapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MakeTodoActivity.this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         studyRef.child(study_key).child("todo_list").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -77,7 +82,7 @@ public class MakeTodoActivity extends AppCompatActivity {
                         Log.v("시간", "time" + time);
 
                         listNum.add(num);
-                        listTime.add(topic);
+                        listTopic.add(topic);
                         listTime.add(time);
                 }
 
@@ -90,6 +95,7 @@ public class MakeTodoActivity extends AppCompatActivity {
                     data.setTime(listTime.get(i));
                     adapter.addItem(data);
                 }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
