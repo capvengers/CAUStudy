@@ -3,6 +3,7 @@ package com.example.caustudy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spanned;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.commonmark.ext.gfm.strikethrough.Strikethrough;
 import org.commonmark.node.Block;
 import org.commonmark.node.BlockQuote;
 import org.commonmark.node.Node;
@@ -27,7 +29,11 @@ import java.util.Set;
 
 import io.noties.markwon.AbstractMarkwonPlugin;
 import io.noties.markwon.Markwon;
+import io.noties.markwon.MarkwonConfiguration;
+import io.noties.markwon.MarkwonSpansFactory;
+import io.noties.markwon.RenderProps;
 import io.noties.markwon.core.CorePlugin;
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
 
 public class CoreActivity extends ActivityWithMenuOptions {
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Study");
@@ -83,8 +89,9 @@ public class CoreActivity extends ActivityWithMenuOptions {
         // 여기에 그냥 친거 그대로 받아오면 될 것 같은데?
         final Markwon markwon = Markwon.builder(this)
                 .usePlugin(CorePlugin.create())
+                .usePlugin(StrikethroughPlugin.create())
                 .build();
-
+        
         final String markdown = mark_text;
         // this will parse raw markdown and set parsed content to specified TextView
         markwon.setMarkdown(textView, markdown);
