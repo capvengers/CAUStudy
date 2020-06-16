@@ -33,6 +33,7 @@ import java.util.StringTokenizer;
 
 import io.noties.markwon.Markwon;
 import io.noties.markwon.core.CorePlugin;
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
 
 public class StudyDetailActivity extends AppCompatActivity {
     long count = 0;
@@ -345,6 +346,7 @@ public class StudyDetailActivity extends AppCompatActivity {
         // 여기에 그냥 친거 그대로 받아오면 될 것 같은데?
         final Markwon markwon = Markwon.builder(this)
                 .usePlugin(CorePlugin.create())
+                .usePlugin(StrikethroughPlugin.create())
                 .build();
 
         final String markdown = mark_text;
