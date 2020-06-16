@@ -118,6 +118,7 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemClick(View v, int position) {
                 Intent intent = new Intent(mContext, PostViewActivity.class);
+                intent.putExtra("study_key",study_key);
                 intent.putExtra("title", listTitle.get(position) );
                 intent.putExtra("content", listContent.get(position));
                 intent.putExtra("uid",listUser.get(position));
