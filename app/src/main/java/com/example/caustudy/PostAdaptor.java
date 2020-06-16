@@ -1,5 +1,6 @@
 package com.example.caustudy;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class PostAdaptor extends RecyclerView.Adapter<PostAdaptor.PostViewHolder
         }
         void onBind(Post post) {
             title.setText(post.getTitle());
-            user_name.setText(post.getUsername());
+            user_name.setText(post.getUid());
             contents.setText(post.getContents());
             date.setText(post.getDate());
         }

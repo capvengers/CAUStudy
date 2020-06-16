@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.PictureInPictureParams;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -27,6 +28,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.caustudy.MemberManagement.MemberManagementActivity;
 import com.example.caustudy.Models.FirebaseID;
 import com.example.caustudy.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,6 +51,7 @@ import org.commonmark.parser.Parser;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,6 +87,7 @@ public class PostActivity extends ActivityWithMenuOptions implements View.OnClic
     private String pendingInput;
     String markdown_text;
 
+    private Context mContext;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore mStore = FirebaseFirestore.getInstance();
     private EditText mTitle, editText;
@@ -92,6 +96,8 @@ public class PostActivity extends ActivityWithMenuOptions implements View.OnClic
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private String user_name;
     private String study_key, study_name, email, name, id;
+    DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
+
 
     @NonNull
     @Override
@@ -125,6 +131,10 @@ public class PostActivity extends ActivityWithMenuOptions implements View.OnClic
         if (!TextUtils.isEmpty(pendingInput)) {
             editText.setText(pendingInput);
         }
+    }
+
+    public void setmContext(Context context) {
+        mContext = context;
     }
 
     private void createView() {
@@ -186,22 +196,28 @@ public class PostActivity extends ActivityWithMenuOptions implements View.OnClic
             data.put("author_uid", mAuth.getCurrentUser().getUid());
 
 
+            long now = System.currentTimeMillis();
+            Date date = new Date(now);
+            SimpleDateFormat mFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            String time = mFormat.format(date);
+
+
             data.put("time_stamp", FieldValue.serverTimestamp());
             data.put("user_name",this.user_name);
             //mStore.collection(FirebaseID.post).document(postId).set(data, SetOptions.merge());
 
-            mStore.collection(study_key+":notice").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            String title = mTitle.getText().toString();
+
+            studyRef.child(study_key).child("notice_list").child(title).child("title").setValue(mTitle.getText().toString());
+            studyRef.child(study_key).child("notice_list").child(title).child("content").setValue(editText.getText().toString());
+            studyRef.child(study_key).child("notice_list").child(title).child("user_name").setValue(this.user_name);
+            studyRef.child(study_key).child("notice_list").child(title).child("date").setValue(time).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Log.d("data add ","is successs");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("data add ", "is fail");
+                public void onSuccess(Void aVoid) {
+                    ((JMainActivity)JMainActivity.mContext).set_listview();
+
                 }
             });
-
             Log.d("test","Auth success");
             finish();
         } else {

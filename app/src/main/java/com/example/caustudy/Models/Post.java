@@ -47,6 +47,7 @@ public class Post {
         return contents;
     }
     public String getDate() {
+        /*
         try {
             SimpleDateFormat transFormat = new SimpleDateFormat("MM-dd\nHH:mm:ss");
             date = transFormat.format(this.time_stamp.toDate());
@@ -55,6 +56,8 @@ public class Post {
 
         }
         return "Null";
+        */
+        return this.date;
     }
 
     public void setTitle(String title) {

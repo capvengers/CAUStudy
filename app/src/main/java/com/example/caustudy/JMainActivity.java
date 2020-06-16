@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 public class JMainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static Context mContext;
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
     private RecyclerView mPostRecyclerView;
     private PostAdaptor mAdapter;
@@ -40,7 +42,7 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mContext = this;
         Intent intent = getIntent();
         study_key = intent.getStringExtra("study_key");
         study_name = intent.getStringExtra("study_name");
@@ -48,6 +50,8 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
         mPostRecyclerView = findViewById(R.id.main_recyclerview);
         findViewById(R.id.jmain_post_edit).setOnClickListener(this);
         set_listview();
+
+
 
     }
 
@@ -57,6 +61,7 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
         intent.putExtra("study_key", study_key );
         intent.putExtra("study_name", study_name );
         startActivity(intent);
+
     }
 
     void set_listview(){
@@ -80,8 +85,8 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
                     //title, user_name, contents, date
                     String key = study.getKey();
                     String title = study.child("title").getValue().toString();
-                    String username = study.child("username").getValue().toString();
-                    String contents = study.child("contents").getValue().toString();
+                    String username = study.child("user_name").getValue().toString();
+                    String contents = study.child("content").getValue().toString();
                     String date = study.child("date").getValue().toString();
 
                     listKey.add(key);
@@ -100,6 +105,7 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
                     post.setDate(listDate.get(i));
                     mAdapter.addItem(post);
                 }
+
                 mAdapter.notifyDataSetChanged();
             }
             @Override
@@ -108,6 +114,16 @@ public class JMainActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         // adapter의 값이 변경되었다는 것을 알려줍니다.
+        mAdapter.setOnItemClickListener(new PostAdaptor.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Intent intent = new Intent(mContext, PostViewActivity.class);
+                intent.putExtra("title", listTitle.get(position) );
+                intent.putExtra("content", listContent.get(position));
+                intent.putExtra("uid",listUser.get(position));
+                startActivity(intent);
+            }
+        });
         mAdapter.notifyDataSetChanged();
     }
 }
