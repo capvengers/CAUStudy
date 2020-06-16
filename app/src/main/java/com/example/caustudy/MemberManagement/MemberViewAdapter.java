@@ -4,6 +4,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,8 +45,8 @@ public class MemberViewAdapter extends RecyclerView.Adapter<MemberViewAdapter.Vi
     private OnItemClickListener mListener = null ;
 
     public interface OnItemClickListener {
-        void onDeleteClick(View v, int position);
-        void onAcceptClick(View v, int position) ;
+        void onEvalClick(View v, int position) ;
+        void onKickClick(View v, int position);
     }
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener ;
@@ -56,7 +58,9 @@ public class MemberViewAdapter extends RecyclerView.Adapter<MemberViewAdapter.Vi
         private TextView name;
         private TextView email;
         private TextView dept;
-
+        private Button eval;
+        private Button kick;
+        private String study_key;
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -64,6 +68,24 @@ public class MemberViewAdapter extends RecyclerView.Adapter<MemberViewAdapter.Vi
             name = itemView.findViewById(R.id.item_name);
             email = itemView.findViewById(R.id.item_email);
             dept = itemView.findViewById(R.id.item_dept);
+            eval = itemView.findViewById(R.id.btn_evaluate);
+            kick = itemView.findViewById(R.id.btn_kick);
+
+            eval.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        if (mListener != null) {
+                            mListener.onEvalClick(v, pos);
+
+                        }
+                    }
+
+                }
+            });
+
 
         }
 

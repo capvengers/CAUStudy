@@ -3,6 +3,7 @@ package com.example.caustudy.MemberManagement;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,6 +58,7 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
     public interface OnItemClickListener {
         void onDeleteClick(View v, int position);
         void onAcceptClick(View v, int position) ;
+        void onRatingInquiry(View v, int position);
     }
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener ;
@@ -70,6 +72,7 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
         private TextView dept;
         private ImageView accept;
         private ImageView delete;
+        private Button btn_rating_view;
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -79,6 +82,7 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
             dept = itemView.findViewById(R.id.item_dept);
             accept = itemView.findViewById(R.id.apply_accept);
             delete = itemView.findViewById(R.id.apply_delete);
+            btn_rating_view = itemView.findViewById(R.id.btn_rating_inquiry);
 
             accept.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.example.caustudy.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,8 +58,12 @@ public class MemberManagementActivity extends AppCompatActivity {
     DatabaseReference studyRef = FirebaseDatabase.getInstance().getReference("Study");
     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("사용자");
 
-    public static Context mContext;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser userAuth = mAuth.getCurrentUser();
+    StringTokenizer stringTokenizer = new StringTokenizer(userAuth.getEmail(), "@");
+    String cur_user_id = stringTokenizer.nextToken();
 
+    public static Context mContext;
 
     class ApplyableSwitchListener implements CompoundButton.OnCheckedChangeListener{
         @Override
@@ -95,7 +101,6 @@ public class MemberManagementActivity extends AppCompatActivity {
                 Dialog_NumApply dialog_numApply = new Dialog_NumApply(MemberManagementActivity.this);
                 dialog_numApply.callFunction(study_key);
                 update_view();
-
             }
         });
 
@@ -139,8 +144,24 @@ public class MemberManagementActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(MemberManagementActivity.this);
         member_recyclerView.setLayoutManager(linearLayoutManager2);
 
-        apply_view_adapter.setOnItemClickListener(new ApplyViewAdapter.OnItemClickListener() {
+        member_view_adapter.setOnItemClickListener(new MemberViewAdapter.OnItemClickListener() {
+            @Override
+            public void onEvalClick(View v, int position) {
+                String email_mem = member_email.get(position);
+                StringTokenizer id_token = new StringTokenizer(email_mem, "@");
+                String id_mem = id_token.nextToken();
+                String name_mem = member_name.get(position);
+                Dialog_member_evaluation dialog_eval = new Dialog_member_evaluation(MemberManagementActivity.this);
+                dialog_eval.callFunction(study_key,id_mem);
 
+                update_view();
+            }
+            @Override
+            public void onKickClick(View v, int position) {
+            }
+        });
+
+        apply_view_adapter.setOnItemClickListener(new ApplyViewAdapter.OnItemClickListener() {
             @Override
             public void onAcceptClick(View v, int position) {
                 String get_email = listEmail.get(position);
@@ -214,6 +235,15 @@ public class MemberManagementActivity extends AppCompatActivity {
 
 
             }
+
+            @Override
+            public void onRatingInquiry(View v, int position) {
+                String email_mem = listEmail.get(position);
+                String name_mem = listName.get(position);
+
+
+            }
+
             @Override
             public void onDeleteClick(View v, int position) {
                 String get_email = listEmail.get(position);
@@ -232,96 +262,11 @@ public class MemberManagementActivity extends AppCompatActivity {
             }
         });
 
+
         apply_recyclerView.setAdapter(apply_view_adapter);
-        studyRef.child(study_key).child("applier_list").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null){
-                    listEmail.clear();
-                    listName.clear();
-                    list_L.clear();
-                    list_S.clear();
-                }
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    email = ds.child("email").getValue().toString();
-                    name = ds.child("username").getValue().toString();
-                    l_dept = ds.child("L_deptname").getValue().toString();
-                    s_dept = ds.child("S_deptname").getValue().toString();
-                    listEmail.add(email);
-                    Log.d("???",email);
-                    listName.add(name);
-                    list_L.add(l_dept);
-                    list_S.add(s_dept);
-
-                    ApplyViewItem applyViewItem = new ApplyViewItem();
-                    applyViewItem.setName(name);
-                    applyViewItem.setEmail(email);
-                    applyViewItem.setL_dept(l_dept);
-                    applyViewItem.setS_dept(s_dept);
-                    apply_view_adapter.addItem(applyViewItem);
-                    apply_view_adapter.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
         member_recyclerView.setAdapter(member_view_adapter);
-        studyRef.child(study_key).child("member_list").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null){
-                    member_email.clear();
-                    member_name.clear();
-                    member_list_L.clear();
-                    member_list_S.clear();
-                }
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    //member_email.add(ds.getValue().toString());
-                    String user_email = ds.getValue().toString();
-                    StringTokenizer id_token = new StringTokenizer(user_email, "@");
-                    String user_id = id_token.nextToken();
-                    final String[] name = new String[1];
-                    userRef.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot ds) {
-                            if (ds.getValue() != null) {
-                                name[0] = ds.child("username").getValue().toString();
-                                String member_l_dept = ds.child("L_deptname").getValue().toString();
-                                String member_s_dept = ds.child("S_deptname").getValue().toString();
-
-                                member_email.add(user_email);
-                                member_name.add(name[0]);
-                                member_list_L.add(member_l_dept);
-                                member_list_S.add(member_s_dept);
-                                MemberViewItem memberViewItem = new MemberViewItem();
-                                memberViewItem.setName(name[0]);
-                                memberViewItem.setEmail(user_email);
-                                memberViewItem.setL_dept(member_l_dept);
-                                memberViewItem.setS_dept(member_s_dept);
-
-                                member_view_adapter.addItem(memberViewItem);
-                                // 아래 코드를 밖으로 뺴면 안되더
-                                member_view_adapter.notifyDataSetChanged();
-
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
-
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        update_applier_view();
+        update_member_view();
     }
     public void update_member_view() {
         studyRef.child(study_key).child("member_list").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -332,14 +277,18 @@ public class MemberManagementActivity extends AppCompatActivity {
                     member_name.clear();
                     member_list_L.clear();
                     member_list_S.clear();
-                    member_view_adapter.clearItem();
                 }
-
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //member_email.add(ds.getValue().toString());
+
                     String user_email = ds.getValue().toString();
                     StringTokenizer id_token = new StringTokenizer(user_email, "@");
                     String user_id = id_token.nextToken();
+                    Log.d("check",user_id);
+                    Log.d("check-2",cur_user_id);
+                    if (user_id.equals(cur_user_id)) {
+                        continue;
+                    }
                     final String[] name = new String[1];
                     userRef.child(user_id).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -369,10 +318,7 @@ public class MemberManagementActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
                     });
-
-
                 }
-
             }
 
             @Override
