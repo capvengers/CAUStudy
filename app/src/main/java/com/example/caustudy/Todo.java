@@ -4,14 +4,16 @@ class Todo {
     private String num = "";
     private String topic = "";
     private String time = "";
+    private String status = "";
 
     public Todo() {
 
     }
-    public Todo(String num, String topic, String time) {
+    public Todo(String num, String topic, String time, String status) {
         this.num = num;
         this.topic = topic;
         this.time = time;
+        this.status = status;
     }
 
     public String getNum() {
@@ -33,5 +35,12 @@ class Todo {
     }
     public void setTime(String time) {
         this.time = "시간: "+ time;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

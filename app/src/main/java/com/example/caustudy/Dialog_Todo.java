@@ -74,7 +74,7 @@ public class Dialog_Todo {
             @Override
             public void onClick(View view) {
                 String num = todo_num.getText().toString();
-                Todo todo = new Todo(num, todo_topic.getText().toString(), day);
+                Todo todo = new Todo(num, todo_topic.getText().toString(), day, "0");
                 studyRef.child(studyNum).child("todo_list").child(num).setValue(todo).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

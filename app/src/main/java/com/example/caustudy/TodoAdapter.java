@@ -1,11 +1,18 @@
 package com.example.caustudy;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -23,7 +30,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
         // Item을 하나씩 출력
         holder.onBind(listTodo.get(position));
-
     }
 
     @Override
@@ -39,7 +45,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
     private OnItemClickListener mListener = null ;
 
     public interface OnItemClickListener {
-        void onItemClick(View v, int position) ;
+        void onCheckClick(View v, int position, Button btn) ;
     }
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mListener = listener ;
@@ -51,6 +57,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
         private TextView num;
         private TextView topic;
         private TextView time;
+        private Button checkbox;
 
         TodoViewHolder(View itemView) {
             super(itemView);
@@ -58,15 +65,15 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoViewHolder
             num = itemView.findViewById(R.id.item_num);
             topic = itemView.findViewById(R.id.item_topic);
             time = itemView.findViewById(R.id.item_time);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
+            checkbox = itemView.findViewById(R.id.checkBox);
+            checkbox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = getAdapterPosition() ;
+                    int pos = getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
                         // 리스너 객체의 메서드 호출.
                         if (mListener != null) {
-                            mListener.onItemClick(v, pos) ;
+                            mListener.onCheckClick(v, pos, checkbox);
                         }
                     }
                 }

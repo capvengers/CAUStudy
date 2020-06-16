@@ -43,8 +43,6 @@ public class PostViewActivity extends AppCompatActivity {
                     title = ds.child("title").getValue().toString();
                     textTitle.setText(title);
                     simple();
-                    //enabledBlockTypes();
-                    //alreadyParsed();
                 }
             }
             @Override
