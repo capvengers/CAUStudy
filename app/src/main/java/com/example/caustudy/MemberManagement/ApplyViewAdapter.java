@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.ViewHolder> {
 
@@ -110,6 +111,19 @@ public class ApplyViewAdapter extends RecyclerView.Adapter<ApplyViewAdapter.View
                             notifyItemRemoved(pos);
                         }
                     }
+                }
+            });
+            btn_rating_view.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        if (mListener != null) {
+                            mListener.onRatingInquiry(v, pos);
+                        }
+                    }
+
                 }
             });
         }

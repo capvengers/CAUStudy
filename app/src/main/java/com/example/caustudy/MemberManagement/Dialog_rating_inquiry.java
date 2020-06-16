@@ -2,6 +2,8 @@ package com.example.caustudy.MemberManagement;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,13 +44,16 @@ public class Dialog_rating_inquiry {
     StringTokenizer stringTokenizer = new StringTokenizer(userAuth.getEmail(), "@");
     String user_id = stringTokenizer.nextToken();
     private ArrayList<String> fill_list;
+    private RatingHistoryViewAdapter rating_view_adapter;
+    RecyclerView recyclerView;
+
 
     public Dialog_rating_inquiry(Context context) {
         this.context = context;
     }
 
     // 호출할 다이얼로그 함수를 정의한다.
-    public void callFunction(String study_key) {
+    public void callFunction(String id_mem) {
 
         // 커스텀 다이얼로그를 정의하기위해 Dialog클래스를 생성한다.
         final Dialog dlg = new Dialog(context);
@@ -56,17 +62,26 @@ public class Dialog_rating_inquiry {
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         // 커스텀 다이얼로그의 레이아웃을 설정한다.
-        dlg.setContentView(R.layout.dialog_member_apply_limit);
+        dlg.setContentView(R.layout.activity_dialog_rating_inquiry);
+        recyclerView = dlg.findViewById(R.id.rating_history_view);
+        rating_view_adapter = new RatingHistoryViewAdapter();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.context);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(rating_view_adapter);
+        rating_view_adapter.update_rates_view(id_mem);
+
+        Log.d("Why adapter not update?",String.valueOf(rating_view_adapter.getItemCount()));
+
 
 
 
         // 커스텀 다이얼로그를 노출한다.
         dlg.show();
 
-
         // 커스텀 다이얼로그의 각 위젯들을 정의한다.
         //final EditText message = (EditText) dlg.findViewById(R.id.mesgase);
         final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);
+
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
