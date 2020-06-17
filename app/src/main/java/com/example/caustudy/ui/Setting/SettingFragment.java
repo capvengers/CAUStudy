@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.caustudy.MdInstructionActivity;
 import com.example.caustudy.MemberManagement.Dialog_member_evaluation;
 import com.example.caustudy.MemberManagement.Dialog_rating_inquiry;
 import com.example.caustudy.MemberManagement.MemberManagementActivity;
@@ -63,16 +64,19 @@ public class SettingFragment extends Fragment {
 
         singerAdapter.addItem(new SettingData("스터디 참여도 평가 내역"));
         singerAdapter.addItem(new SettingData("관심 태그 관리"));
+        singerAdapter.addItem(new SettingData("마크다운에디터 설명서"));
         singerAdapter.setOnItemClickListener(new com.example.caustudy.ui.Setting.SettingRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position){
                 if (position == 0 ) {
-
                     String id_mem = user_id;
                     Dialog_rating_inquiry dialog = new Dialog_rating_inquiry(SettingFragment.this.getContext());
                     dialog.callFunction(id_mem);
                 } else if (position == 1) {
                     Intent intent = new Intent(getActivity(), Setting_HashtagActivity.class);
+                    startActivity(intent);
+                } else if (position == 2) {
+                    Intent intent = new Intent(getActivity(), MdInstructionActivity.class);
                     startActivity(intent);
                 }
             }

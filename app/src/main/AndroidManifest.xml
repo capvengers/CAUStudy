@@ -15,7 +15,8 @@
         android:roundIcon="@drawable/cau"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".PostViewActivity"></activity>
+        <activity android:name=".MdInstructionActivity"></activity>
+        <activity android:name=".PostViewActivity" />
         <activity android:name=".MemberManagement.MemberManagementActivity" />
         <activity android:name=".MemberManagement.Dialog_rating_inquiry" />
         <activity android:name=".MemberManagement.Dialog_member_evaluation" />
