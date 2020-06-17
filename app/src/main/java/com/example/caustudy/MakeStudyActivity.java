@@ -328,6 +328,7 @@ public class MakeStudyActivity extends AppCompatActivity {
                     //studyRef.child(l_cate).child(s_cate).child("0" + (count + 1)).child("member_list").child(id).setValue(email);
                     studyRef.child("0" + (count + 1)).child("member_list").child(id).setValue(email);
                     studyRef.child("0" + (count + 1)).child("applier_limit").setValue("10");
+                    studyRef.child("0" + (count + 1)).child("detail_info").setValue(" ");
 
                     while(hashTokenizer.hasMoreTokens()) {
                         String hashtag = hashTokenizer.nextToken();
@@ -363,6 +364,8 @@ public class MakeStudyActivity extends AppCompatActivity {
                 } else {
                     //studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).setValue(study);
                     studyRef.child("00" + (count + 1)).setValue(study);
+                    studyRef.child("00" + (count + 1)).child("detail_info").setValue(" ");
+
                     //studyRef.child(l_cate).child(s_cate).child("00" + (count + 1)).child("member_list").child(id).setValue(email);
                     studyRef.child("00" + (count + 1)).child("member_list").child(id).setValue(email);
                     while(hashTokenizer.hasMoreTokens()) {

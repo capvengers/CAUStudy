@@ -109,6 +109,7 @@ public class StudyMenuActivity extends AppCompatActivity {
                 if (position == 3){
                     //1:1 문의
                     Intent intent = new Intent(StudyMenuActivity.this, QuestionActivity.class);
+                    intent.putExtra("address",leader_email);
                     startActivity(intent);
                 }
                 if (position == 4){

@@ -76,6 +76,7 @@ public class StudyDetailActivity extends AppCompatActivity {
         textView = findViewById(R.id.text_markdown);
 
         // 근데 detail_info를 안 작성하면 에러뜨면서 꺼지는데? 파베 어려워요.,, 몰라요...
+
         studyRef.child(study_key).child("detail_info").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
@@ -88,6 +89,9 @@ public class StudyDetailActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
+
+
 
 
         back.setOnClickListener(new View.OnClickListener() {

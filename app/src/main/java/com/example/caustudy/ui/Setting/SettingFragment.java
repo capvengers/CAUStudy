@@ -17,7 +17,9 @@ import com.example.caustudy.MdInstructionActivity;
 import com.example.caustudy.MemberManagement.Dialog_member_evaluation;
 import com.example.caustudy.MemberManagement.Dialog_rating_inquiry;
 import com.example.caustudy.MemberManagement.MemberManagementActivity;
+import com.example.caustudy.QuestionActivity;
 import com.example.caustudy.R;
+import com.example.caustudy.StudyMenuActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -65,6 +67,7 @@ public class SettingFragment extends Fragment {
         singerAdapter.addItem(new SettingData("스터디 참여도 평가 내역"));
         singerAdapter.addItem(new SettingData("관심 태그 관리"));
         singerAdapter.addItem(new SettingData("마크다운에디터 설명서"));
+        singerAdapter.addItem(new SettingData("관리자 문의"));
         singerAdapter.setOnItemClickListener(new com.example.caustudy.ui.Setting.SettingRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position){
@@ -77,6 +80,10 @@ public class SettingFragment extends Fragment {
                     startActivity(intent);
                 } else if (position == 2) {
                     Intent intent = new Intent(getActivity(), MdInstructionActivity.class);
+                    startActivity(intent);
+                } else if (position == 3) {
+                    Intent intent = new Intent(SettingFragment.this.getContext(), QuestionActivity.class);
+                    intent.putExtra("address","ys_7197@naver.com");
                     startActivity(intent);
                 }
             }

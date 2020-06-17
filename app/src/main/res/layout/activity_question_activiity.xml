@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_margin="15dp"
     android:layout_gravity="center_vertical"
     android:background="@drawable/listview"
@@ -24,7 +24,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="받는 사람 : CAU STUDY 관리자"
+        android:text="받는 사람 : "
+        android:layout_marginBottom="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView_email_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이메일 주소"
         android:layout_marginBottom="20dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -50,7 +58,7 @@
     <EditText
         android:id="@+id/et_message"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:gravity="top"
         android:inputType="textMultiLine"
         android:lines="5" />
@@ -60,7 +68,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/blue_button"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="15dp"
         android:textColor="#FFFFFF"
         android:text="이메일 보내기" />
