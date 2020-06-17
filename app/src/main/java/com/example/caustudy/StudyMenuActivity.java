@@ -79,10 +79,10 @@ public class StudyMenuActivity extends AppCompatActivity {
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_question_answer_black_24dp),
                 "1:1 문의", "이건 잠깐 링크연결") ;
         // 다섯 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_event_available_black_24dp),
                 "출석부 관리", "스터디장만 접근 권한이 있습니다.") ;
         // 여섯 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_people_blue_24dp),
                 "스터디원 관리", "스터디장만 접근 권한이 있습니다.") ;
 
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_settings_black_24dp),

@@ -160,6 +160,7 @@ public class SettingStudyActivity extends AppCompatActivity {
 
     public void refresh_nextSchedule_view() {
 
+        Log.d("refresh_nextSchedule_view","start");
         studyRef.child(study_key).child("next_schedule").child("next_location").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {

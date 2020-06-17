@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="400dp"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    android:gravity="center"
-    >
+    android:gravity="center">
 
 
     <TextView
@@ -13,10 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#124175"
+
         android:gravity="center"
-        android:text="스터디원 평가 이"
+        android:text="참여도 평가 내역"
         android:textColor="#ffffff"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        />
 
 
 

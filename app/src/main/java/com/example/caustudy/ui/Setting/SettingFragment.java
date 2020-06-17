@@ -13,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.caustudy.MemberManagement.Dialog_member_evaluation;
+import com.example.caustudy.MemberManagement.Dialog_rating_inquiry;
+import com.example.caustudy.MemberManagement.MemberManagementActivity;
 import com.example.caustudy.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,14 +60,26 @@ public class SettingFragment extends Fragment {
 
         recyclerView.setAdapter(singerAdapter);
 
+
+        singerAdapter.addItem(new SettingData("스터디 참여도 평가 내역"));
         singerAdapter.addItem(new SettingData("관심 태그 관리"));
         singerAdapter.setOnItemClickListener(new com.example.caustudy.ui.Setting.SettingRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position){
-                Intent intent = new Intent(getActivity(), Setting_HashtagActivity.class);
-                startActivity(intent);
+                if (position == 0 ) {
+
+                    String id_mem = user_id;
+                    Dialog_rating_inquiry dialog = new Dialog_rating_inquiry(SettingFragment.this.getContext());
+                    dialog.callFunction(id_mem);
+                } else if (position == 1) {
+                    Intent intent = new Intent(getActivity(), Setting_HashtagActivity.class);
+                    startActivity(intent);
+                }
             }
         });
+
+
+
         // 스터디 리스트 목록부터 받아와야함(순서 중요)
         //check_mystudy_list();
 

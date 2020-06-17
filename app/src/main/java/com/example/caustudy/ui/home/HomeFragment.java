@@ -94,7 +94,76 @@ public class HomeFragment extends Fragment {
                         // 리스트에 값이 저장이 안되는거 같아서 일단 때려박았어..
                         study_list.add(study_num); // 키 값 저장 (format = L_cate:S_cate:001)
 
-                        datebaseReference_study.addListenerForSingleValueEvent(new ValueEventListener() {
+                        datebaseReference_study.child(study_num).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot ds) {
+                                Log.d("in for ",ds.getKey().toString());
+                                String title = ds.child("study_name").getValue().toString();
+                                if (ds.child("study_name").getValue() != null) {
+                                    title = ds.child("study_name").getValue().toString();
+                                } else {
+                                    title = "-";
+                                };
+
+                                String next_time;
+                                if (ds.child("next_schedule").child("next_time").getValue() != null) {
+                                    next_time = ds.child("next_schedule").child("next_time").getValue().toString();
+                                } else {
+                                    next_time = "-";
+                                };
+
+                                String next_location;
+                                if (ds.child("next_schedule").child("next_location").getValue() != null) {
+                                    next_location = ds.child("next_schedule").child("next_location").getValue().toString();
+                                } else {
+                                    next_location = "-";
+                                };
+
+                                String next_assignment;
+                                if (ds.child("next_assignment").child("title").getValue() != null) {
+                                    next_assignment = ds.child("next_assignment").child("title").getValue().toString();
+                                } else {
+                                    next_assignment = "-";
+                                };
+
+
+                                String recent_notice = " - ";
+                                long recent_date = 0;
+                                for (DataSnapshot dss : ds.child("notice_list").getChildren()) {
+                                    if (dss.child("date") == null) {
+                                        continue;
+                                    }
+
+                                    String str = dss.child("date").toString().replaceAll("[^0-9]","");
+                                    long date_prev = Long.valueOf(str);
+
+                                    Log.d("test",str);
+                                    if (date_prev > recent_date) {
+                                        recent_notice = dss.child("title").getValue().toString();
+                                    }
+                                }
+
+
+                                HomeData data = new HomeData();
+                                Log.d("test",title + " "+next_time + next_location);
+                                data.title = title;
+                                data.next_time = next_time;
+                                data.next_location = next_location;
+                                data.next_assignment = next_assignment;
+                                data.recent_notice = recent_notice;
+
+                                singerAdapter.addItem(data);
+                                singerAdapter.notifyDataSetChanged();
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        /*
+                                addListenerForSingleValueEvent(new ValueEventListener() {
                             String num = study_num;
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -107,7 +176,7 @@ public class HomeFragment extends Fragment {
                                         String time = ds.child("study_time").getValue().toString();  // 시간
                                         String org = ds.child("organization").getValue().toString();  // 소속
                                         Log.d("HomeFragment:addItem",title);
-                                        singerAdapter.addItem(new HomeData(title, "test", "test", "test","test","test"));
+                                        singerAdapter.addItem(new HomeData("test", "test", "test", "test","test","test"));
                                         singerAdapter.notifyDataSetChanged();
                                     }
                                 }
@@ -117,9 +186,7 @@ public class HomeFragment extends Fragment {
                             public void onCancelled (@NonNull DatabaseError databaseError){
                             }
                         });
-
-
-
+                        */
 
                         //get_study_info(L_cate, S_cate);
                         Log.d("MyStudyFragment:check_mystudy_list: ",String.valueOf(number));

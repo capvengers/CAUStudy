@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             >
             <TextView
-                android:id="@+id/period_pos"
+                android:id="@+id/item_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
@@ -40,7 +40,7 @@
                 android:textSize="14dp"
                 android:textColor="@android:color/darker_gray"/>
         <TextView
-            android:id="@+id/item_period"
+            android:id="@+id/view_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/next_time_pos"
+                android:id="@+id/item_next_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
@@ -65,13 +65,13 @@
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/item_time"
+                android:id="@+id/view_next_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
                 android:layout_marginLeft="10dp"
 
-                android:text="스터디 시간"
+                android:text="다 시간"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="14dp" />
 
@@ -83,7 +83,7 @@
             android:orientation="horizontal"
             >
             <TextView
-                android:id="@+id/next_loc_pos"
+                android:id="@+id/item_next_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
@@ -91,12 +91,12 @@
                 android:textColor="@android:color/darker_gray"
                 android:textSize="14dp" />
             <TextView
-                android:id="@+id/item_leader"
+                android:id="@+id/view_next_location"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="스터디장 이메일"
+                android:text="다음 장"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="14dp" />
         </LinearLayout>
@@ -107,7 +107,7 @@
             android:orientation="horizontal"
             >
             <TextView
-                android:id="@+id/assignment_pos"
+                android:id="@+id/item_next_assignment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
@@ -115,12 +115,12 @@
                 android:textSize="14dp"
                 android:textColor="@android:color/darker_gray"/>
             <TextView
-                android:id="@+id/item_org"
+                android:id="@+id/view_next_assignment"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="단체"
+                android:text="다음 과"
                 android:textSize="14dp"
                 android:textColor="@android:color/darker_gray"/>
         </LinearLayout>
@@ -132,7 +132,7 @@
             >
 
             <TextView
-                android:id="@+id/notice_pos"
+                android:id="@+id/item_recent_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
@@ -140,12 +140,12 @@
                 android:textSize="14dp"
                 android:textColor="@android:color/darker_gray"/>
             <TextView
-                android:id="@+id/item_info"
+                android:id="@+id/view_recent_notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:includeFontPadding="false"
-                android:text="소개"
+                android:text="최근 공지"
                 android:textSize="14dp"
                 android:textColor="@android:color/darker_gray"/>
 

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="320dp"
     android:layout_height="match_parent"
     android:background="#ffffff">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#124175"
+        android:layout_height="40dp"
+        android:background="#ffffff"
         android:gravity="center"
         android:text="스터디원 피드백"
-        android:textColor="#ffffff"
+        android:textColor="#111111"
         android:textSize="16dp" />
 
     <View
@@ -24,28 +24,37 @@
     <TextView
         android:id="@+id/textView_member_star"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:background="#124175"
         android:gravity="center"
-        android:text="5점 만점에?"
+        android:text="참여 태도 평가"
         android:textColor="#ffffff"
         android:textSize="16dp" />
 
-    <RatingBar
-        android:isIndicator="false"
-        android:id="@+id/ratingBarInficator"
-        style="@style/Widget.AppCompat.RatingBar.Indicator"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:rating="3"
-        />
+        android:gravity="center"
+        >
+        <RatingBar
+            android:isIndicator="false"
+            android:id="@+id/ratingBarInficator"
+            style="@style/Widget.AppCompat.RatingBar.Indicator"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="3"
+            />
+
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView_member_feedback_title"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="40dp"
         android:background="#124175"
         android:gravity="center"
         android:text="한 줄 피드백"

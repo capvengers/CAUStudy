@@ -53,22 +53,22 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<com.example.caustu
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView progress;
+        private TextView next_time;
+        private TextView next_location;
+        private TextView next_assignment;
+        private TextView recent_notice;
         private TextView title;
-        private TextView period;
-        private TextView time;
-        private TextView leader;
-        private TextView org;
-        private TextView info;
 
         ItemViewHolder(View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.item_title);
-            period = itemView.findViewById(R.id.item_period);
-            time = itemView.findViewById(R.id.item_time);
-            leader = itemView.findViewById(R.id.item_leader);
-            org = itemView.findViewById(R.id.item_org);
-            info = itemView.findViewById(R.id.item_info);
+            progress = itemView.findViewById(R.id.view_next_time);
+            next_time = itemView.findViewById(R.id.view_next_time);
+            next_location = itemView.findViewById(R.id.view_next_location);
+            next_assignment = itemView.findViewById(R.id.view_next_assignment);
+            recent_notice = itemView.findViewById(R.id.view_recent_notice);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,20 +85,24 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<com.example.caustu
         }
 
         void onBind(com.example.caustudy.ui.home.HomeData data) {
-            title.setText(data.getTitle());
-            period.setText(data.getPeriod());
-            time.setText(data.getTime());
-            leader.setText(data.getLeader());
-            org.setText(data.getOrg());
-            info.setText(data.getInfo());
+            title.setText(data.title);
+            progress.setText("test");
+            next_time.setText(data.next_time.substring(0,data.next_time.length()-1));
+            next_location.setText(data.next_location);
+            next_assignment.setText(data.next_assignment);
+            recent_notice.setText(data.recent_notice);
         }
     }
 }
 
 class HomeData {
 
-    private String title, period, time, leader, org, info;
+    public String title, period, time, leader, org, info;
+    public String next_location, next_time, next_assignment, recent_notice;
 
+    public HomeData () {
+
+    }
     public HomeData(String title, String period, String time, String leader, String org, String info) {
         this.title = title;
         this.period = title;
@@ -106,8 +110,8 @@ class HomeData {
         this.leader = leader;
         this.org = org;
         this.info = info;
-
     }
+
 
     public String getTitle() {
         return title;
@@ -115,6 +119,8 @@ class HomeData {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public String getLocation() {return next_location;}
 
     public String getPeriod() {
         return period;

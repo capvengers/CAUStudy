@@ -15,10 +15,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#6B95BB"
-            android:textSize="30dp"
+            android:textSize="35dp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:text="참여중인 스터디 강의실" />
+            android:text="스터디 강의실" />
     </LinearLayout>
 
     <LinearLayout

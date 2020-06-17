@@ -12,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,6 +67,7 @@ public class SearchStudyFragment extends Fragment {
     StringTokenizer stringTokenizer = new StringTokenizer(userAuth.getEmail(), "@");
     String user_id = stringTokenizer.nextToken();
     Map<String, Integer> interest = new HashMap<>();
+    private TextView upper_title;
 
     List<String> listKey = new ArrayList<>();
     List<String> listTitle = new ArrayList<>();
@@ -84,7 +88,7 @@ public class SearchStudyFragment extends Fragment {
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_searchstudy, container, false);
 
-
+        upper_title = (TextView)root.findViewById(R.id.textView1);
         //자동완성
         autoCompleteTextView = (AutoCompleteTextView) root.findViewById(R.id.autoCompleteTextView);
         fill_list = new ArrayList<String>();
@@ -168,9 +172,12 @@ public class SearchStudyFragment extends Fragment {
             public void onClick(View view) {
                 if(autoCompleteTextView.getText().toString().length() <= 0){
                     getData(recyclerView);
+                    upper_title.setText("스터디 검색");
                 }
                 else{
                     getData_2(recyclerView);
+                    upper_title.setText("스터디 검색");
+
                 }
             }
         });
@@ -179,6 +186,7 @@ public class SearchStudyFragment extends Fragment {
             public void onClick(View view) {
                 // 추천 리스트 불러오기
                 get_recommend_Data(recyclerView);
+                upper_title.setText("추천 스터디 목록");
             }
         });
 
