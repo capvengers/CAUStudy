@@ -73,11 +73,11 @@ public class StudyMenuActivity extends AppCompatActivity {
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_edit_black_24dp),
                 "상세 스터디 정보", "마크다운 에디터를 이용해서 스터디 정보를 작성해보세요!.") ;
         // 세 번째 아이템 추가.
-        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_event_available_black_24dp),
-                "아직 암것도 읍다", "지각/결석 벌금있습니다!") ;
+        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_insert_drive_file_black_24dp),
+                "스터디 준비 과제", "미리 준비해 오시면 좋아요!") ;
         // 네 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_question_answer_black_24dp),
-                "1:1 문의", "이건 잠깐 링크연결") ;
+                "스터디장에게 문의", "스터디장에게 이메일 문의 보내") ;
         // 다섯 번째 아이템 추가.
         adapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_event_available_black_24dp),
                 "출석부 관리", "스터디장만 접근 권한이 있습니다.") ;
@@ -104,6 +104,11 @@ public class StudyMenuActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 if (position == 2){
+                    Intent intent = new Intent(StudyMenuActivity.this, JMainActivity2.class);
+                    intent.putExtra("study_key", study_key );
+                    intent.putExtra("study_name", study_name );
+                    startActivity(intent);
+
 
                 }
                 if (position == 3){

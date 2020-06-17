@@ -17,6 +17,8 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".MdInstructionActivity"></activity>
         <activity android:name=".PostViewActivity" />
+        <activity android:name=".PostViewActivity2" />
+
         <activity android:name=".MemberManagement.MemberManagementActivity" />
         <activity android:name=".MemberManagement.Dialog_rating_inquiry" />
         <activity android:name=".MemberManagement.Dialog_member_evaluation" />
@@ -53,7 +55,13 @@
             android:name=".PostActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".PostActivity2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".JMainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".JMainActivity2"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SignInActivity" />
         <activity
